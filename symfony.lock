@@ -23,6 +23,34 @@
     "doctrine/dbal": {
         "version": "2.11.1"
     },
+    "doctrine/doctrine-bundle": {
+        "version": "2.0",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "master",
+            "version": "2.0",
+            "ref": "a9f2463b9f73efe74482f831f03a204a41328555"
+        },
+        "files": [
+            "config/packages/doctrine.yaml",
+            "config/packages/prod/doctrine.yaml",
+            "src/Entity/.gitignore",
+            "src/Repository/.gitignore"
+        ]
+    },
+    "doctrine/doctrine-migrations-bundle": {
+        "version": "2.2",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "master",
+            "version": "2.2",
+            "ref": "baaa439e3e3179e69e3da84b671f0a3e4a2f56ad"
+        },
+        "files": [
+            "config/packages/doctrine_migrations.yaml",
+            "migrations/.gitignore"
+        ]
+    },
     "doctrine/event-manager": {
         "version": "1.1.1"
     },
@@ -35,6 +63,9 @@
     "doctrine/lexer": {
         "version": "1.2.1"
     },
+    "doctrine/migrations": {
+        "version": "3.0.1"
+    },
     "doctrine/orm": {
         "version": "v2.7.3"
     },
@@ -44,6 +75,9 @@
     "doctrine/reflection": {
         "version": "1.2.1"
     },
+    "doctrine/sql-formatter": {
+        "version": "1.1.1"
+    },
     "monolog/monolog": {
         "version": "1.25.5"
     },
@@ -52,6 +86,9 @@
     },
     "ocramius/package-versions": {
         "version": "1.5.1"
+    },
+    "ocramius/proxy-manager": {
+        "version": "2.2.3"
     },
     "php": {
         "version": "7.3"
@@ -130,6 +167,9 @@
         "version": "v1.0.8"
     },
     "symfony/dependency-injection": {
+        "version": "v4.4.15"
+    },
+    "symfony/doctrine-bridge": {
         "version": "v4.4.15"
     },
     "symfony/dotenv": {
@@ -233,6 +273,9 @@
     },
     "symfony/options-resolver": {
         "version": "v4.4.15"
+    },
+    "symfony/orm-pack": {
+        "version": "v2.0.0"
     },
     "symfony/polyfill-intl-icu": {
         "version": "v1.18.1"
@@ -378,5 +421,11 @@
     },
     "twig/twig": {
         "version": "v3.0.5"
+    },
+    "zendframework/zend-code": {
+        "version": "3.4.1"
+    },
+    "zendframework/zend-eventmanager": {
+        "version": "3.2.1"
     }
 }
