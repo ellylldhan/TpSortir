@@ -1,0 +1,15 @@
+body {
+    font-family: 'Lato', sans-serif;
+}
+
+.navbar {
+    background-color: #154c82;
+}
+
+.navbar a {
+    color: white;
+}
+
+.navbar a:hover {
+    color: white;
+}

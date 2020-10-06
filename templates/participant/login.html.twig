@@ -1,0 +1,29 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Sortir.com | Login{% endblock %}
+
+{% block body %}
+    <div class="jumbotron container" style="margin-top: 25px">
+        <form method="post" class="form-signin" style="margin: 0 auto;width: 50%">
+            <h1 class="h3 mb-3">Connection</h1>
+            <label for="username" class="sr-only">Pseudo</label>
+            <input type="text" id="username" name="_username" class="form-control" placeholder="Pseudo" required
+                   autofocus>
+            <br/>
+            <label for="password" class="sr-only">Mot de passe</label>
+            <input type="password" id="password" name="_password" class="form-control" placeholder="Mot de passe"
+                   required>
+            <br/>
+
+            <button class="btn btn-lg btn-primary btn-block" type="submit">Se connecter</button>
+            <br>
+            <label class="checkbox mb-3" style="float:right">
+                <input type="checkbox" value="remember-me"> Se souvenir de moi
+            </label>
+            <br>
+        </form>
+    </div>
+{% endblock %}
+
+
+

@@ -7,13 +7,14 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=ParticipantRepository::class)
  * @UniqueEntity(fields={"pseudo"}, message="Le pseudo est déjà utilisé")
  */
-class Participant
+class Participant implements UserInterface
 {
     /**
      * @ORM\Id
@@ -260,4 +261,33 @@ class Participant
 
         return $this;
     }
+
+
+
+    public function getRoles() {
+        // TODO: Vérifier si c'est bien comme ça qu'on fait
+        return ["ROLE_USER"];
+    }
+
+    public function getPassword() {
+        return $this->getMotDePasse();
+    }
+
+
+    public function getSalt() {
+        // Le salt est inutile car déjà contenu dans la méthode de hashage du mdp
+        // Mais DOIT être implémenté quand même
+        return null;
+    }
+
+    public function getUsername() {
+        return $this->getPseudo();
+    }
+
+    public function eraseCredentials() {
+        // TODO: Implement eraseCredentials() method.
+        // Efface les infos stockées. Besoin ?
+    }
+
+
 }
