@@ -91,6 +91,17 @@
     border: 1px solid black;
 }
 
+#modale_ville .form-control {
+    width: 100%;
+    border-radius: 0px;
+}
+
+#modale_ville .form-control:focus {
+    outline: none;
+    box-shadow: none;
+    border: 1px solid black;
+}
+
 .btn_custom {
     width: 100px;
     background: #27AE60;
@@ -111,6 +122,11 @@
 }
 
 #table_campus .btn-success {
+    border: 1px solid #28a745;
+    border-radius: 0px;
+}
+
+#table_ville .btn-success {
     border: 1px solid #28a745;
     border-radius: 0px;
 }
