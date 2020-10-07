@@ -17,6 +17,11 @@ security:
         login_path: login
         check_path: login
         csrf_token_generator: security.csrf.token_manager
+      remember_me:
+        # https://symfony.com/doc/current/security/remember_me.html
+        secret: '%kernel.secret%'
+        lifetime: 14400 # 4h in seconds
+        path: /
       guard:
         authenticators:
           - App\Security\LoginFormAuthenticator
