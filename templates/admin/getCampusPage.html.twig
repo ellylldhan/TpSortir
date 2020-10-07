@@ -16,12 +16,17 @@
 
         <h4 class="font-weight-bold">Filtrer les sites</h4>
 
-        <form method="post" class="form-inline">
+        <form method="post" class="form-inline" action="{{ path('admin_search_campus') }}">
             <div class="form-group col-sm-12 pl-0">
                 <label for="campus_recherche" class="col-sm-2 col-form-label justify-content-start pl-0">
                     Le nom contient :
                 </label>
-                <input style="font-family: FontAwesome, 'Lato', sans-serif;" type="text" class="form-control_search" placeholder="&#xf002">
+
+                {% if recherche is null %}
+                    <input style="font-family: FontAwesome, 'Lato', sans-serif;" type="text" class="form-control_search" placeholder="&#xf002" name="campus_recherche" onblur="this.form.submit();">
+                {% else %}
+                    <input style="font-family: FontAwesome, 'Lato', sans-serif;" type="text" class="form-control_search" placeholder="&#xf002" name="campus_recherche" value="{{ recherche }}" onblur="this.form.submit();">
+                {% endif %}
             </div>
         </form>
 

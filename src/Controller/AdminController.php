@@ -68,7 +68,8 @@ class AdminController extends AbstractController
 
         return $this->render('admin/getCampusPage.html.twig', [
             'title' => "Gestion campus",
-           'toCampus' => $toCampus
+            'recherche' => null,
+            'toCampus' => $toCampus
         ]);
     }
 
@@ -118,6 +119,31 @@ class AdminController extends AbstractController
             'title' => $title,
             'idCampus' => $idCampus,
             'form' => $form->createView()
+        ]);
+    }
+
+    /**
+     * Permet de rechercher un campus sur son nom
+     * @Route("/searchCampus", name="_search_campus")
+     * @param Request $request
+     * @return mixed
+     */
+    public function searchCampus(Request $request)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $campusRepository = $em->getRepository('App:Campus');
+
+        $recherche = $request->get('campus_recherche');
+        if (!$recherche) {
+            return $this->redirectToRoute('admin_get_campus_page');
+        }
+
+        $toCampus = $campusRepository->searchCampus($recherche);
+
+        return $this->render('admin/getCampusPage.html.twig', [
+            'title' => "Gestion campus",
+            'recherche' => $recherche,
+            'toCampus' => $toCampus
         ]);
     }
 
