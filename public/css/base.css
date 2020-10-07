@@ -1,9 +1,17 @@
 body {
     font-family: 'Lato', sans-serif;
+<<<<<<< HEAD
+=======
+    background: #FAFAFA ;
+>>>>>>> master
 }
 
 .navbar {
     background-color: #154c82;
+<<<<<<< HEAD
+=======
+    color: white;
+>>>>>>> master
 }
 
 .navbar a {
@@ -12,4 +20,8 @@ body {
 
 .navbar a:hover {
     color: white;
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> master

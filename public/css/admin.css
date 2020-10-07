@@ -1,0 +1,63 @@
+.card {
+    width: auto;
+    border-radius: 0px;
+}
+
+.card .card-header {
+    background-color: white;
+    color: #6a87a7;
+    text-align: center;
+}
+
+#form_add_participant input.form-control {
+    padding: 10px 10px 10px 5px;
+    -webkit-appearance: none;
+    display: block;
+    color: #636363;
+    width: 100%;
+    border: none;
+    border-radius: 0;
+    border-bottom: 1px solid #757575;
+}
+
+#form_add_participant input.form-control:focus {
+    outline: none;
+    box-shadow: none;
+    border-bottom: 1px solid black;
+}
+
+#form_add_participant select.form-control {
+    color: #636363;
+    width: 100%;
+    border: 1px solid #757575;
+    border-radius: 0;
+}
+
+#form_add_participant select.form-control:focus {
+    outline: none;
+    box-shadow: none;
+    border: 1px solid black;
+}
+
+#form_add_participant button {
+    width: 100px;
+    background: #27AE60;
+    color: white;
+    border: 0 none;
+    border-radius: 1px;
+    cursor: pointer;
+    padding: 10px 5px;
+    margin: 10px 5px;
+}
+
+#form_add_participant button:hover {
+    box-shadow: 0 0 0 2px white, 0 0 0 3px #27AE60;
+}
+
+#form_add_participant button:focus {
+    outline: none;
+}
+
+#form_add_participant .col-form-label {
+    font-weight: bold;
+}
