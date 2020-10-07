@@ -11,6 +11,8 @@ use App\Entity\Participant;
 use App\Form\ParticipantType;
 use App\Entity\Campus;
 use App\Form\CampusType;
+use App\Entity\Ville;
+use App\Form\VilleType;
 
 /**
  * Class AdminController
@@ -58,6 +60,7 @@ class AdminController extends AbstractController
      * Permet de récupérer la page de gestion des campus
      * @Route("/getCampusPage", name="_get_campus_page")
      * @param Request $request
+     * @return mixed
      */
     public function getCampusPage(Request $request)
     {
@@ -70,6 +73,26 @@ class AdminController extends AbstractController
             'title' => "Gestion campus",
             'recherche' => null,
             'toCampus' => $toCampus
+        ]);
+    }
+
+    /**
+     * Permet de récupérer la page de gestion des villes
+     * @Route("/getVillePage", name="_get_ville_page")
+     * @param Request $request
+     * @return mixed
+     */
+    public function getVillePage(Request $request)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $villeRepository = $em->getRepository('App:Ville');
+        $toVille = $villeRepository->findAll();
+
+        return $this->render('admin/getVillePage.html.twig', [
+            'title' => "Gestion villes",
+            'recherche' => null,
+            'toVille' => $toVille
         ]);
     }
 
@@ -123,6 +146,55 @@ class AdminController extends AbstractController
     }
 
     /**
+     * Récupère la modale d'ajout ou de modification
+     * @Route("/getModaleVille", name="_get_modale_ville")
+     * @param Request $request
+     */
+    public function getModaleVille(Request $request)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $idVille = $request->get('idVille');
+        $villeRepository = $em->getRepository('App:Ville');
+
+        //Il s'ajout d'un ajout de campus
+        if ($idVille == -1) {
+            $oVille = new Ville();
+            $title = "Ajouter ";
+        } else {
+            $oVille = $villeRepository->findOneBy(['id' => $idVille]);
+            $title = "Modifier ";
+
+            //Si on ne trouve pas le campus
+            if (!$oVille) {
+                //Création d'une alerte
+                $this->addFlash('danger', 'La ville n\'existe pas.');
+                //Redirection vers la page de gestion des campus
+                $this->redirectToRoute('admin_get_ville_page');
+            }
+        }
+
+        $form = $this->createForm(VilleType::class, $oVille);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $oCampus = $form->getData();
+
+            $em->persist($oVille);
+            $em->flush();
+
+            $this->addFlash('success', 'Ville enregistré !');
+            return $this->redirectToRoute('admin_get_ville_page');
+        }
+
+        return $this->render('admin/getModaleVille.html.twig', [
+            'title' => $title,
+            'idVille' => $idVille,
+            'form' => $form->createView()
+        ]);
+    }
+
+    /**
      * Permet de rechercher un campus sur son nom
      * @Route("/searchCampus", name="_search_campus")
      * @param Request $request
@@ -144,6 +216,31 @@ class AdminController extends AbstractController
             'title' => "Gestion campus",
             'recherche' => $recherche,
             'toCampus' => $toCampus
+        ]);
+    }
+
+    /**
+     * Permet de rechercher une ville sur son nom
+     * @Route("/searchVille", name="_search_ville")
+     * @param Request $request
+     * @return mixed
+     */
+    public function searchVille(Request $request)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $villeRepository = $em->getRepository('App:Ville');
+
+        $recherche = $request->get('ville_recherche');
+        if (!$recherche) {
+            return $this->redirectToRoute('admin_get_ville_page');
+        }
+
+        $toVille = $villeRepository->searchVille($recherche);
+
+        return $this->render('admin/getVillePage.html.twig', [
+            'title' => "Gestion villes",
+            'recherche' => $recherche,
+            'toVille' => $toVille
         ]);
     }
 
