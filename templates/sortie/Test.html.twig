@@ -1,0 +1,29 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <a href="{{ path('inscription') }}" ><button>Je suis MOI</button></a>
+
+
+    <div id="res"></div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+    <script >
+        function inscription(){
+            $.ajax({
+                type: 'post',
+                url: '{{ path('inscription') }}',
+                data: {
+                    sortie:1
+                },
+                success: function (response) {
+                    console.log(response);
+                },error:function (response){
+                    console.log(response);
+                }
+            });
+        }
+    </script>
+{% endblock %}

@@ -52,6 +52,7 @@ class Sortie
     /**
      * @ORM\Column(type="integer", nullable=true)
      */
+    //0 = non annulé; 1 = annulé
     private $etatSortie;
 
     /**
