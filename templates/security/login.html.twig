@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Sortir.com | Connection{% endblock %}
+{% block title %}Sortir.com | Connexion{% endblock %}
 
 {% block body %}
     {% if error %}
@@ -8,7 +8,7 @@
     {% endif %}
     <div class="jumbotron container" style="margin-top: 25px">
         <form method="post">
-            <h1 class="h3 mb-3 font-weight-normal">Connection</h1>
+            <h1 class="h3 mb-3 font-weight-normal">Connexion</h1>
             <label for="inputPseudo">Pseudo</label>
             <input type="text" value="{{ last_username }}" name="_username" id="inputPseudo" class="form-control"
                    required
