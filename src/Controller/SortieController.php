@@ -120,7 +120,7 @@ class SortieController extends AbstractController
             $typeMessage = "succes";
         }
         $this->addFlash($typeMessage, $message);
-        
+
         //TUDO revoir la redirection
         return new RedirectResponse($this->generateUrl('sortie'));
 
