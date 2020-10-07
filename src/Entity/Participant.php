@@ -24,7 +24,6 @@ class Participant
 
     /**
      * @ORM\Column(type="string", length=30, unique=true)
-     * @Assert\Unique(message="Le pseudo est déjà utilisé")
      */
     private $pseudo;
 
@@ -40,11 +39,19 @@ class Participant
 
     /**
      * @ORM\Column(type="string", length=15, nullable=true)
+     * @Assert\Regex(
+     *     pattern= "/(\+\d+(\s|-))?0\d(\s|-)?(\d{2}(\s|-)?){4}/",
+     *     message="Numéro de téléphone invalide"
+     * )
      */
     private $telephone;
 
     /**
      * @ORM\Column(type="string", length=20)
+     * @Assert\Regex(
+     *     pattern="/^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/",
+     *     message="Email invalide"
+     * )
      */
     private $mail;
 
