@@ -30,35 +30,44 @@
                     <li class="nav-item">
                         <a class="nav-link" href="#">Accueil</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Mon profil</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Se déconnecter</a>
-                    </li>
+                    {# Check si user est connecté : #}
+                    {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">Mon profil</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ path('logout') }}">Se déconnecter</a>
+                        </li>
+                    {% else %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ path('login') }}">Se connecter</a>
+                        </li>
+                    {% endif %}
+                    {# fin check #}
                 </ul>
             </div>
         </nav>
 
-        {% for label, messages in app.flashes %}
-            {% for message in messages %}
-                {%  if message == 'error' %}
-                    {%  set label = 'danger' %}
-                {%  endif %}
-                <div class="alert alert-{{ label }}">
-                    {{ message }}
-                </div>
-            {% endfor %}
-        {% endfor %}
 
-        {% block body %}
+{% for label, messages in app.flashes %}
+    {% for message in messages %}
+        {% if message == 'error' %}
+            {% set label = 'danger' %}
+        {% endif %}
+        <div class="alert alert-{{ label }}">
+            {{ message }}
+        </div>
+    {% endfor %}
+{% endfor %}
 
-        {% endblock %}
+{% block body %}
 
-        {% block javascripts %}
-            <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
-            <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
-            <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
-        {% endblock %}
+{% endblock %} 
+
+{% block javascripts %}
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
+{% endblock %}
     </body>
 </html>

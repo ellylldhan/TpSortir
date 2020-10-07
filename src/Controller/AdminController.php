@@ -6,9 +6,11 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Entity\Participant;
 use App\Form\ParticipantType;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use App\Entity\Campus;
 use App\Form\CampusType;
 use App\Entity\Ville;
@@ -25,23 +27,27 @@ class AdminController extends AbstractController
      * Permet à un administrateur d'ajouter un participant
      * @Route("/addParticipant", name="_add_participant")
      * @param Request $request
-     * @return
+     * @param UserPasswordEncoderInterface $encoder
+     * @return Response
      */
-    public function addParticipant(Request $request)
+    public function addParticipant(Request $request,UserPasswordEncoderInterface $encoder)
     {
         $em = $this->getDoctrine()->getManager();
-        $participant= new Participant();
+        $participant = new Participant();
 
         $form = $this->createForm(ParticipantType::class, $participant);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $participant = $form->getData();
+            $hashed = $encoder->encodePassword($participant, $participant->getPassword());
+            $participant->setPassword($hashed);
 
             $em->persist($participant);
             $em->flush();
 
             $this->addFlash('success', 'Participant enregistré !');
+            $this->redirectToRoute('admin_add_participant');
         } else {
             $errors = $this->getErrorsFromForm($form);
 
