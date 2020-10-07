@@ -9,6 +9,11 @@
     text-align: center;
 }
 
+.title {
+    color: #6a87a7;
+    text-align: center;
+}
+
 #form_add_participant input.form-control {
     padding: 10px 10px 10px 5px;
     -webkit-appearance: none;
@@ -60,4 +65,52 @@
 
 #form_add_participant .col-form-label {
     font-weight: bold;
+}
+
+.form-control_search {
+    border: 1px solid #636363;
+    border-radius: 15px;
+    padding-left: 3px;
+}
+
+.form-control_search:focus {
+    outline: none;
+    box-shadow: none;
+    border: 1px solid black;
+    border-radius: 15px;
+}
+
+#modale_campus .form-control {
+    width: 100%;
+    border-radius: 0px;
+}
+
+#modale_campus .form-control:focus {
+    outline: none;
+    box-shadow: none;
+    border: 1px solid black;
+}
+
+.btn_custom {
+    width: 100px;
+    background: #27AE60;
+    color: white;
+    border: 0 none;
+    border-radius: 1px;
+    cursor: pointer;
+    padding: 3px;
+    margin: 10px 5px;
+}
+
+.btn_custom:hover {
+    box-shadow: 0 0 0 2px white, 0 0 0 3px #27AE60;
+}
+
+.btn_custom:focus {
+    outline: none;
+}
+
+#table_campus .btn-success {
+    border: 1px solid #28a745;
+    border-radius: 0px;
 }

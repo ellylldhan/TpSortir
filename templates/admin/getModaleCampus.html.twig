@@ -1,0 +1,36 @@
+<div id="modale_campus" class="modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">{{ title }} campus</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                {{ form_start(form, {'attr': {'class': 'form-inline', 'id': 'form_campus', 'action': path('admin_get_modale_campus')}}) }}
+
+                {{ form_errors(form) }}
+
+                <div class="col-sm-12">
+                    <div class="form-group mb-3">
+                        <label for="campus_nom" class="col-sm-2 col-form-label">
+                            Nom
+                            <span class="required">*</span>
+                        </label>
+                        <div class="col-sm-10">
+                            {{ form_widget(form.nom) }}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="m-auto">
+                    <input name="idCampus" type="text" value="{{ idCampus }}" class="d-none">
+                    {{ form_widget(form.enregistrer) }}
+                </div>
+
+                {{ form_end(form) }}
+            </div>
+        </div>
+    </div>
+</div>
