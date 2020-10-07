@@ -3,26 +3,71 @@
 {% block title %}Sortir.com | Login{% endblock %}
 
 {% block body %}
+    {%  if app.user.pseudo %}
+    <div class="mb-3">
+        You are logged in as {{ app.user }}, <a href="{{ path('app_logout') }}">Logout</a>
+    </div>
+    {% endif %}
     <div class="jumbotron container" style="margin-top: 25px">
         <form method="post" class="form-signin" style="margin: 0 auto;width: 50%">
             <h1 class="h3 mb-3">Connection</h1>
             <label for="username" class="sr-only">Pseudo</label>
-            <input type="text" id="username" name="_username" class="form-control" placeholder="Pseudo" required
-                   autofocus>
+            <input type="text" id="username" name="_username" class="form-control" placeholder="Pseudo" required>
             <br/>
             <label for="password" class="sr-only">Mot de passe</label>
             <input type="password" id="password" name="_password" class="form-control" placeholder="Mot de passe"
                    required>
             <br/>
 
+                <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+
             <button class="btn btn-lg btn-primary btn-block" type="submit">Se connecter</button>
             <br>
             <label class="checkbox mb-3" style="float:right">
-                <input type="checkbox" value="remember-me"> Se souvenir de moi
+                <input type="checkbox" value="remember-me" name> Se souvenir de moi
             </label>
             <br>
         </form>
     </div>
+
+    <hr>
+
+{#    <form method="post">#}
+{#    {% if error %}#}
+{#        <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>#}
+{#    {% endif %}#}
+
+{#    {% if app.user %}#}
+{#        <div class="mb-3">#}
+{#            You are logged in as {{ app.user.username }}, <a href="{{ path('app_logout') }}">Logout</a>#}
+{#        </div>#}
+{#    {% endif %}#}
+
+{#    <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>#}
+{#    <label for="inputEmail" class="sr-only">Email</label>#}
+{#    <input type="email" value="{{ pseudo }}" name="email" id="inputEmail" class="form-control" placeholder="Email" required autofocus>#}
+{#    <label for="inputPassword" class="sr-only">Password</label>#}
+{#    <input type="password" name="password" id="inputPassword" class="form-control" placeholder="Password" required>#}
+
+{#    <input type="hidden" name="_csrf_token"#}
+{#           value="{{ csrf_token('authenticate') }}"#}
+{#    >#}
+
+{#    #}{##}
+{#    Uncomment this section and add a remember_me option below your firewall to activate remember me functionality.#}
+{#    See https://symfony.com/doc/current/security/remember_me.html#}
+
+{#    <div class="checkbox mb-3">#}
+{#        <label>#}
+{#            <input type="checkbox" name="_remember_me"> Remember me#}
+{#        </label>#}
+{#    </div>#}
+{#    #}
+
+{#    <button class="btn btn-lg btn-primary" type="submit">#}
+{#        Sign in#}
+{#    </button>#}
+{#    </form>#}
 {% endblock %}
 
 

@@ -273,6 +273,10 @@ class Participant implements UserInterface
         return $this->getMotDePasse();
     }
 
+    public function setPassword($mdp) {
+       $this->setMotDePasse($mdp);
+    }
+
 
     public function getSalt() {
         // Le salt est inutile car déjà contenu dans la méthode de hashage du mdp

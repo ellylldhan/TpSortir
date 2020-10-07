@@ -1,0 +1,65 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Connection{% endblock %}
+
+{% block body2 %}
+    {% if error %}
+        <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+    {% endif %}
+    <div class="jumbotron container" style="margin-top: 25px">
+        <form method="post">
+            <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
+            <label for="inputUsername">Username</label>
+            <input type="text" value="{{ last_username }}" name="_username" id="inputUsername" class="form-control"
+                   required {{ autofocusLogin }}>
+            <br>
+            <label for="inputPassword">Password</label>
+            <input type="password" name="_password" id="inputPassword" class="form-control"
+                   required {{ autofocusPswd }}>
+
+            <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+            <br>
+            <div class="checkbox mb-3">
+                <label>
+                    <input type="checkbox" name="_remember_me"> Remember me
+                </label>
+            </div>
+
+            <button class="btn btn-lg btn-primary" type="submit">
+                Sign in
+            </button>
+        </form>
+    </div>
+{% endblock %}
+
+{% block body %}
+    {% if error %}
+        <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+    {% endif %}
+    {# {%  if app.participant %} #}
+    {# <div class="mb-3"> #}
+    {# You are logged in as {{ app.participant.pseudo }}, <a href="{{ path('logout') }}">Logout</a> #}
+    {# </div> #}
+    {# {% endif %} #}
+
+    <div class="jumbotron container" style="margin-top: 25px">
+        <form action="{{ path('login') }}" method="post" class="form-signin" style="margin: 0 auto;width: 50%">
+            <h1 class="h3 mb-3">Connection</h1>
+            <label for="username" class="sr-only">Pseudo</label>
+            <input type="text" id="username" name="_username" class="form-control" placeholder="Pseudo" required>
+            <br/>
+            <label for="password" class="sr-only">Mot de passe</label>
+            <input type="password" id="password" name="_password" class="form-control" placeholder="Mot de passe"
+                   required {{ autofocusPswd }}>
+            <br/>
+            <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+            <br>
+            <button class="btn btn-lg btn-primary btn-block" type="submit">Se connecter</button>
+            <br>
+            <label class="checkbox mb-3" style="float:right">
+                <input type="checkbox" value="remember-me" name> Se souvenir de moi
+            </label>
+            <br>
+        </form>
+    </div>
+{% endblock %}

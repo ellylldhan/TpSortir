@@ -1,0 +1,20 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="container" style="margin-top: 20px">
+        <div style="display: inline-block">
+            <h3>Liste des Users</h3>
+            {% for user in listUsers %}
+                <div class="card" style="width: 18rem;float:left;margin:5px 5px 5px 5px;">
+                    <div class="card-body">
+                        <h6 class="card-title">Pseudo : {{ user.pseudo }}</h6>
+                        <p class="card-subtitle mb-2 text-muted">Mdp : {{ user.motDePasse }}</p>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}
+
+{% block title %}List Users{% endblock %}
+

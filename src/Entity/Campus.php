@@ -37,7 +37,7 @@ class Campus
     public function __construct()
     {
         $this->participants = new ArrayCollection();
-        $this->sorties = new ArrayCollection();
+        $this->sorties      = new ArrayCollection();
     }
 
     public function getId(): ?int
