@@ -28,12 +28,12 @@ class Participant
     private $pseudo;
 
     /**
-     * @ORM\Column(type="string", length=30)
+     * @ORM\Column(type="string", length=255)
      */
     private $nom;
 
     /**
-     * @ORM\Column(type="string", length=30)
+     * @ORM\Column(type="string", length=255)
      */
     private $prenom;
 
@@ -47,7 +47,7 @@ class Participant
     private $telephone;
 
     /**
-     * @ORM\Column(type="string", length=20)
+     * @ORM\Column(type="string", length=255)
      * @Assert\Regex(
      *     pattern="/^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/",
      *     message="Email invalide"
