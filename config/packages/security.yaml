@@ -1,4 +1,14 @@
 security:
+    # https://symfony.com/doc/current/security.html#where-do-users-come-from-user-providers
+    providers:
+        users_in_memory: { memory: null }
+    firewalls:
+        dev:
+            pattern: ^/(_(profiler|wdt)|css|images|js)/
+            security: false
+        main:
+            anonymous: lazy
+            provider: users_in_memory
   # https://symfony.com/doc/current/security.html#where-do-users-come-from-user-providers
   providers:
     our_db_provider:
@@ -30,6 +40,8 @@ security:
         # where to redirect after logout
         target: base
 
+            # activate different ways to authenticate
+            # https://symfony.com/doc/current/security.html#firewalls-authentication
       # activate different ways to authenticate
       # https://symfony.com/doc/current/security.html#firewalls-authentication
 
@@ -43,5 +55,5 @@ security:
   # - { path: ^/profile, roles: ROLE_USER }
   encoders:
     App\Entity\Participant:
-      algorithm: bcrypt
+      algorithm: sha512
 
