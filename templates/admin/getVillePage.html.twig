@@ -1,0 +1,79 @@
+{% extends 'base.html.twig' %}
+
+{% block title %} {{ parent() }} {{ title }} {% endblock %}
+
+{% block stylesheet %}
+    <link rel="stylesheet" href="{{ asset('css/admin.css') }}">
+{% endblock %}
+
+{% block body %}
+
+    <div class="container mt-5 mb-5">
+        <div class="title">
+            <h1>Gérer les villes</h1>
+        </div>
+        <br>
+
+        <h4 class="font-weight-bold">Filtrer les villes</h4>
+
+        <form method="post" class="form-inline" action="{{ path('admin_search_ville') }}">
+            <div class="form-group col-sm-12 pl-0">
+                <label for="ville_recherche" class="col-sm-2 col-form-label justify-content-start pl-0">
+                    Le nom contient :
+                </label>
+
+                {% if recherche is null %}
+                    <input style="font-family: FontAwesome, 'Lato', sans-serif;" type="text" class="form-control_search" placeholder="&#xf002" name="ville_recherche" onblur="this.form.submit();">
+                {% else %}
+                    <input style="font-family: FontAwesome, 'Lato', sans-serif;" type="text" class="form-control_search" placeholder="&#xf002" name="ville_recherche" value="{{ recherche }}" onblur="this.form.submit();">
+                {% endif %}
+            </div>
+        </form>
+
+        <div id="table_ville" class="mt-5">
+            <button class="btn btn-success mb-1" onclick="getModaleVille(-1)">Ajouter une ville</button>
+            <table class="table table-striped">
+                <thead>
+                <th>Ville</th>
+                <th>Code postal</th>
+                <th>Actions</th>
+                </thead>
+                <tbody>
+                {% for oVille in toVille %}
+                    <tr>
+                        <th>{{ oVille.nom }}</th>
+                        <th>{{ oVille.codePostal }}</th>
+                        <th>
+                            <a type="button" class="btn btn-trasparent p-0" onclick="return getModaleVille({{ oVille.id }});">Modifier</a>
+                        </th>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block javascripts %}
+
+    {{ parent() }}
+
+    <script>
+        function getModaleVille(id) {
+            $routeGetModaleVille = '{{ path('admin_get_modale_ville') }}';
+
+            $.ajax({
+                url: $routeGetModaleVille,
+                data: {
+                    idVille: id
+                },
+                type: 'GET',
+                success: function (data) {
+                    $(data).modal();
+                }
+            });
+        }
+    </script>
+
+{% endblock %}

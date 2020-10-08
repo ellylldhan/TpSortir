@@ -1,0 +1,48 @@
+<div id="modale_ville" class="modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">{{ title }} campus</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                {{ form_start(form, {'attr': {'class': 'form-inline', 'id': 'form_ville', 'action': path('admin_get_modale_ville')}}) }}
+
+                {{ form_errors(form) }}
+
+                <div class="col-sm-12">
+                    <div class="form-group mb-3">
+                        <label for="ville_nom" class="col-sm-4 col-form-label justify-content-end">
+                            Nom
+                            <span class="required">*</span>
+                        </label>
+                        <div class="col-sm-8">
+                            {{ form_widget(form.nom) }}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-sm-12">
+                    <div class="form-group mb-3">
+                        <label for="ville_code_postal" class="col-sm-4 col-form-label justify-content-end">
+                            Code postal
+                            <span class="required">*</span>
+                        </label>
+                        <div class="col-sm-8">
+                            {{ form_widget(form.codePostal) }}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="m-auto">
+                    <input name="idVille" type="text" value="{{ idVille}}" class="d-none">
+                    {{ form_widget(form.enregistrer) }}
+                </div>
+
+                {{ form_end(form) }}
+            </div>
+        </div>
+    </div>
+</div>
