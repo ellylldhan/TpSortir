@@ -14,18 +14,21 @@ use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ObjectManager;
 use Exception;
 use Faker;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class AppFixtures extends Fixture
 {
     private $campusRepository;
     private $etatRepository;
     private $lieuRepository;
+    private $encoder;
 
-    public function __construct(EntityManagerInterface $em)
+    public function __construct(EntityManagerInterface $em, UserPasswordEncoderInterface $encoder)
     {
         $this->campusRepository = $em->getRepository(Campus::class);
         $this->etatRepository = $em->getRepository(Etat::class);
         $this->lieuRepository = $em->getRepository(Lieu::class);
+        $this->encoder = $encoder;
     }
 
     public function load(ObjectManager $manager)
@@ -53,10 +56,10 @@ class AppFixtures extends Fixture
 
         // Types de campus
         $typesCampus = [
-            "Campus Thomas",
-            "Campus Loan",
-            "Campus Reno",
-            "Campus Guiom"
+            "Campus de Thomas",
+            "Campus de Loan",
+            "Campus de Reno",
+            "Campus de Guiom"
         ];
 
         // Génération des Etats
@@ -89,7 +92,9 @@ class AppFixtures extends Fixture
                     $lieu->setNom(
                         $typesLieu[random_int(0, count($typesLieu)-1)]." ".$streetName
                     );
-                } catch (Exception $e) { }
+                } catch (Exception $e) {
+                    print_r($e);
+                }
                 $lieu->setRue($streetName)
                     ->setLatitude(
                         $faker->latitude($min = -90, $max = 90)
@@ -104,7 +109,7 @@ class AppFixtures extends Fixture
             $manager->flush();
         }
 
-        // Récupération des campus en BDD
+        // Récupération des collections
         $campusCollection = $this->campusRepository->findAll();
         $etatsCollection = $this->etatRepository->findAll();
         $lieuxCollection = $this->lieuRepository->findAll();
@@ -116,7 +121,7 @@ class AppFixtures extends Fixture
             $organisateur->setPrenom($faker->firstName())
                 ->setNom($faker->name())
                 ->setMail($faker->email())
-                ->setMotDePasse($faker->password(10, 20))
+                ->setMotDePasse($this->encoder->encodePassword($organisateur, "password"))
                 ->setPseudo("organisateur_".$key)
                 ->setActif($faker->boolean())
                 ->setAdministrateur($faker->boolean())
@@ -146,7 +151,7 @@ class AppFixtures extends Fixture
                 $participant->setPrenom($faker->firstName())
                     ->setNom($faker->name())
                     ->setMail($faker->email())
-                    ->setMotDePasse($faker->password(10, 20))
+                    ->setMotDePasse($this->encoder->encodePassword($participant, "password"))
                     ->setPseudo("pseudo_".$campus->getId()."_".$i)
                     ->setActif($faker->boolean())
                     ->setAdministrateur($faker->boolean())
