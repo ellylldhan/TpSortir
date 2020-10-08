@@ -34,20 +34,21 @@
             <button class="btn btn-success mb-1" onclick="getModaleVille(-1)">Ajouter une ville</button>
             <table class="table table-striped">
                 <thead>
-                <th>Ville</th>
-                <th>Code postal</th>
-                <th>Actions</th>
+                    <th>Ville</th>
+                    <th>Code postal</th>
+                    <th>Actions</th>
                 </thead>
+
                 <tbody>
-                {% for oVille in toVille %}
-                    <tr>
-                        <th>{{ oVille.nom }}</th>
-                        <th>{{ oVille.codePostal }}</th>
-                        <th>
-                            <a type="button" class="btn btn-trasparent p-0" onclick="return getModaleVille({{ oVille.id }});">Modifier</a>
-                        </th>
-                    </tr>
-                {% endfor %}
+                    {% for oVille in toVille %}
+                        <tr>
+                            <th>{{ oVille.nom }}</th>
+                            <th>{{ oVille.codePostal }}</th>
+                            <th>
+                                <a type="button" class="btn btn-trasparent p-0" onclick="return getModaleVille({{ oVille.id }});">Modifier</a>
+                            </th>
+                        </tr>
+                    {% endfor %}
                 </tbody>
             </table>
         </div>

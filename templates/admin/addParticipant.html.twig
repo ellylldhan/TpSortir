@@ -91,7 +91,10 @@
                 </div>
 
                 <div class="mb-5 mt-3 ml-auto mr-auto">
-                    <button type="submit">Enregistrer</button>
+                    <button type="submit" class="btn btn_custom">Enregistrer</button>
+                    <a type="button" class="btn btn_custom_cancel" href="{{ path('admin_get_participant_page') }}">
+                        Annuler
+                    </a>
                 </div>
 
                 {{ form_end(form) }}

@@ -1,0 +1,77 @@
+{% extends 'base.html.twig' %}
+
+{% block title %} {{ parent() }} {{ title }} {% endblock %}
+
+{% block stylesheet %}
+    <link rel="stylesheet" href="{{ asset('css/admin.css') }}">
+{% endblock %}
+
+{% block body %}
+
+    <div class="container mt-5 mb-5">
+        <div class="title">
+            <h1>Gérer les participants</h1>
+        </div>
+        <br>
+
+        <div id="table_participant" class="mt-5">
+            <a type="button" class="btn btn-success mb-1" href="{{ path('admin_add_participant') }}">Ajouter un participant</a>
+            <table class="table table-striped">
+                <thead>
+                    <th>Pseudo</th>
+                    <th>Nom</th>
+                    <th>Prénom</th>
+                    <th>Téléphone</th>
+                    <th>Mail</th>
+                    <th>Campus</th>
+                    <th>Actions</th>
+                </thead>
+
+                <tbody>
+                    {% for oParticipant in toParticipant %}
+                        <tr>
+                            <th>{{ oParticipant.pseudo }}</th>
+                            <th>{{ oParticipant.nom }}</th>
+                            <th>{{ oParticipant.prenom }}</th>
+                            <th>{{ oParticipant.telephone }}</th>
+                            <th>{{ oParticipant.mail }}</th>
+                            <th>{{ oParticipant.campus.nom }}</th>
+                            <th>
+                                <button class="btn btn_transparent pt-0 pr-0" title="Modifier"  onclick="return getModaleUpdateParticipant({{ oParticipant.id }});">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="btn btn_transparent pt-0 pl-0" title="Supprimer">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </th>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block javascripts %}
+
+    {{ parent() }}
+
+    <script>
+        function getModaleUpdateParticipant(id) {
+            $routeGetModaleUpdateParticipant = '{{ path('admin_get_modale_update_participant') }}';
+
+            $.ajax({
+                url: $routeGetModaleUpdateParticipant,
+                data: {
+                    idParticipant: id
+                },
+                type: 'GET',
+                success: function (data) {
+                    $(data).modal();
+                }
+            });
+        }
+    </script>
+
+{% endblock %}

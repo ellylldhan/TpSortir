@@ -1,0 +1,110 @@
+<div id="modale_update_participant" class="modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">{{ title }}</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                {{ form_start(form, {'attr': {'class': 'form-inline', 'id': 'form_update_participant', 'action': path('admin_get_modale_update_participant')}}) }}
+
+                {{ form_errors(form) }}
+
+                <div class="col-sm-12">
+                    <div class="form-group mb-3">
+                        <label for="participant_pseudo" class="col-sm-3 col-form-label justify-content-end">
+                            Pseudo
+                        </label>
+                        <div class="col-sm-9">
+                            {{ form_widget(form.pseudo, { 'attr': {'id': 'participant_pseudo'} }) }}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-sm-12">
+                    <div class="form-group mb-3">
+                        <label for="participant_nom" class="col-sm-3 col-form-label justify-content-end">
+                            Nom
+                        </label>
+                        <div class="col-sm-9">
+                            {{ form_widget(form.nom, { 'attr': {'id': 'participant_nom'} }) }}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-sm-12">
+                    <div class="form-group mb-3">
+                        <label for="participant_prenom" class="col-sm-3 col-form-label justify-content-end">
+                            Prénom
+                        </label>
+                        <div class="col-sm-9">
+                            {{ form_widget(form.prenom, { 'attr': {'id': 'participant_prenom'} }) }}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-sm-12">
+                    <div class="form-group mb-3">
+                        <label for="participant_telephone" class="col-sm-3 col-form-label justify-content-end">
+                            Téléphone
+                        </label>
+                        <div class="col-sm-9">
+                            {{ form_widget(form.telephone, { 'attr': {'id': 'participant_telephone'} }) }}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-sm-12">
+                    <div class="form-group mb-4">
+                        <label for="participant_mail" class="col-sm-3 col-form-label justify-content-end">
+                            Mail
+                        </label>
+                        <div class="col-sm-9">
+                            {{ form_widget(form.mail, { 'attr': {'id': 'participant_mail'} }) }}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-sm-12">
+                    <div class="form-group mb-4">
+                        <label for="participant_campus" class="col-sm-3 col-form-label justify-content-end">
+                            Campus
+                        </label>
+                        <div class="col-sm-9">
+                            {{ form_widget(form.campus, { 'attr': {'id': 'participant_campus'} }) }}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-sm-12">
+                    <div class="form-group mb-3">
+                        <label for="participant_administrateur" class="col-sm-4 col-form-label justify-content-end">
+                            Administrateur
+                        </label>
+                        <div class="col-sm-1 justify-content-start">
+                            {{ form_widget(form.administrateur, { 'attr': {'id': 'participant_administrateur'} }) }}
+                        </div>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label for="participant_actif" class="col-sm-4 col-form-label justify-content-end">
+                            Actif
+                        </label>
+                        <div class="col-sm-1 justify-content-start">
+                            {{ form_widget(form.actif, { 'attr': {'id': 'participant_actif'} }) }}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-5 mt-3 ml-auto mr-auto">
+                    <input type="text" class="d-none" name="idParticipant" value="{{ idParticipant }}">
+                    {{ form_widget(form.enregistrer) }}
+                </div>
+
+                {{ form_end(form) }}
+            </div>
+        </div>
+    </div>
+</div>

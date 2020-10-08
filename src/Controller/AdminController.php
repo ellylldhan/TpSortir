@@ -3,7 +3,11 @@
 namespace App\Controller;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -73,7 +77,7 @@ class AdminController extends AbstractController
         $em = $this->getDoctrine()->getManager();
 
         $campusRepository = $em->getRepository('App:Campus');
-        $toCampus = $campusRepository->findAll();
+        $toCampus = $campusRepository->findBy(array(), array('nom' => 'ASC'));
 
         return $this->render('admin/getCampusPage.html.twig', [
             'title' => "Gestion campus",
@@ -93,12 +97,31 @@ class AdminController extends AbstractController
         $em = $this->getDoctrine()->getManager();
 
         $villeRepository = $em->getRepository('App:Ville');
-        $toVille = $villeRepository->findAll();
+        $toVille = $villeRepository->findBy(array(), array('nom' => 'ASC'));
 
         return $this->render('admin/getVillePage.html.twig', [
             'title' => "Gestion villes",
             'recherche' => null,
             'toVille' => $toVille
+        ]);
+    }
+
+    /**
+     * Permet de récupérer la page de gestion des participants
+     * @Route("/getParticipantPage", name="_get_participant_page")
+     * @param Request $request
+     * @return mixed
+     */
+    public function getParticipantPage(Request $request)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $participantRepository = $em->getRepository('App:Participant');
+        $toParticipant = $participantRepository->findBy(array(), array('pseudo' => 'ASC'));
+
+        return $this->render('admin/getParticipantPage.html.twig', [
+            'title' => "Gestion participants",
+            'toParticipant' => $toParticipant
         ]);
     }
 
@@ -197,6 +220,63 @@ class AdminController extends AbstractController
             'title' => $title,
             'idVille' => $idVille,
             'form' => $form->createView()
+        ]);
+    }
+
+    /**
+     * Permet de récupérer la modale de modification d'un participant
+     * @Route("/getModaleUpdateParticipant", name="_get_modale_update_participant")
+     * @param $idParticipant
+     * @return mixed
+     */
+    public function getModaleUpdateParticipant(Request $request)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $participantRepository = $em->getRepository('App:Participant');
+
+        $idParticipant = $request->get('idParticipant');
+
+        $oParticipant = $participantRepository->findOneBy(['id' => $idParticipant]);
+        if (!$oParticipant) {
+            $this->addFlash('danger', 'Participant non trouvé.');
+            return $this->redirectToRoute('admin_get_participant_page');
+        }
+
+        $formUpdateParticipant = $this->createFormBuilder($oParticipant)
+            ->add('pseudo', TextType::class, ['required' => true, 'attr' => ['class' => 'form-control']])
+            ->add('nom', TextType::class, ['required' => true, 'attr' => ['class' => 'form-control']])
+            ->add('prenom', TextType::class, ['required' => true, 'attr' => ['class' => 'form-control']])
+            ->add('telephone', TextType::class, ['required' => false, 'attr' => ['class' => 'form-control']])
+            ->add('mail', TextType::class, ['required' => true, 'attr' => ['class' => 'form-control']])
+            ->add('administrateur', CheckboxType::class, ['required' => false, 'attr' => ['class' => 'form-checkbox-input']])
+            ->add('actif', CheckboxType::class, ['required' => false, 'attr' => ['class' => 'form-checkbox-input']])
+            ->add('campus', EntityType::class, [
+                'class' => Campus::class,
+                'choice_label' => function ($campus) {
+                    return $campus->getNom();
+                },
+                'attr' => [
+                    'class' => 'form-control'
+                ]
+            ])
+            ->add('enregistrer', SubmitType::class, ['label' => 'Enregistrer', 'attr' => ['class' => 'btn_custom']])
+            ->getForm();
+
+        $formUpdateParticipant->handleRequest($request);
+        if ($formUpdateParticipant->isSubmitted() && $formUpdateParticipant->isValid()) {
+            $oParticipant = $formUpdateParticipant->getData();
+
+            $em->persist($oParticipant);
+            $em->flush();
+
+            $this->addFlash('success', 'Participant modifié !');
+            return $this->redirectToRoute('admin_get_participant_page');
+        }
+
+        return $this->render('admin/getModaleUpdateParticipant.html.twig', [
+            'title' => "Modifier participant",
+            'idParticipant' => $idParticipant,
+            'form' => $formUpdateParticipant->createView()
         ]);
     }
 
