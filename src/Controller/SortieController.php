@@ -2,9 +2,11 @@
 
 namespace App\Controller;
 
+use App\Entity\Campus;
 use App\Entity\Inscription;
 use App\Entity\Participant;
 use App\Entity\Sortie;
+use App\Form\SortieType;
 use App\Manager\SortieManager;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
@@ -13,14 +15,24 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
+/**
+ * @Route("/sortie")
+ */
 class SortieController extends AbstractController
 {
     /**
-     * @Route("/sortie", name="sortie")
+     * @Route("/ajout", name="ajout")
      */
-    public function index()
+    public function ajout(EntityManagerInterface $em)
     {
-        return $this->render('sortie/Test.html.twig');
+        $sortie = new Sortie();
+        $participant = $em->getRepository(Participant::class)->findOneBy(['username' => $this->getUser()->getUsername()]);
+        $campus = $em->getRepository(Campus::class)->find($participant->getCampus());
+        $sortieForm = $this->createForm(SortieType::class,$sortie);
+        return $this->render('sortie/AjoutSortie.html.twig',[
+            "form" => $sortieForm->createView(),
+            'campusName' => $campus->getNom()
+        ]);
     }
 
     /**

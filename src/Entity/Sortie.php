@@ -50,17 +50,6 @@ class Sortie
     private $descriptionInfo;
 
     /**
-     * @ORM\Column(type="integer", nullable=true)
-     */
-    //0 = non annulé; 1 = annulé
-    private $etatSortie;
-
-    /**
-     * @ORM\Column(type="string", length=250, nullable=true)
-     */
-    private $urlPhoto;
-
-    /**
      * @ORM\ManyToOne(targetEntity=Participant::class, inversedBy="sorties")
      * @ORM\JoinColumn(nullable=false)
      */
@@ -171,29 +160,6 @@ class Sortie
         return $this;
     }
 
-    public function getEtatSortie(): ?int
-    {
-        return $this->etatSortie;
-    }
-
-    public function setEtatSortie(?int $etatSortie): self
-    {
-        $this->etatSortie = $etatSortie;
-
-        return $this;
-    }
-
-    public function getUrlPhoto(): ?string
-    {
-        return $this->urlPhoto;
-    }
-
-    public function setUrlPhoto(?string $urlPhoto): self
-    {
-        $this->urlPhoto = $urlPhoto;
-
-        return $this;
-    }
 
     public function getOrganisateur(): ?Participant
     {

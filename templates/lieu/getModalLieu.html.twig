@@ -1,0 +1,84 @@
+<div id="modale_lieu" class="modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">{{ title }} Lieu</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                {{ form_start(form, {'attr': {'class': 'form-inline', 'id': 'form_lieu', 'action': path('get_modale_lieu')}}) }}
+
+                {{ form_errors(form) }}
+
+                <div class="col-sm-12">
+                    <div class="form-group mb-3">
+                        <label for="lieu_nom" class="col-sm-4 col-form-label justify-content-end">
+                            lieu
+                            <span class="required">*</span>
+                        </label>
+                        <div class="col-sm-8">
+                            {{ form_widget(form.nom) }}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-sm-12">
+                    <div class="form-group mb-3">
+                        <label for="lieu_rue" class="col-sm-4 col-form-label justify-content-end">
+                            Rue
+                            <span class="required">*</span>
+                        </label>
+                        <div class="col-sm-8">
+                            {{ form_widget(form.rue) }}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-sm-12">
+                    <div class="form-group mb-3">
+                        <label for="lieu_latitude" class="col-sm-4 col-form-label justify-content-end">
+                            latitude
+                            <span class="required">*</span>
+                        </label>
+                        <div class="col-sm-8">
+                            {{ form_widget(form.latitude) }}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-sm-12">
+                    <div class="form-group mb-3">
+                        <label for="lieu_longitude" class="col-sm-4 col-form-label justify-content-end">
+                            Longitude
+                            <span class="required">*</span>
+                        </label>
+                        <div class="col-sm-8">
+                            {{ form_widget(form.longitude) }}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-sm-12">
+                    <div class="form-group mb-3">
+                        <label for="lieu_ville" class="col-sm-4 col-form-label justify-content-end">
+                            Ville
+                            <span class="required">*</span>
+                        </label>
+                        <div class="col-sm-8">
+                            {{ form_widget(form.ville) }}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="m-auto">
+                    <input name="idLieu" type="text" value="{{ idLieu}}" class="d-none">
+                    {{ form_widget(form.enregister, { 'attr': {'class':'btn btn-success'} }) }}
+                </div>
+
+                {{ form_end(form) }}
+            </div>
+        </div>
+    </div>
+</div>
