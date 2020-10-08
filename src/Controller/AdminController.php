@@ -2,7 +2,6 @@
 
 namespace App\Controller;
 
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
@@ -36,30 +35,40 @@ class AdminController extends AbstractController
      */
     public function addParticipant(Request $request,UserPasswordEncoderInterface $encoder)
     {
+        //Récupération de l'entity manager
         $em = $this->getDoctrine()->getManager();
+        //Création d'une nouvelle instance de Participant
         $participant = new Participant();
 
+        //Création du formulaire
         $form = $this->createForm(ParticipantType::class, $participant);
         $form->handleRequest($request);
 
+        //Si le formulaire est soumis et est valide
         if ($form->isSubmitted() && $form->isValid()) {
+            //On récupère les données et on hydrate l'instance
             $participant = $form->getData();
+            //On encode le mot de passe
             $hashed = $encoder->encodePassword($participant, $participant->getPassword());
             $participant->setPassword($hashed);
 
+            //On sauvegarde
             $em->persist($participant);
             $em->flush();
 
+            //On affiche un message de succès et on redirige vers la page d'ajout des participants
             $this->addFlash('success', 'Participant enregistré !');
             $this->redirectToRoute('admin_add_participant');
-        } else {
+        } else { //Si le formulaire n'est pas valide
             $errors = $this->getErrorsFromForm($form);
 
+            //Pour chaque erreur, on affiche une alerte contenant le message
             foreach ($errors as $error) {
                 $this->addFlash('danger', $error[0]);
             }
         }
 
+        //On redirige vers la page d'ajout
         return $this->render('admin/addParticipant.html.twig', [
             'title' => 'Ajout participant',
             'form' => $form->createView()
@@ -74,9 +83,12 @@ class AdminController extends AbstractController
      */
     public function getCampusPage(Request $request)
     {
+        //Récupération de l'entity manager
         $em = $this->getDoctrine()->getManager();
 
+        //Récupération du repository de l'entité Campus
         $campusRepository = $em->getRepository('App:Campus');
+        //On récupère tous les campus ordonnés sur le nom par ordre ascendant
         $toCampus = $campusRepository->findBy(array(), array('nom' => 'ASC'));
 
         return $this->render('admin/getCampusPage.html.twig', [
@@ -94,9 +106,12 @@ class AdminController extends AbstractController
      */
     public function getVillePage(Request $request)
     {
+        //Récupération de l'entity manager
         $em = $this->getDoctrine()->getManager();
 
+        //Récupération du repository de l'entité Ville
         $villeRepository = $em->getRepository('App:Ville');
+        //Récupération de toutes les villes ordonnées sur le nom par ordre ascendant
         $toVille = $villeRepository->findBy(array(), array('nom' => 'ASC'));
 
         return $this->render('admin/getVillePage.html.twig', [
@@ -114,9 +129,12 @@ class AdminController extends AbstractController
      */
     public function getParticipantPage(Request $request)
     {
+        //Récupération de l'entity manager
         $em = $this->getDoctrine()->getManager();
 
+        //Récupération du repository de l'entité Participant
         $participantRepository = $em->getRepository('App:Participant');
+        //Récupération de tous les participants triés sur le pseudo en ordre ascendant
         $toParticipant = $participantRepository->findBy(array(), array('pseudo' => 'ASC'));
 
         return $this->render('admin/getParticipantPage.html.twig', [
@@ -132,37 +150,47 @@ class AdminController extends AbstractController
      */
     public function getModaleCampus(Request $request)
     {
+        //Récupération de l'entity manager
         $em = $this->getDoctrine()->getManager();
 
+        //Récupération de l'identifiant du campus
         $idCampus = $request->get('idCampus');
+        //Récupération du repository de l'entité Campus
         $campusRepository = $em->getRepository('App:Campus');
 
-        //Il s'ajout d'un ajout de campus
+        //Si l'identifiant est égal à -1, il s'ajout d'une création de campus
         if ($idCampus == -1) {
+            //Création d'une nouvelle instance de Campus
             $oCampus = new Campus();
             $title = "Ajouter ";
-        } else {
+        } else { //Sinon il s'agit d'une modification
+            //Récupération du campus existant en fonction de son identifiant
             $oCampus = $campusRepository->findOneBy(['id' => $idCampus]);
             $title = "Modifier ";
 
             //Si on ne trouve pas le campus
             if (!$oCampus) {
-                //Création d'une alerte
+                //Création d'une alerte contenant le message d'erreur
                 $this->addFlash('danger', 'Le campus n\'existe pas.');
                 //Redirection vers la page de gestion des campus
                 $this->redirectToRoute('admin_get_campus_page');
             }
         }
 
+        //Création du formulaire
         $form = $this->createForm(CampusType::class, $oCampus);
         $form->handleRequest($request);
 
+        //Si le formulaire est soumis et est valide
         if ($form->isSubmitted() && $form->isValid()) {
+            //On hydrate l'instance avec les données récupérées
             $oCampus = $form->getData();
 
+            //On sauvegarde en base
             $em->persist($oCampus);
             $em->flush();
 
+            //on affiche un message de succès et on redirige vers la page de gestion des campus
             $this->addFlash('success', 'Campus enregistré !');
             return $this->redirectToRoute('admin_get_campus_page');
         }
@@ -181,37 +209,47 @@ class AdminController extends AbstractController
      */
     public function getModaleVille(Request $request)
     {
+        //Récupération de l'entity manager
         $em = $this->getDoctrine()->getManager();
 
+        //Récupération de l'identifiant de la ville
         $idVille = $request->get('idVille');
+        //Récupération du repository de l'entité Ville
         $villeRepository = $em->getRepository('App:Ville');
 
-        //Il s'ajout d'un ajout de campus
+        //Si l'identifiant est égal à -1, il s'agit d'une création
         if ($idVille == -1) {
+            //On créer une nouvelle instance de Ville
             $oVille = new Ville();
             $title = "Ajouter ";
-        } else {
+        } else { //Sinon il s'agit d'une modification
+            //on récupère la ville existante en fonction de son identifiant
             $oVille = $villeRepository->findOneBy(['id' => $idVille]);
             $title = "Modifier ";
 
-            //Si on ne trouve pas le campus
+            //Si on ne trouve pas la ville
             if (!$oVille) {
                 //Création d'une alerte
                 $this->addFlash('danger', 'La ville n\'existe pas.');
-                //Redirection vers la page de gestion des campus
+                //Redirection vers la page de gestion des villes
                 $this->redirectToRoute('admin_get_ville_page');
             }
         }
 
+        //Création du formulaire
         $form = $this->createForm(VilleType::class, $oVille);
         $form->handleRequest($request);
 
+        //Si le formulaire est soumis et est valide
         if ($form->isSubmitted() && $form->isValid()) {
-            $oCampus = $form->getData();
+            //On hydrate l'entité avec les données du formulaire
+            $oVille = $form->getData();
 
+            //On sauvegarde en base
             $em->persist($oVille);
             $em->flush();
 
+            //Affichage du message de succès et redirection vers la page de gestion des villes
             $this->addFlash('success', 'Ville enregistré !');
             return $this->redirectToRoute('admin_get_ville_page');
         }
@@ -231,17 +269,24 @@ class AdminController extends AbstractController
      */
     public function getModaleUpdateParticipant(Request $request)
     {
+        //Récupération de l'entity manager
         $em = $this->getDoctrine()->getManager();
+
+        //Récupération de l'identifiant du participant que l'on souhaite modifier
+        $idParticipant = $request->get('idParticipant');
+        //Récupération du repository de l'entité Participant
         $participantRepository = $em->getRepository('App:Participant');
 
-        $idParticipant = $request->get('idParticipant');
-
+        //Récupération du participant en fonction de son identifiant
         $oParticipant = $participantRepository->findOneBy(['id' => $idParticipant]);
+        //Si on ne trouve pas le participant
         if (!$oParticipant) {
+            //On affiche un message d'erreur et on redirige vers la base de gestion des utilisateurs
             $this->addFlash('danger', 'Participant non trouvé.');
             return $this->redirectToRoute('admin_get_participant_page');
         }
 
+        //Définition du formulaire de modification
         $formUpdateParticipant = $this->createFormBuilder($oParticipant)
             ->add('pseudo', TextType::class, ['required' => true, 'attr' => ['class' => 'form-control']])
             ->add('nom', TextType::class, ['required' => true, 'attr' => ['class' => 'form-control']])
@@ -263,12 +308,16 @@ class AdminController extends AbstractController
             ->getForm();
 
         $formUpdateParticipant->handleRequest($request);
+        //Si le formulaire est soumis et est valide
         if ($formUpdateParticipant->isSubmitted() && $formUpdateParticipant->isValid()) {
+            //On hydrate l'instance avec les données du formulaire
             $oParticipant = $formUpdateParticipant->getData();
 
+            //on sauvegarde en base
             $em->persist($oParticipant);
             $em->flush();
 
+            //on affiche un message alertant du succès de la modif et on redirige vers la page de gestion des participants
             $this->addFlash('success', 'Participant modifié !');
             return $this->redirectToRoute('admin_get_participant_page');
         }
@@ -288,14 +337,19 @@ class AdminController extends AbstractController
      */
     public function searchCampus(Request $request)
     {
+        //Récupération de l'entity manager
         $em = $this->getDoctrine()->getManager();
+        //Récupération du repository de l'entité Campus
         $campusRepository = $em->getRepository('App:Campus');
 
+        //On récupère ce que l'utilisateur recherche
         $recherche = $request->get('campus_recherche');
+        //Si on n'a pas de recherche, on redirige vers la page de gestion des campus
         if (!$recherche) {
             return $this->redirectToRoute('admin_get_campus_page');
         }
 
+        //On récupère les campus correspondant à la recherche
         $toCampus = $campusRepository->searchCampus($recherche);
 
         return $this->render('admin/getCampusPage.html.twig', [
@@ -313,14 +367,20 @@ class AdminController extends AbstractController
      */
     public function searchVille(Request $request)
     {
+        //Récupération de l'entity manager
         $em = $this->getDoctrine()->getManager();
+        //Récupération du repository de l'entité Ville
         $villeRepository = $em->getRepository('App:Ville');
 
+        //On récupère la recherche de l'utilisateur
         $recherche = $request->get('ville_recherche');
+        //Si on n'a pas de recherche
         if (!$recherche) {
+            //On redirige vers la page de gestion des villes
             return $this->redirectToRoute('admin_get_ville_page');
         }
 
+        //Récupération des villes en fonction de la recherche utilisateur
         $toVille = $villeRepository->searchVille($recherche);
 
         return $this->render('admin/getVillePage.html.twig', [
