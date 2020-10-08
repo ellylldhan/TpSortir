@@ -19,6 +19,16 @@ class CampusRepository extends ServiceEntityRepository
         parent::__construct($registry, Campus::class);
     }
 
+    public function searchCampus($recherche) {
+        return $this->createQueryBuilder('c')
+            ->andWhere('c.nom LIKE :recherche')
+            ->setParameter('recherche', $recherche.'%')
+            ->orderBy('c.nom', 'ASC')
+            ->getQuery()
+            ->getResult()
+            ;
+    }
+
     // /**
     //  * @return Campus[] Returns an array of Campus objects
     //  */

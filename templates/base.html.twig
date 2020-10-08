@@ -3,6 +3,8 @@
     <head>
         <meta charset="UTF-8">
         <title>{% block title %}Sortir.com | {% endblock %}</title>
+        <script src="https://kit.fontawesome.com/033bec0c22.js" crossorigin="anonymous"></script>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
         <link href="https://fonts.googleapis.com/css2?family=Lato&display=swap" rel="stylesheet">
         <link rel="stylesheet" href="{{ asset('css/base.css') }}">
@@ -20,38 +22,47 @@
             <div class="collapse navbar-collapse ml-auto mr-0" id="navbarSupportedContent">
                 <ul class="navbar-nav ml-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Ville <span class="sr-only">(current)</span></a>
+                        <a class="nav-link" href="{{ path('admin_get_ville_page') }}">Ville</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Campus</a>
+                        <a class="nav-link" href="{{ path('admin_get_campus_page') }}">Campus</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="#">Accueil</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Mon profil</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Se déconnecter</a>
-                    </li>
+                    {# Check si user est connecté : #}
+                    {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">Mon profil</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ path('logout') }}">Se déconnecter</a>
+                        </li>
+                    {% else %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ path('login') }}">Se connecter</a>
+                        </li>
+                    {% endif %}
+                    {# fin check #}
                 </ul>
             </div>
         </nav>
 
-        {% for label, messages in app.flashes %}
-            {% for message in messages %}
-                {%  if message == 'error' %}
-                    {%  set label = 'danger' %}
-                {%  endif %}
-                <div class="alert alert-{{ label }}">
-                    {{ message }}
-                </div>
-            {% endfor %}
-        {% endfor %}
 
-        {% block body %}
+{% for label, messages in app.flashes %}
+    {% for message in messages %}
+        {% if message == 'error' %}
+            {% set label = 'danger' %}
+        {% endif %}
+        <div class="alert alert-{{ label }}">
+            {{ message }}
+        </div>
+    {% endfor %}
+{% endfor %}
 
-        {% endblock %}
+{% block body %}
+
+{% endblock %} 
 
         {% block javascripts %}
             <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>

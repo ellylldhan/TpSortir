@@ -1,0 +1,132 @@
+.card {
+    width: auto;
+    border-radius: 0px;
+}
+
+.card .card-header {
+    background-color: white;
+    color: #6a87a7;
+    text-align: center;
+}
+
+.title {
+    color: #6a87a7;
+    text-align: center;
+}
+
+#form_add_participant input.form-control {
+    padding: 10px 10px 10px 5px;
+    -webkit-appearance: none;
+    display: block;
+    color: #636363;
+    width: 100%;
+    border: none;
+    border-radius: 0;
+    border-bottom: 1px solid #757575;
+}
+
+#form_add_participant input.form-control:focus {
+    outline: none;
+    box-shadow: none;
+    border-bottom: 1px solid black;
+}
+
+#form_add_participant select.form-control {
+    color: #636363;
+    width: 100%;
+    border: 1px solid #757575;
+    border-radius: 0;
+}
+
+#form_add_participant select.form-control:focus {
+    outline: none;
+    box-shadow: none;
+    border: 1px solid black;
+}
+
+#form_add_participant button {
+    width: 100px;
+    background: #27AE60;
+    color: white;
+    border: 0 none;
+    border-radius: 1px;
+    cursor: pointer;
+    padding: 10px 5px;
+    margin: 10px 5px;
+}
+
+#form_add_participant button:hover {
+    box-shadow: 0 0 0 2px white, 0 0 0 3px #27AE60;
+}
+
+#form_add_participant button:focus {
+    outline: none;
+}
+
+#form_add_participant .col-form-label {
+    font-weight: bold;
+}
+
+.form-control_search {
+    border: 1px solid #636363;
+    border-radius: 15px;
+    padding-left: 3px;
+}
+
+.form-control_search:focus {
+    outline: none;
+    box-shadow: none;
+    border: 1px solid black;
+    border-radius: 15px;
+}
+
+#modale_campus .form-control {
+    width: 100%;
+    border-radius: 0px;
+}
+
+#modale_campus .form-control:focus {
+    outline: none;
+    box-shadow: none;
+    border: 1px solid black;
+}
+
+#modale_ville .form-control {
+    width: 100%;
+    border-radius: 0px;
+}
+
+#modale_ville .form-control:focus {
+    outline: none;
+    box-shadow: none;
+    border: 1px solid black;
+}
+
+.btn_custom {
+    width: 100px;
+    background: #27AE60;
+    color: white;
+    border: 0 none;
+    border-radius: 1px;
+    cursor: pointer;
+    padding: 3px;
+    margin: 10px 5px;
+}
+
+.btn_custom:hover {
+    box-shadow: 0 0 0 2px white, 0 0 0 3px #27AE60;
+}
+
+.btn_custom:focus {
+    outline: none;
+}
+
+#table_campus .btn-success {
+    border: 1px solid #28a745;
+    border-radius: 0px;
+}
+
+#table_ville .btn-success {
+    border: 1px solid #28a745;
+    border-radius: 0px;
+}

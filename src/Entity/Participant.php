@@ -7,13 +7,14 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=ParticipantRepository::class)
  * @UniqueEntity(fields={"pseudo"}, message="Le pseudo est déjà utilisé")
  */
-class Participant
+class Participant implements UserInterface
 {
     /**
      * @ORM\Id
@@ -24,32 +25,39 @@ class Participant
 
     /**
      * @ORM\Column(type="string", length=30, unique=true)
-     * @Assert\Unique(message="Le pseudo est déjà utilisé")
      */
     private $pseudo;
 
     /**
-     * @ORM\Column(type="string", length=30)
+     * @ORM\Column(type="string", length=255)
      */
     private $nom;
 
     /**
-     * @ORM\Column(type="string", length=30)
+     * @ORM\Column(type="string", length=255)
      */
     private $prenom;
 
     /**
      * @ORM\Column(type="string", length=15, nullable=true)
+     * @Assert\Regex(
+     *     pattern= "/(\+\d+(\s|-))?0\d(\s|-)?(\d{2}(\s|-)?){4}/",
+     *     message="Numéro de téléphone invalide"
+     * )
      */
     private $telephone;
 
     /**
-     * @ORM\Column(type="string", length=20)
+     * @ORM\Column(type="string", length=255)
+     * @Assert\Regex(
+     *     pattern="/^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/",
+     *     message="Email invalide"
+     * )
      */
     private $mail;
 
     /**
-     * @ORM\Column(type="string", length=20)
+     * @ORM\Column(type="string", length=255)
      */
     private $motDePasse;
 
@@ -260,4 +268,38 @@ class Participant
 
         return $this;
     }
+
+    public function getRoles()
+    {
+        //TODO: [RL] moulinette pour determiner les user
+        return ['ROLE_USER'];
+    }
+
+    public function getPassword()
+    {
+        return $this->getMotDePasse();
+    }
+
+    public function setPassword($pass)
+    {
+        $this->setMotDePasse($pass);
+    }
+
+    public function getSalt()
+    {
+        // [RL] Le hâchage bcrypt sale lui-même
+        return null;
+    }
+
+    public function getUsername()
+    {
+        return $this->getPseudo();
+    }
+
+    public function eraseCredentials()
+    {
+        // TODO: Implement eraseCredentials() method.
+    }
+
+
 }

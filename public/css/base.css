@@ -1,9 +1,11 @@
 body {
     font-family: 'Lato', sans-serif;
+    background: #FAFAFA ;
 }
 
 .navbar {
     background-color: #154c82;
+    color: white;
 }
 
 .navbar a {
