@@ -14,8 +14,15 @@
         </div>
         <br>
 
-        <div id="table_participant" class="mt-5">
-            <a type="button" class="btn btn-success mb-1" href="{{ path('admin_add_participant') }}">Ajouter un participant</a>
+        <a type="button" class="btn btn_custom w-auto m-0" href="{{ path('admin_add_participant') }}">Ajouter un participant</a>
+        <button class="btn btn_custom_cancel w-auto m-0" onclick="return afficherFormJson()">Ajouter depuis un fichier json</button>
+
+        <form id="form_json" class="d-none form-inline mt-2" method="post">
+            <input type="file" name="jsonFileParticipant" id="jsonFileParticipant">
+            <button class="btn btn_custom">Valider</button>
+        </form>
+
+        <div id="table_participant" class="mt-2">
             <table class="table table-striped">
                 <thead>
                     <th>Pseudo</th>
@@ -58,6 +65,10 @@
     {{ parent() }}
 
     <script>
+        function afficherFormJson() {
+            $('#form_json').addClass('d-block');
+        }
+
         function getModaleUpdateParticipant(id) {
             routeGetModaleUpdateParticipant = '{{ path('admin_get_modale_update_participant') }}';
 

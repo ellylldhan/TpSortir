@@ -75,6 +75,10 @@ class AdminController extends AbstractController
         ]);
     }
 
+    public function addParticipantFromJsonFile() {
+        
+    }
+
     /**
      * Permet de récupérer la page de gestion des campus
      * @Route("/getCampusPage", name="_get_campus_page")
