@@ -30,6 +30,8 @@ security:
         # where to redirect after logout
         target: base
 
+            # activate different ways to authenticate
+            # https://symfony.com/doc/current/security.html#firewalls-authentication
       # activate different ways to authenticate
       # https://symfony.com/doc/current/security.html#firewalls-authentication
 
@@ -43,5 +45,5 @@ security:
   # - { path: ^/profile, roles: ROLE_USER }
   encoders:
     App\Entity\Participant:
-      algorithm: bcrypt
+      algorithm: sha512
 
