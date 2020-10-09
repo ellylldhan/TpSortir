@@ -62,10 +62,10 @@
 
     <script>
         function getModaleVille(id) {
-            $routeGetModaleVille = '{{ path('admin_get_modale_ville') }}';
+            routeGetModaleVille = '{{ path('admin_get_modale_ville') }}';
 
             $.ajax({
-                url: $routeGetModaleVille,
+                url: routeGetModaleVille,
                 data: {
                     idVille: id
                 },
