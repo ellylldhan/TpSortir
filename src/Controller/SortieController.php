@@ -26,12 +26,12 @@ class SortieController extends AbstractController
     public function ajout(EntityManagerInterface $em)
     {
         $sortie = new Sortie();
-        $participant = $em->getRepository(Participant::class)->findOneBy(['username' => $this->getUser()->getUsername()]);
-        $campus = $em->getRepository(Campus::class)->find($participant->getCampus());
+       /* $participant = $em->getRepository(Participant::class)->findOneBy(['username' => $this->getUser()->getUsername()]);
+        $campus = $em->getRepository(Campus::class)->find($participant->getCampus());*/
         $sortieForm = $this->createForm(SortieType::class,$sortie);
         return $this->render('sortie/AjoutSortie.html.twig',[
             "form" => $sortieForm->createView(),
-            'campusName' => $campus->getNom()
+            'campusName' => 'testCampus'//$campus->getNom()
         ]);
     }
 

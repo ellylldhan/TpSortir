@@ -131,7 +131,6 @@ class AppFixtures extends Fixture
             $sortie->setNom("Sortie ".$key)
                 ->setDateDebut(new \DateTime())
                 ->setDateCloture(new \DateTime(date("d-m-Y", $ts+random_int(0, 10))))
-                ->setUrlPhoto($faker->url())
                 ->setEtat($etatsCollection[random_int(0, count($etatsCollection)-1)])
                 ->setCampusOrganisateur($campus)
                 ->setLieu($lieuxCollection[random_int(0, count($lieuxCollection)-1)])

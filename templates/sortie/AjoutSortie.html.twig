@@ -5,10 +5,8 @@
 {% block stylesheet %}
     {{ parent() }}
     <link rel="stylesheet" href="{{ asset('css/admin.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.1.2/css/tempusdominus-bootstrap-4.min.css"/>
 
-    <link rel="stylesheet"
-          href="https://cdnjs.cloudfl   are.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
 {% endblock %}
 
 {% block body %}
@@ -30,17 +28,16 @@
                     </div>
                 </div>
 
+
                 <div class="form-group mb-3">
                     <label for="sortie_dateDebut" class="col-sm-4 col-form-label justify-content-end">
                         date de debut :
                         <span class="required">*</span>
                     </label>
-                    <div class="col-sm-8">
-                        <div class='input-group date' id='datetimepickerDateDeb'>
-                            {{ form_widget(form.dateDebut, { 'attr': {'id': 'sortie_dateDeb', 'placeholder': 'Date de début', 'class': 'form-control'} }) }}
-                            <span class="input-group-addon">
-                                <span class="glyphicon glyphicon-calendar"></span>
-                            </span>
+                    <div class="input-group date" id="datetimepickerDateDeb" data-target-input="nearest">
+                        {{ form_widget(form.dateDebut, { 'attr': {'id': 'sortie_dateDeb', 'placeholder': 'Date de début','data-target':'#datetimepickerDateDeb', 'class': 'form-control datetimepicker-input'} }) }}
+                        <div class="input-group-append" data-target="#datetimepickerDateDeb" data-toggle="datetimepicker">
+                            <div class="input-group-text"><i class="fa fa-calendar"></i></div>
                         </div>
                     </div>
                 </div>
@@ -50,12 +47,10 @@
                         date de cloture :
                         <span class="required">*</span>
                     </label>
-                    <div class="col-sm-8">
-                        <div class='input-group date' id='datetimepickerDateCloture'>
-                            {{ form_widget(form.dateCloture, { 'attr': {'id': 'sortie_dateCloture', 'placeholder': 'Date de cloture', 'class': 'form-control'} }) }}
-                            <span class="input-group-addon">
-                                <span class="glyphicon glyphicon-calendar"></span>
-                           </span>
+                    <div class="input-group date" id="datetimepickerDateCloture" data-target-input="nearest">
+                        {{ form_widget(form.dateCloture, { 'attr': {'id': 'sortie_dateCloture', 'placeholder': 'Date de cloture','data-target':'#datetimepickerDateCloture', 'class': 'form-control datetimepicker-input'} }) }}
+                        <div class="input-group-append" data-target="#datetimepickerDateCloture" data-toggle="datetimepicker">
+                            <div class="input-group-text"><i class="fa fa-calendar"></i></div>
                         </div>
                     </div>
                 </div>
@@ -99,7 +94,7 @@
                         <span class="required">*</span>
                     </label>
                     <div class="col-sm-8">
-                        {{ form_widget(form.campusOrganisateur, { 'attr': {'id': 'sortie_campusOrganisateur', 'placeholder': 'campus organisateur'} }) }}
+                        {{  campusName }}
                     </div>
                 </div>
                 <div class="row">
@@ -125,30 +120,24 @@
             </div>
         </div>
             {{ form_widget(form.enregister, { 'attr': {'class':'btn btn-success'} }) }}
-
-    </div>
     {{ form_end(form) }}
 {% endblock %}
 {% block javascripts %}
 
     {{ parent() }}
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/momentjs/2.14.1/moment.min.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.0/locale/fr.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.1.2/js/tempusdominus-bootstrap-4.min.js"></script>
     <script type="text/javascript">
         $(function () {
-            $('#datetimepicker').datetimepicker({});
-            $('#datetimepickerDateDeb').datetimepicker({
-                locale: 'fr'
-            });
-            $('#datetimepickerDateCloture').datetimepicker({
-                locale: 'fr'
-            });
+            $('#datetimepickerDateCloture').datetimepicker({locale: 'fr'});
+            $('#datetimepickerDateDeb').datetimepicker({locale: 'fr'});
         });
-
     </script>
+
+
     <script>
         function getModaleLieu(id) {
             $routeGetModaleLieu = '{{ path('get_modale_lieu') }}';
