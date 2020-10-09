@@ -44,27 +44,19 @@
     border: 1px solid black;
 }
 
-#form_add_participant button {
-    width: 100px;
-    background: #27AE60;
-    color: white;
-    border: 0 none;
-    border-radius: 1px;
-    cursor: pointer;
-    padding: 10px 5px;
-    margin: 10px 5px;
-}
-
-#form_add_participant button:hover {
-    box-shadow: 0 0 0 2px white, 0 0 0 3px #27AE60;
-}
-
-#form_add_participant button:focus {
-    outline: none;
-}
-
 #form_add_participant .col-form-label {
     font-weight: bold;
+}
+
+#form_update_participant .form-control {
+    width: 100%;
+    border-radius: 0px;
+}
+
+#form_update_participant .form-control:focus {
+    outline: none;
+    box-shadow: none;
+    border: 1px solid black;
 }
 
 .form-control_search {
@@ -115,9 +107,30 @@
 
 .btn_custom:hover {
     box-shadow: 0 0 0 2px white, 0 0 0 3px #27AE60;
+    color: white;
 }
 
 .btn_custom:focus {
+    outline: none;
+}
+
+.btn_custom_cancel {
+    width: 100px;
+    background: #6c757d;
+    color: white;
+    border: 0 none;
+    border-radius: 1px;
+    cursor: pointer;
+    padding: 3px;
+    margin: 10px 5px;
+}
+
+.btn_custom_cancel:hover {
+    box-shadow: 0 0 0 2px white, 0 0 0 3px #6c757d;
+    color: white;
+}
+
+.btn_custom_cancel:focus {
     outline: none;
 }
 
@@ -129,4 +142,14 @@
 #table_ville .btn-success {
     border: 1px solid #28a745;
     border-radius: 0px;
+}
+
+#table_participant .btn-success {
+    border: 1px solid #28a745;
+    border-radius: 0px;
+}
+
+.btn_transparent:focus {
+    outline: none;
+    box-shadow: none;
 }
