@@ -29,25 +29,49 @@ class SortieType extends AbstractType
                 ]
             ])
             ->add('dateDebut', DateTimeType::class, [
-                // renders it as a single text box
                 'widget' => 'single_text',
+                'required' => true,
+                'attr' => [
+                    'class' => 'form-control'
+                ]
             ])
-            ->add('duree',IntegerType::class)
+            ->add('duree',IntegerType::class, [
+                'required' => false,
+                'attr' => [
+                    'class' => 'form-control'
+                ]
+            ])
             ->add('dateCloture', DateTimeType::class, [
-                // renders it as a single text box
                 'widget' => 'single_text',
+                'required' => true,
+                'attr' => [
+                    'class' => 'form-control'
+                ]
             ])
-            ->add('nombreInscriptionsMax')
-            ->add('descriptionInfo',TextareaType::class)
+            ->add('nombreInscriptionsMax', IntegerType::class, [
+                'required' => true,
+                'attr' => [
+                    'class' => 'form-control'
+                ]
+            ])
+            ->add('descriptionInfo',TextareaType::class, [
+                'required' => false,
+                'attr' => [
+                    'class' => 'form-control'
+                ]
+            ])
             ->add('lieu',EntityType::class,[
                 'required' => true,
                 'class' => Lieu::class,
                 'choice_label' => function($lieu){
                     return $lieu->getNom();
-                }])
+                }
+            ])
             ->add('enregister',SubmitType::class,[
                 'label' => 'Enregister',
-                'attr' => ['class' => 'btn_custom']
+                'attr' => [
+                    'class' => 'btn_custom'
+                ]
             ])
         ;
     }
