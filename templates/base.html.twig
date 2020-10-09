@@ -21,11 +21,23 @@
 
             <div class="collapse navbar-collapse ml-auto mr-0" id="navbarSupportedContent">
                 <ul class="navbar-nav ml-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ path('admin_get_ville_page') }}">Ville</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ path('admin_get_campus_page') }}">Campus</a>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Administration
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <a class="dropdown-item" href="{{ path('admin_get_ville_page') }}">
+                                <i class="fas fa-city mr-2"></i> Ville
+                            </a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="{{ path('admin_get_campus_page') }}">
+                                <i class="fas fa-graduation-cap mr-2"></i> Campus
+                            </a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="{{ path('admin_get_participant_page') }}">
+                                <i class="fas fa-users mr-2"></i> Participant
+                            </a>
+                        </div>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="#">Accueil</a>

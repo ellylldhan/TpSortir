@@ -40,7 +40,7 @@
                                 <button class="btn btn_transparent pt-0 pr-0" title="Modifier"  onclick="return getModaleUpdateParticipant({{ oParticipant.id }});">
                                     <i class="fas fa-edit"></i>
                                 </button>
-                                <button class="btn btn_transparent pt-0 pl-0" title="Supprimer">
+                                <button class="btn btn_transparent pt-0 pl-0" title="Supprimer" onclick="return getConfirmDeleteParticipant({{ oParticipant.id }});">
                                     <i class="fas fa-trash"></i>
                                 </button>
                             </th>
@@ -59,10 +59,10 @@
 
     <script>
         function getModaleUpdateParticipant(id) {
-            $routeGetModaleUpdateParticipant = '{{ path('admin_get_modale_update_participant') }}';
+            routeGetModaleUpdateParticipant = '{{ path('admin_get_modale_update_participant') }}';
 
             $.ajax({
-                url: $routeGetModaleUpdateParticipant,
+                url: routeGetModaleUpdateParticipant,
                 data: {
                     idParticipant: id
                 },
@@ -71,6 +71,26 @@
                     $(data).modal();
                 }
             });
+        }
+
+        function getConfirmDeleteParticipant(id) {
+            if (confirm("Êtes-vous sûre de vouloir supprimer les possibles sorties organisées et inscriptions liées ?")) {
+                routeDeleteParticipant = '{{ path('admin_delete_participant') }}';
+
+                $.ajax({
+                    url: routeDeleteParticipant,
+                    data: {
+                        idParticipant: id
+                    },
+                    method: 'POST',
+                    success: function (render) {
+                        document.open();
+                        document.write(render);
+                        document.close();
+                    },
+                    async: false
+                })
+            }
         }
     </script>
 

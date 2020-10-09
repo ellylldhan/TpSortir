@@ -58,7 +58,7 @@ class AdminController extends AbstractController
 
             //On affiche un message de succès et on redirige vers la page d'ajout des participants
             $this->addFlash('success', 'Participant enregistré !');
-            $this->redirectToRoute('admin_add_participant');
+            $this->redirectToRoute('admin_get_participant_page');
         } else { //Si le formulaire n'est pas valide
             $errors = $this->getErrorsFromForm($form);
 
@@ -327,6 +327,75 @@ class AdminController extends AbstractController
             'idParticipant' => $idParticipant,
             'form' => $formUpdateParticipant->createView()
         ]);
+    }
+
+    /**
+     * Permet de supprimer un participant si l'on a accepté de supprimer les entités liées
+     * @Route("/deleteParticipant", name="_delete_participant")
+     * @param Request $request
+     * @return mixed
+     */
+    public function deleteParticipant(Request $request) {
+        //Récupération de l'entity manager
+        $em = $this->getDoctrine()->getManager();
+
+        //Récupération de l'identifiant du participant que l'on souhaite modifier
+        $idParticipant = $request->get('idParticipant');
+        //Récupération du repository de l'entité Participant
+        $participantRepository = $em->getRepository('App:Participant');
+        //Récupération du repository de l'entité Sortie
+        $sortieRepository = $em->getRepository('App:Sortie');
+        //Récupération du repository de l'entité Inscription
+        $inscriptionRepository = $em->getRepository('App:Inscription');
+
+        //Récupération du participant à supprimer
+        $oParticipant = $participantRepository->findOneBy(['id' => $idParticipant]);
+        //Si le participant n'existe pas
+        if (!$oParticipant) {
+            $this->addFlash('danger', 'Le participant n\'existe pas');
+            return $this->redirectToRoute('admin_get_participant_page');
+        }
+
+        //On recherche les inscriptions aux sorties du participant
+        $toInscription = $inscriptionRepository->findBy(['participant' => $oParticipant]);
+        //Si le participant est inscrit à des sorties
+        if ($toInscription) {
+            //On supprime chaque inscription
+            foreach ($toInscription as $oInscription) {
+                $em->remove($oInscription);
+            }
+
+            $em->flush();
+        }
+
+        //On recherche les sorties organisées par le participant
+        $toSortie = $sortieRepository->findBy(['organisateur' => $oParticipant]);
+        //Si le participant a organisé des sorties
+        if ($toSortie) {
+            //On supprime chaque sortie
+            foreach ($toSortie as $oSortie) {
+                //On récupère les inscriptions de chaque sortie
+                $toInscription = $inscriptionRepository->findBy(['sortie' => $oSortie]);
+                //Si on a bien des inscriptions
+                if ($toInscription) {
+                    //On supprime chaque inscription
+                    foreach ($toInscription as $oInscription) {
+                        $em->remove($oInscription);
+                    }
+                }
+
+                $em->remove($oSortie);
+            }
+
+            $em->flush();
+        }
+
+        //Enfin, on supprime le participant
+        $em->remove($oParticipant);
+        $em->flush();
+
+        $this->addFlash('success', 'Le participant et les données liées ont été supprimés avec succès.');
+        return $this->redirectToRoute('admin_get_participant_page');
     }
 
     /**
