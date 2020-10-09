@@ -8,6 +8,7 @@ use App\Entity\Ville;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
@@ -27,9 +28,15 @@ class SortieType extends AbstractType
                     'maxlength' => 30
                 ]
             ])
-            ->add('dateDebut', TextType::class)
+            ->add('dateDebut', DateTimeType::class, [
+                // renders it as a single text box
+                'widget' => 'single_text',
+            ])
             ->add('duree',IntegerType::class)
-            ->add('dateCloture', TextType::class)
+            ->add('dateCloture', DateTimeType::class, [
+                // renders it as a single text box
+                'widget' => 'single_text',
+            ])
             ->add('nombreInscriptionsMax')
             ->add('descriptionInfo',TextareaType::class)
             ->add('lieu',EntityType::class,[
@@ -49,6 +56,8 @@ class SortieType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Sortie::class,
+            'date_format' => 'd/m/Y',
+            'time_format' => 'h:m'
         ]);
     }
 }

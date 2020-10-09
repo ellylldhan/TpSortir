@@ -6,6 +6,7 @@ use App\Entity\Campus;
 use App\Entity\Inscription;
 use App\Entity\Participant;
 use App\Entity\Sortie;
+use App\Form\ParticipantType;
 use App\Form\SortieType;
 use App\Manager\SortieManager;
 use DateTime;
@@ -23,15 +24,36 @@ class SortieController extends AbstractController
     /**
      * @Route("/ajout", name="ajout")
      */
-    public function ajout(EntityManagerInterface $em)
+    public function ajout(Request $request,EntityManagerInterface $em)
     {
+
+        //Récupération de l'entity manager
+        $em = $this->getDoctrine()->getManager();
+        //Création d'une nouvelle instance de Participant
         $sortie = new Sortie();
-       /* $participant = $em->getRepository(Participant::class)->findOneBy(['username' => $this->getUser()->getUsername()]);
-        $campus = $em->getRepository(Campus::class)->find($participant->getCampus());*/
-        $sortieForm = $this->createForm(SortieType::class,$sortie);
-        return $this->render('sortie/AjoutSortie.html.twig',[
-            "form" => $sortieForm->createView(),
-            'campusName' => 'testCampus'//$campus->getNom()
+
+        //Création du formulaire
+        $form = $this->createForm(SortieType::class, $sortie);
+        $form->handleRequest($request);
+
+        //Si le formulaire est soumis et est valide
+        if ($form->isSubmitted() && $form->isValid()) {
+            //On récupère les données et on hydrate l'instance
+            $sortie = $form->getData();
+
+            //On sauvegarde
+            $em->persist($sortie);
+            $em->flush();
+
+            //On affiche un message de succès et on redirige vers la page d'ajout des participants
+            $this->addFlash('success', 'Sortie enregistré !');
+
+        }
+
+        //On redirige vers la page d'ajout
+        return $this->render('sortie/AjoutSortie.html.twig', [
+            'campusName' => 'testCampus',
+            'form' => $form->createView()
         ]);
     }
 

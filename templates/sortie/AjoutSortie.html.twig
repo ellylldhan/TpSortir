@@ -5,7 +5,7 @@
 {% block stylesheet %}
     {{ parent() }}
     <link rel="stylesheet" href="{{ asset('css/admin.css') }}">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.1.2/css/tempusdominus-bootstrap-4.min.css"/>
+
 
 {% endblock %}
 
@@ -18,103 +18,102 @@
 
                 {{ form_errors(form) }}
 
-                <div class="form-group mb-3">
-                    <label for="sortie_nom" class="col-sm-4 col-form-label justify-content-end">
+            <div class="col-sm-12">
+                <div class="form-group mb-3 ">
+                    <label for="sortie_nom" class="col-sm-8 col-form-label justify-content-end ">
                         Nom :
                         <span class="required">*</span>
                     </label>
-                    <div class="col-sm-8">
+                    <div class="col-sm-4">
                         {{ form_widget(form.nom, { 'attr': {'id': 'sortie_nom', 'placeholder': 'nom de la sortie'} }) }}
                     </div>
                 </div>
+            </div>
 
-
+            <div class="col-sm-12">
                 <div class="form-group mb-3">
-                    <label for="sortie_dateDebut" class="col-sm-4 col-form-label justify-content-end">
+                    <label for="sortie_dateDebut" class="col-sm-8 col-form-label justify-content-end">
                         date de debut :
                         <span class="required">*</span>
                     </label>
-                    <div class="input-group date" id="datetimepickerDateDeb" data-target-input="nearest">
-                        {{ form_widget(form.dateDebut, { 'attr': {'id': 'sortie_dateDeb', 'placeholder': 'Date de début','data-target':'#datetimepickerDateDeb', 'class': 'form-control datetimepicker-input'} }) }}
-                        <div class="input-group-append" data-target="#datetimepickerDateDeb" data-toggle="datetimepicker">
-                            <div class="input-group-text"><i class="fa fa-calendar"></i></div>
-                        </div>
+                     <div class="col-sm-4">
+                        {{ form_widget(form.dateDebut, { 'attr': {'id': 'sortie_dateDeb', 'placeholder': 'Date de début', 'class': 'form-control'} }) }}
                     </div>
                 </div>
-
+            </div>
+            <div class="col-sm-12">
                 <div class="form-group mb-3">
-                    <label for="sortie_dateCloture" class="col-sm-4 col-form-label justify-content-end">
+                    <label for="sortie_dateCloture" class="col-sm-8 col-form-label justify-content-end">
                         date de cloture :
                         <span class="required">*</span>
                     </label>
-                    <div class="input-group date" id="datetimepickerDateCloture" data-target-input="nearest">
-                        {{ form_widget(form.dateCloture, { 'attr': {'id': 'sortie_dateCloture', 'placeholder': 'Date de cloture','data-target':'#datetimepickerDateCloture', 'class': 'form-control datetimepicker-input'} }) }}
-                        <div class="input-group-append" data-target="#datetimepickerDateCloture" data-toggle="datetimepicker">
-                            <div class="input-group-text"><i class="fa fa-calendar"></i></div>
-                        </div>
+                    <div class="col-sm-4">
+                        {{ form_widget(form.dateCloture, { 'attr': {'id': 'sortie_dateCloture', 'placeholder': 'Date de cloture', 'class': 'form-control'} }) }}
                     </div>
                 </div>
-
+            </div>
+            <div class="col-sm-12">
                 <div class="form-group mb-3">
-                    <label for="sortie_inscriptionMax" class="col-sm-4 col-form-label justify-content-end">
+                    <label for="sortie_inscriptionMax" class="col-sm-8 col-form-label justify-content-end">
                         nombre d'inscription maximum :
                         <span class="required">*</span>
                     </label>
-                    <div class="col-sm-8">
+                    <div class="col-sm-4">
                         {{ form_widget(form.nombreInscriptionsMax, { 'attr': {'id': 'sortie_nombreInscriptionsMax', 'placeholder': 'Nombre d\'inscription max'} }) }}
                     </div>
                 </div>
-
+            </div>
+            <div class="col-sm-12">
                 <div class="form-group mb-3">
-                    <label for="sortie_duree" class="col-sm-4 col-form-label justify-content-end">
+                    <label for="sortie_duree" class="col-sm-8 col-form-label justify-content-end">
                         durée de l'évenment :
                         <span class="required">*</span>
                     </label>
-                    <div class="col-sm-8">
+                    <div class="col-sm-4">
                         {{ form_widget(form.duree, { 'attr': {'id': 'sortie_duree', 'placeholder': 'durée de la sortie'} }) }}
                     </div>
                 </div>
-
+            </div>
+            <div class="col-sm-12">
                 <div class="form-group mb-3">
-                    <label for="sortie_description" class="col-sm-4 col-form-label justify-content-end">
+                    <label for="sortie_description" class="col-sm-8 col-form-label justify-content-end">
                         Description :
                         <span class="required">*</span>
                     </label>
-                    <div class="col-sm-8">
+                    <div class="col-sm-4">
                         {{ form_widget(form.descriptionInfo, { 'attr': {'id': 'sortie_descriptionInfo', 'placeholder': 'Description de la sortie'} }) }}
                     </div>
                 </div>
-
-
             </div>
-            <div class='col-sm-6'>
+        </div>
+        <div class='col-sm-6'>
+            <div class="col-sm-12">
                 <div class="form-group mb-3">
-                    <label for="sortie_campusOrganisateur" class="col-sm-4 col-form-label justify-content-end">
+                    <label for="sortie_campusOrganisateur" class="col-sm-6 col-form-label justify-content-end">
                         Campus de l'organisateur :
                         <span class="required">*</span>
                     </label>
-                    <div class="col-sm-8">
+                    <div class="col-sm-6">
                         {{  campusName }}
                     </div>
                 </div>
+            </div>
                 <div class="row">
                     <div class="col-sm-6">
-
-                        <div class="form-group mb-3">
-                            <label for="sortie_campusOrganisateur" class="col-sm-4 col-form-label justify-content-end">
-                                Lieu de l'évenement :
-                                <span class="required">*</span>
-                            </label>
-                            <div class="col-sm-8">
-                                {{ form_widget(form.lieu, { 'attr': {'id': 'sortie_lieu', 'placeholder': 'Lieu de l\'évenement'} }) }}
+                        <div class="col-sm-12">
+                            <div class="form-group mb-3">
+                                <label for="sortie_campusOrganisateur" class="col-sm-10 col-form-label justify-content-end">
+                                    Lieu de l'évenement :
+                                    <span class="required">*</span>
+                                </label>
+                                <div class="col-sm-6">
+                                    {{ form_widget(form.lieu, { 'attr': {'id': 'sortie_lieu', 'placeholder': 'Lieu de l\'évenement'} }) }}
+                                </div>
                             </div>
-                        </div>
-
+                    </div>
                     </div>
                     <div class="col-sm-6">
-
                         <button class="btn btn-secondary" onclick="getModaleLieu(-1)">Ajouter un lieu</button>
-
                     </div>
                 </div>
             </div>
@@ -125,18 +124,6 @@
 {% block javascripts %}
 
     {{ parent() }}
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.0/locale/fr.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.1.2/js/tempusdominus-bootstrap-4.min.js"></script>
-    <script type="text/javascript">
-        $(function () {
-            $('#datetimepickerDateCloture').datetimepicker({locale: 'fr'});
-            $('#datetimepickerDateDeb').datetimepicker({locale: 'fr'});
-        });
-    </script>
-
 
     <script>
         function getModaleLieu(id) {
