@@ -53,7 +53,7 @@ class SortieController extends AbstractController
         //On redirige vers la page d'ajout
         return $this->render('sortie/AjoutSortie.html.twig', [
             'campusName' => 'testCampus',
-            'form' => $form->createView()
+            'formSortie' => $form->createView()
         ]);
     }
 

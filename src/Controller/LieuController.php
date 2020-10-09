@@ -19,9 +19,9 @@ class LieuController extends AbstractController
 
         $em = $this->getDoctrine()->getManager();
 
-        $idLieu = $request->get('idlieu');
+        $idLieu = $request->get('idLieu');
         $lieuRepository = $em->getRepository('App:Lieu');
-
+dump($idLieu);
         //Il s'ajout d'un ajout de campus
         if ($idLieu == -1) {
             $lieu = new Lieu();
@@ -44,7 +44,7 @@ class LieuController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $lieu = $form->getData();
-            dump($lieu);
+            //$lieu->get
             $em->persist($lieu);
             $em->flush();
 
@@ -55,7 +55,7 @@ class LieuController extends AbstractController
         return $this->render('lieu/getModalLieu.html.twig',  [
             'title' => $title,
             'idLieu' => $idLieu,
-            'form' => $form->createView()
+            'formLieu' => $form->createView()
         ]);
     }
 }
