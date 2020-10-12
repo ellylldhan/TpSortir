@@ -10,7 +10,7 @@ use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
 class SecurityController extends AbstractController
 {
-    public const ROUTE_BASE = 'base';
+    public const ROUTE_HOME = 'base';
 
     /**
      * @Route("/login", name="login")
@@ -20,7 +20,7 @@ class SecurityController extends AbstractController
     public function login(AuthenticationUtils $authenticationUtils): Response
     {
          if ($this->getUser()) {
-             return $this->redirectToRoute(self::ROUTE_BASE);
+             return $this->redirectToRoute(self::ROUTE_HOME);
          }
 
         // get the login error if there is one
