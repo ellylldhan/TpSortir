@@ -14,6 +14,8 @@ class SecurityController extends AbstractController
 
     /**
      * @Route("/login", name="login")
+     * @param AuthenticationUtils $authenticationUtils
+     * @return Response
      */
     public function login(AuthenticationUtils $authenticationUtils): Response
     {
@@ -47,22 +49,6 @@ class SecurityController extends AbstractController
         throw new \LogicException('This method can be blank - it will be intercepted by the logout key on your firewall.');
     }
 
-
-
-    /**
-     * @Route("/user/list", name="user_list")
-     */
-    public function list()
-    {
-        $userRepo = $this->getDoctrine()->getRepository(Participant::class);
-
-        $listUsers = $userRepo->findBy([], ["pseudo" => "ASC"], 30, 0);
-        dump($listUsers);
-
-        return $this->render('security/list.html.twig', [
-            'listUsers' => $listUsers,
-        ]);
-    }
 
     /**
      * @Route("/", name="base")

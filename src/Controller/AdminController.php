@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
@@ -23,6 +24,7 @@ use App\Form\VilleType;
  * Class AdminController
  * @package App\Controller
  * @Route("/admin", name="admin")
+ * @IsGranted("ROLE_ADMIN")
  */
 class AdminController extends AbstractController
 {
@@ -268,7 +270,7 @@ class AdminController extends AbstractController
     /**
      * Permet de récupérer la modale de modification d'un participant
      * @Route("/getModaleUpdateParticipant", name="_get_modale_update_participant")
-     * @param $idParticipant
+     * @param Request $request
      * @return mixed
      */
     public function getModaleUpdateParticipant(Request $request)
