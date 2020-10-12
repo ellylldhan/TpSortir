@@ -55,6 +55,7 @@ class SecurityController extends AbstractController
      */
     public function index()
     {
+        //TODO: redirect sur page LISTE_SORTIES
         return $this->render("base.html.twig", []);
     }
 }

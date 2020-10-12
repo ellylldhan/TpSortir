@@ -9,6 +9,7 @@ use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormInterface;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -28,6 +29,7 @@ use App\Form\VilleType;
  */
 class AdminController extends AbstractController
 {
+
     /**
      * Permet à un administrateur d'ajouter un participant
      * @Route("/addParticipant", name="_add_participant")
@@ -60,13 +62,13 @@ class AdminController extends AbstractController
 
             //On affiche un message de succès et on redirige vers la page d'ajout des participants
             $this->addFlash('success', 'Participant enregistré !');
-            $this->redirectToRoute('admin_get_participant_page');
+            $this->redirectToRoute("admin_get_participant_page");
         } else { //Si le formulaire n'est pas valide
             $errors = $this->getErrorsFromForm($form);
 
             //Pour chaque erreur, on affiche une alerte contenant le message
             foreach ($errors as $error) {
-                $this->addFlash('danger', $error[0]);
+                $this->addFlash("danger", $error[0]);
             }
         }
 
@@ -84,10 +86,9 @@ class AdminController extends AbstractController
     /**
      * Permet de récupérer la page de gestion des campus
      * @Route("/getCampusPage", name="_get_campus_page")
-     * @param Request $request
      * @return mixed
      */
-    public function getCampusPage(Request $request)
+    public function getCampusPage()
     {
         //Récupération de l'entity manager
         $em = $this->getDoctrine()->getManager();
@@ -107,10 +108,9 @@ class AdminController extends AbstractController
     /**
      * Permet de récupérer la page de gestion des villes
      * @Route("/getVillePage", name="_get_ville_page")
-     * @param Request $request
      * @return mixed
      */
-    public function getVillePage(Request $request)
+    public function getVillePage()
     {
         //Récupération de l'entity manager
         $em = $this->getDoctrine()->getManager();
@@ -130,10 +130,9 @@ class AdminController extends AbstractController
     /**
      * Permet de récupérer la page de gestion des participants
      * @Route("/getParticipantPage", name="_get_participant_page")
-     * @param Request $request
      * @return mixed
      */
-    public function getParticipantPage(Request $request)
+    public function getParticipantPage()
     {
         //Récupération de l'entity manager
         $em = $this->getDoctrine()->getManager();
@@ -153,6 +152,7 @@ class AdminController extends AbstractController
      * Récupère la modale d'ajout ou de modification
      * @Route("/getModaleCampus", name="_get_modale_campus")
      * @param Request $request
+     * @return RedirectResponse|Response
      */
     public function getModaleCampus(Request $request)
     {
@@ -212,6 +212,7 @@ class AdminController extends AbstractController
      * Récupère la modale d'ajout ou de modification
      * @Route("/getModaleVille", name="_get_modale_ville")
      * @param Request $request
+     * @return RedirectResponse|Response
      */
     public function getModaleVille(Request $request)
     {

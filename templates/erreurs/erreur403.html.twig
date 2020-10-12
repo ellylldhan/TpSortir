@@ -1,0 +1,20 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Sortir.com | 403{% endblock %}
+
+{% block body %}
+    <h1>Erreur 403 : Accès refusé !</h1>
+    <p>Vous n'avez pas les droits nécessaires pour accéder à cette page.</p>
+    <ul>
+        <li>Pseudo : {{ user.username }}</li>
+        <li>Role :
+        <ul>
+            {% for role in user.roles %}
+            <li>{{ role }}</li>
+            {% endfor %}
+        </ul>
+        </li>
+    </ul>
+    {# TODO: changer route LOGIN pour route ACCUEIL #}
+    <p><a href="{{ path('login') }}">Retour à l'accueil</a></p>
+{% endblock %}
