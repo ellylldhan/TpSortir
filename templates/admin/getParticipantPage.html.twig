@@ -17,7 +17,7 @@
         <a type="button" class="btn btn_custom w-auto m-0" href="{{ path('admin_add_participant') }}">Ajouter un participant</a>
         <button class="btn btn_custom_cancel w-auto m-0" onclick="return afficherFormJson()">Ajouter depuis un fichier json</button>
 
-        <form id="form_json" class="d-none form-inline mt-2" method="post">
+        <form id="form_json" class="d-none form-inline mt-2" method="post" action="{{ path('admin_add_participant_from_json_file') }}" enctype="multipart/form-data">
             <input type="file" name="jsonFileParticipant" id="jsonFileParticipant">
             <button type="submit" class="btn btn_custom">Valider</button>
         </form>
