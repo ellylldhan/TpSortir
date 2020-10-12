@@ -8,9 +8,9 @@
                 </button>
             </div>
             <div class="modal-body">
-                {{ form_start(form, {'attr': {'class': 'form-inline', 'id': 'form_lieu', 'action': path('get_modale_lieu')}}) }}
+                {{ form_start(formLieu, {'attr': {'class': 'form-inline', 'id': 'form_lieu', 'action': path('get_modale_lieu')}}) }}
 
-                {{ form_errors(form) }}
+                {{ form_errors(formLieu) }}
 
                 <div class="col-sm-12">
                     <div class="form-group mb-3">
@@ -19,7 +19,7 @@
                             <span class="required">*</span>
                         </label>
                         <div class="col-sm-8">
-                            {{ form_widget(form.nom) }}
+                            {{ form_widget(formLieu.nom) }}
                         </div>
                     </div>
                 </div>
@@ -31,7 +31,7 @@
                             <span class="required">*</span>
                         </label>
                         <div class="col-sm-8">
-                            {{ form_widget(form.rue) }}
+                            {{ form_widget(formLieu.rue) }}
                         </div>
                     </div>
                 </div>
@@ -43,7 +43,7 @@
                             <span class="required">*</span>
                         </label>
                         <div class="col-sm-8">
-                            {{ form_widget(form.latitude) }}
+                            {{ form_widget(formLieu.latitude) }}
                         </div>
                     </div>
                 </div>
@@ -55,7 +55,7 @@
                             <span class="required">*</span>
                         </label>
                         <div class="col-sm-8">
-                            {{ form_widget(form.longitude) }}
+                            {{ form_widget(formLieu.longitude) }}
                         </div>
                     </div>
                 </div>
@@ -67,17 +67,17 @@
                             <span class="required">*</span>
                         </label>
                         <div class="col-sm-8">
-                            {{ form_widget(form.ville) }}
+                            {{ form_widget(formLieu.ville) }}
                         </div>
                     </div>
                 </div>
 
                 <div class="m-auto">
                     <input name="idLieu" type="text" value="{{ idLieu}}" class="d-none">
-                    {{ form_widget(form.enregister, { 'attr': {'class':'btn btn-success'} }) }}
+                    {{ form_widget(formLieu.enregister, { 'attr': {'class':'btn btn-success','onClick':'setCookie()'} }) }}
                 </div>
 
-                {{ form_end(form) }}
+                {{ form_end(formLieu) }}
             </div>
         </div>
     </div>

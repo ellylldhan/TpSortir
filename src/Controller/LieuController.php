@@ -20,8 +20,7 @@ class LieuController extends AbstractController
         $em = $this->getDoctrine()->getManager();
 
         $idLieu = $request->get('idLieu');
-        $lieuRepository = $em->getRepository('App:Lieu');
-dump($idLieu);
+        $lieuRepository = $em->getRepository(Lieu::class );
         //Il s'ajout d'un ajout de campus
         if ($idLieu == -1) {
             $lieu = new Lieu();

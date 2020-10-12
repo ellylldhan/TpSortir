@@ -24,9 +24,11 @@ class LieuType extends AbstractType
                 'attr' => ['class' => 'form_control' ]
             ])
             ->add('latitude',IntegerType::class,[
+                'required' => false,
                 'attr' => ['class' => 'form_control' ]
             ])
             ->add('longitude',IntegerType::class,[
+                'required' => false,
                 'attr' => ['class' => 'form_control' ]
             ])
             ->add('ville',EntityType::class,[

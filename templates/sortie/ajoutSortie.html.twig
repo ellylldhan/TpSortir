@@ -33,24 +33,24 @@
 
                 <div class="col-sm-12">
                     <div class="form-group mb-3">
-                        <label for="sortie_date_debut" class="col-sm-5 col-form-label justify-content-end">
+                        <label for="sortie_dateDebut" class="col-sm-5 col-form-label justify-content-end">
                             Date de début
                             <span class="required">*</span>
                         </label>
                         <div class="col-sm-7">
-                            {{ form_widget(formSortie.dateDebut, { 'attr': {'id': 'sortie_date_debut'} }) }}
+                            {{ form_widget(formSortie.dateDebut, { 'attr': {'id': 'sortie_dateDebut'} }) }}
                         </div>
                     </div>
                 </div>
 
                 <div class="col-sm-12">
                     <div class="form-group mb-3">
-                        <label for="sortie_date_cloture" class="col-sm-5 col-form-label justify-content-end">
+                        <label for="sortie_dateCloture" class="col-sm-5 col-form-label justify-content-end">
                             Date de cloture
                             <span class="required">*</span>
                         </label>
                         <div class="col-sm-7">
-                            {{ form_widget(formSortie.dateCloture, { 'attr': {'id': 'sortie_date_cloture'} }) }}
+                            {{ form_widget(formSortie.dateCloture, { 'attr': {'id': 'sortie_dateCloture'} }) }}
                         </div>
                     </div>
                 </div>
@@ -81,12 +81,12 @@
 
                 <div class="col-sm-12">
                     <div class="form-group mb-3">
-                        <label for="sortie_inscriptions_max" class="col-sm-7 col-form-label justify-content-end">
+                        <label for="sortie_nombreInscriptionsMax" class="col-sm-7 col-form-label justify-content-end">
                             Nombre d'inscriptions maximum
                             <span class="required">*</span>
                         </label>
                         <div class="col-sm-5">
-                            {{ form_widget(formSortie.nombreInscriptionsMax, { 'attr': {'id': 'sortie_inscriptions_max'} }) }}
+                            {{ form_widget(formSortie.nombreInscriptionsMax, { 'attr': {'id': 'sortie_nombreInscriptionsMax'} }) }}
                         </div>
                     </div>
                 </div>
@@ -118,7 +118,7 @@
                     <div class="form-group">
                         <label class="col-sm-6 col-form-label justify-content-end">Vous ne trouver pas le lieu ?</label>
                         <div class="col-sm-6">
-                            <button class="btn btn_custom_secondary" onclick="getModaleLieu(-1)">Ajouter</button>
+                            <button type="button" class="btn btn_custom_secondary" onclick="getModaleLieu(-1)">Ajouter</button>
                         </div>
                     </div>
                 </div>
@@ -131,6 +131,8 @@
             {{ form_end(formSortie) }}
         </div>
     </div>
+    <button type="button" class="btn btn_custom_secondary" onclick="setCookie()">Ajouter cookie</button>
+    <button type="button" class="btn btn_custom_secondary" onclick="getCookie()">Ajouter cookie</button>
 
 {% endblock %}
 
@@ -139,6 +141,10 @@
     {{ parent() }}
 
     <script>
+
+        let champ = ['#sortie_nom','#sortie_dateDebut','#sortie_dateCloture','#sortie_duree','#sortie_descriptionInfo','#sortie_nombreInscriptionsMax','#sortie_lieu']
+        getCookie();
+
         function getModaleLieu(id) {
             $routeGetModaleLieu = '{{ path('get_modale_lieu') }}';
             $.ajax({
@@ -151,6 +157,50 @@
                     $(data).modal();
                 }
             });
+        }
+
+        function setCookie() {
+            let value = '{';
+            let first = true
+            champ.forEach( x =>{
+                if (!first){
+                    value = value + ','
+                }
+                value =  value + '"' + x + '"' + ' : ' + '"' + $(x).val().toString() + '"';
+                first = false;
+            })
+            value =  value + '}';
+            var d = new Date();
+            d.setTime(d.getTime() + (60 * 2000));
+            console.log(d);
+            var expires = "expires="+ d.toUTCString();
+            document.cookie = "champ =" + value + ";" + expires + ";path=/";
+        }
+
+        function getCookie() {
+            var cookieArr = document.cookie.split(";");
+
+            // Loop through the array elements
+            for(var i = 0; i < cookieArr.length; i++) {
+                var cookiePair = cookieArr[i].split("=");
+
+                /* Removing whitespace at the beginning of the cookie name
+                and compare it with the given string */
+                if('champ' == cookiePair[0].trim()) {
+                    // Decode the cookie value and return
+                    setForm(decodeURIComponent(cookiePair[1]));
+                }
+            }
+            document.cookie = "champ = \"\" ; -1 ;path=/";
+        }
+        function setForm(json){
+            console.log(json);
+            let object = JSON.parse(json);
+            console.log(object);
+           console.log(Object.keys(object));
+            Object.keys(object).forEach(x => {
+                $(x).val(object[x]);
+            })
         }
     </script>
 

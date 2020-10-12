@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Campus;
+use App\Entity\Etat;
 use App\Entity\Inscription;
 use App\Entity\Participant;
 use App\Entity\Sortie;
@@ -31,7 +32,6 @@ class SortieController extends AbstractController
         $em = $this->getDoctrine()->getManager();
         //Création d'une nouvelle instance de Participant
         $sortie = new Sortie();
-
         //Création du formulaire
         $form = $this->createForm(SortieType::class, $sortie);
         $form->handleRequest($request);
@@ -40,6 +40,12 @@ class SortieController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             //On récupère les données et on hydrate l'instance
             $sortie = $form->getData();
+           //pseudo_5_2
+            // $sortie->setOrganisateur($em->getRepository(Participant::class)->findOneBy(['pseudo' => $this->getUser()->getUsername()]));
+            $organisateur = $em->getRepository(Participant::class)->findOneBy(['pseudo' => 'pseudo_5_2']);
+            $sortie->setOrganisateur($organisateur);
+            $sortie->setEtat($em->getRepository(Etat::class)->findOneBy(['libelle'=>'Ouverte']));
+            $sortie->setCampusOrganisateur($organisateur->getCampus());
 
             //On sauvegarde
             $em->persist($sortie);
@@ -47,12 +53,13 @@ class SortieController extends AbstractController
 
             //On affiche un message de succès et on redirige vers la page d'ajout des participants
             $this->addFlash('success', 'Sortie enregistré !');
+            $form = $this->createForm(SortieType::class, $sortie);
 
         }
 
         //On redirige vers la page d'ajout
         return $this->render('sortie/AjoutSortie.html.twig', [
-            'campusName' => 'testCampus',
+            'campusName' => $em->getRepository(Participant::class)->findOneBy(['pseudo' => 'pseudo_5_2'])->getCampus()->getNom(),
             'formSortie' => $form->createView()
         ]);
     }
