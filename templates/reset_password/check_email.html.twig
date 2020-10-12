@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Sortir.com | Reinit Mot de Passe{% endblock %}
+
+{% block body %}
+    <div class="container">
+    <p>Un lien vers la page de réinitialisation vous a été envoyé par mail.
+        Ce lien expire dans {{ tokenLifetime|date('g') }} heure(s).</p>
+    <p>Si vous ne recevez pas cet email, merci de vérifier dans vos spams ou <a href="{{ path('app_forgot_password_request') }}">réessayez</a>.</p>
+    </div>
+{% endblock %}
