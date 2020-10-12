@@ -112,6 +112,7 @@
 
 .btn_custom:focus {
     outline: none;
+    box-shadow: none;
 }
 
 .btn_custom_cancel {
@@ -132,6 +133,7 @@
 
 .btn_custom_cancel:focus {
     outline: none;
+    box-shadow: none;
 }
 
 #table_campus .btn-success {

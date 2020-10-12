@@ -20,6 +20,11 @@ use App\Entity\Campus;
 use App\Form\CampusType;
 use App\Entity\Ville;
 use App\Form\VilleType;
+use Symfony\Component\Serializer\Encoder\JsonEncoder;
+use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
+use Symfony\Component\Serializer\Normalizer\ArrayDenormalizer;
+use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
+use Symfony\Component\Serializer\Serializer;
 
 /**
  * Class AdminController
@@ -42,22 +47,22 @@ class AdminController extends AbstractController
         //Récupération de l'entity manager
         $em = $this->getDoctrine()->getManager();
         //Création d'une nouvelle instance de Participant
-        $participant = new Participant();
+        $oParticipant = new Participant();
 
         //Création du formulaire
-        $form = $this->createForm(ParticipantType::class, $participant);
+        $form = $this->createForm(ParticipantType::class, $oParticipant);
         $form->handleRequest($request);
 
         //Si le formulaire est soumis et est valide
         if ($form->isSubmitted() && $form->isValid()) {
             //On récupère les données et on hydrate l'instance
-            $participant = $form->getData();
+            $oParticipant = $form->getData();
             //On encode le mot de passe
-            $hashed = $encoder->encodePassword($participant, $participant->getPassword());
-            $participant->setPassword($hashed);
+            $hashed = $encoder->encodePassword($oParticipant, $oParticipant->getPassword());
+            $oParticipant->setPassword($hashed);
 
             //On sauvegarde
-            $em->persist($participant);
+            $em->persist($oParticipant);
             $em->flush();
 
             //On affiche un message de succès et on redirige vers la page d'ajout des participants
@@ -79,8 +84,78 @@ class AdminController extends AbstractController
         ]);
     }
 
-    public function addParticipantFromJsonFile() {
-        
+    /**
+     * Permet d'ajouter des participants à partir d'un fichier json
+     * @Route("/addParticipantFromJsonFile", name="_add_participant_from_json_file")
+     * @param Request $request
+     * @return mixed
+     */
+    public function addParticipantFromJsonFile(Request $request, UserPasswordEncoderInterface $passwordEncoder) {
+        //Récupération de l'entity manager
+        $em = $this->getDoctrine()->getManager();
+        //Récupération du repository de l'entité Participant
+        $participantRepository = $em->getRepository('App:Participant');
+        //Récupération du repository de l'entité Campus
+        $campusRepository = $em->getRepository('App:Campus');
+
+        //Récupération du fichier json transmit par le formulaire
+        $jsonFile = $request->files->get('jsonFileParticipant');
+        //Récupération du contenu du fichier
+        $fileContent = file_get_contents($jsonFile);
+
+        //On ignore les attributs suivants :
+        $defaultContext = [
+            AbstractNormalizer::IGNORED_ATTRIBUTES => [
+                'campus', 'sorties', 'inscriptions', 'roles', 'salt', 'password', 'username'
+            ]
+        ];
+
+        //On définit l'encoder que l'on souhaite, ici json
+        $encoder = new JsonEncoder();
+        $normalizer = new ObjectNormalizer(null, null, null, null, null, null,  $defaultContext);
+
+        //Définition du serializer
+        $serializer = new Serializer([$normalizer, new ArrayDenormalizer()], [$encoder]);
+
+        //On récupère le tableau d'instance Participant en deserialisant notre fichier json
+        $toParticipant = $serializer->deserialize($fileContent, 'App\Entity\Participant[]', 'json');
+        $index = 0;
+
+        //Pour chaque participant obtenu
+        foreach ($toParticipant as $oParticipant) {
+            //Vérification du pseudo unique
+            $pseudoExists = $participantRepository->findOneBy(['pseudo' => $oParticipant->getPseudo()]);
+            //S'il existe un participant avec ce pseudo
+            if ($pseudoExists) {
+                //On affiche un message d'erreur et on redirige vers la page de gestion des participants
+                $this->addFlash('danger', 'Le pseudo : ' . $oParticipant->getPseudo() . 'est déjà utilisé. Veuillez vérifier votre fichier.');
+                return $this->redirectToRoute('admin_get_participant_page');
+            }
+
+            //On encode le mot de passe
+            $hashed = $passwordEncoder->encodePassword($oParticipant, $oParticipant->getPassword());
+            $oParticipant->setPassword($hashed);
+
+            //On récupère l'identifiant du campus renseigné
+            $oCampus = $campusRepository->findOneBy(['id' => json_decode($fileContent, true)[$index]["campus_id"]]);
+            //Si le campus n'existe pas, on génère une erreur et on redirige vers la page de gestion des participants
+            if (!$oCampus) {
+                $this->addFlash('danger', 'Le campus renseigné pour le participant' . $oParticipant->getPseudo() . 'n\'existe pas. Veuillez vérifier votre fichier.');
+                return $this->redirectToRoute('admin_get_participant_page');
+            } else {
+                $oParticipant->setCampus($oCampus);
+            }
+
+            //On persiste le participant
+            $em->persist($oParticipant);
+            $index++;
+        }
+
+        //Si tout s'est bien passé, on sauvegarde, on affiche un message de succès et on redirige
+        $em->flush();
+
+        $this->addFlash('success', 'Création des participants réussie.');
+        return $this->redirectToRoute('admin_get_participant_page');
     }
 
     /**
