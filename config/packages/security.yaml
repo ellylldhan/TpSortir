@@ -42,8 +42,8 @@ security:
   # Note: Only the *first* access control that matches will be used
   access_control:
     # require ROLE_ADMIN or IS_AUTHENTICATED_FULLY for /admin*
-    - { path: ^/admin, roles: ROLE_ADMIN }
-#    - { path: ^/admin/*, roles: ROLE_ADMIN }
+#    - { path: ^/admin, roles: ROLE_ADMIN }
+    - { path: ^/admin*, roles: ROLE_ADMIN }
     - { path: ^/profil, roles: IS_AUTHENTICATED_FULLY }
     - { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
     - { path: ^/reset, roles: IS_AUTHENTICATED_ANONYMOUSLY }
