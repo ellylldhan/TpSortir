@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+{% form_theme resetForm 'bootstrap_4_layout.html.twig' %}
+
+{% block title %}Sortir.com | Réinit Mot de Passe{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <h1>Réinitilaisez votre mot de passe</h1>
+
+        {{ form_start(resetForm) }}
+        {{ form_row(resetForm.plainPassword) }}
+        <button class="btn btn-primary">Réinitialisation</button>
+        {{ form_end(resetForm) }}
+    </div>
+{% endblock %}
