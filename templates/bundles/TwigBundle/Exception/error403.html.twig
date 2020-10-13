@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Sortir.com | Accès Refusé !{% endblock %}
+
+{% block body %}
+    <h1>Erreur 403 : Accès refusé !</h1>
+    <p>Vous n'avez pas les droits requis pour accéder à cette page.</p>
+
+    {# TODO: changer pour route ACCUEIL #}
+    <p><a href="{{ path('base') }}">Retour à l'accueil</a></p>
+{% endblock %}
