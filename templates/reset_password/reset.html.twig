@@ -4,8 +4,11 @@
 {% block title %}Sortir.com | Réinit Mot de Passe{% endblock %}
 
 {% block body %}
-    <div class="container">
-        <h1>Réinitilaisez votre mot de passe</h1>
+    <div class="container mt-5 mb-5">
+        <div class="title">
+            <h1>Réinitialisation de votre mot de passe</h1>
+        </div>
+        <br>
 
         {{ form_start(resetForm) }}
         {{ form_row(resetForm.plainPassword) }}
