@@ -390,10 +390,23 @@ class AdminController extends AbstractController
             ->getForm();
 
         $formUpdateParticipant->handleRequest($request);
-        //Si le formulaire est soumis et est valide
+        dump($oParticipant->getId());
+
+        //Si le formulaire est soumit et est valide
         if ($formUpdateParticipant->isSubmitted() && $formUpdateParticipant->isValid()) {
             //On hydrate l'instance avec les données du formulaire
-            $oParticipant = $formUpdateParticipant->getData();
+            $oUpdateParticipant = $formUpdateParticipant->getData();
+
+            //Vérification de la contrainte unique du pseudo d'un participant
+            $pseudoExists = $participantRepository->findOneBy(['pseudo' => $oUpdateParticipant->getPseudo()]);
+            if ($pseudoExists) {
+                if ($oParticipant->getPseudo() === $oUpdateParticipant->getPseudo()) {
+                    $oParticipant = $oUpdateParticipant;
+                } else {
+                    $this->addFlash('danger', 'Le pseudo est déjà utilisé');
+                    return $this->redirectToRoute('admin_get_participant_page');
+                }
+            }
 
             //on sauvegarde en base
             $em->persist($oParticipant);
@@ -402,6 +415,8 @@ class AdminController extends AbstractController
             //on affiche un message alertant du succès de la modif et on redirige vers la page de gestion des participants
             $this->addFlash('success', 'Participant modifié !');
             return $this->redirectToRoute('admin_get_participant_page');
+        } else {
+            dump($this->getErrorsFromForm($formUpdateParticipant));
         }
 
         return $this->render('admin/getModaleUpdateParticipant.html.twig', [
