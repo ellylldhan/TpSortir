@@ -4,7 +4,10 @@ namespace App\Repository;
 
 use App\Entity\Sortie;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
+use PhpParser\Node\Arg;
+use Symfony\Component\Validator\Constraints\Date;
 
 /**
  * @method Sortie|null find($id, $lockMode = null, $lockVersion = null)
@@ -19,6 +22,26 @@ class SortieRepository extends ServiceEntityRepository
         parent::__construct($registry, Sortie::class);
     }
 
+    public function findAllWithLibelle(QueryBuilder $queryBuilder = null){
+        $query = $queryBuilder;
+
+        dump($queryBuilder);
+        if ($queryBuilder == null){
+            $query = $this->createQueryBuilder('s');
+        }
+        return $query->select('s', 'e','co','o','l','i')
+            ->from('App:Sortie','s')
+            ->innerJoin('s.campusOrganisateur','co')
+            ->innerJoin('s.organisateur','o')
+            ->innerJoin('s.etat','e')
+            ->innerJoin('s.lieu','l')
+            ->leftJoin('s.inscriptions','i')
+            ->andWhere("CURRENT_DATE() <= DATE_ADD(s.dateDebut,1, 'month')")
+            ->orderBy('s.dateDebut', 'DESC')
+            ->getQuery()
+            ->getResult();
+
+    }
     // /**
     //  * @return Sortie[] Returns an array of Sortie objects
     //  */

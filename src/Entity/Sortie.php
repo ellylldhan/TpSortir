@@ -243,4 +243,12 @@ class Sortie
 
         return $this;
     }
+    public function isInscrit($userId){
+        foreach ($this->getInscriptions() as $inscription){
+            if ( $inscription->getParticipant()->getId() == $userId){
+                return true;
+            }
+        }
+        return false;
+    }
 }
