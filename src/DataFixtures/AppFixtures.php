@@ -126,7 +126,8 @@ class AppFixtures extends Fixture
                 ->setActif($faker->boolean())
                 ->setAdministrateur($faker->boolean())
                 ->setTelephone("0102030405")
-                ->setCampus($campus);
+                ->setCampus($campus)
+                ->setUrlPhoto("https://via.placeholder.com/100.png");
 
             $manager->persist($organisateur);
 
@@ -136,7 +137,7 @@ class AppFixtures extends Fixture
             $sortie->setNom("Sortie ".$key)
                 ->setDateDebut(new \DateTime())
                 ->setDateCloture(new \DateTime(date("d-m-Y", $ts+random_int(0, 10))))
-                ->setUrlPhoto($faker->url())
+                ->setUrlPhoto("https://via.placeholder.com/100.png")
                 ->setEtat($etatsCollection[random_int(0, count($etatsCollection)-1)])
                 ->setCampusOrganisateur($campus)
                 ->setLieu($lieuxCollection[random_int(0, count($lieuxCollection)-1)])
@@ -156,7 +157,8 @@ class AppFixtures extends Fixture
                     ->setActif($faker->boolean())
                     ->setAdministrateur($faker->boolean())
                     ->setTelephone("0102030405")
-                    ->setCampus($campus);
+                    ->setCampus($campus)
+                    ->setUrlPhoto("https://via.placeholder.com/100.png");
 
                 $manager->persist($participant);
 

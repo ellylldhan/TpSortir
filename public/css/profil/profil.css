@@ -1,0 +1,11 @@
+img{
+    margin-right: 200px;
+}
+
+.user-details{
+    color: #154c82;
+}
+
+.pseudo, .user-details-container{
+    margin-bottom: 40px;
+}

@@ -1,0 +1,63 @@
+{% extends 'base.html.twig' %}
+
+{% block title %} {{ parent() }} {{ title }} {% endblock %}
+
+{% block stylesheet %}
+    <link rel="stylesheet" href="{{ asset('css/profil/main.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/profil/profil-edit.css') }}">
+{% endblock %}
+
+{% block body %}
+
+    <div class="container">
+        <div class="jumbotron">
+{#            <div class="photo-container">#}
+{#                <div>#}
+{#                    <img src="{{ app.user.urlPhoto }}" class="card-img" alt="Photo de profil de {{ app.user.pseudo }}">#}
+{#                </div>#}
+
+{#                <div>#}
+{#                    <button class="btn btn-primary btn-sm btn-edit-photo">Changer de photo de profil</button>#}
+{#                </div>#}
+{#            </div>#}
+
+            {{ form_start(form) }}
+            <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+            {% if form.administrateur %}
+
+                <div class="photo-container">
+                    <div>
+                        {% if app.user %}
+                            <img src="{{ app.user.urlPhoto }}" class="card-img" alt="Photo de profil de {{ app.user.pseudo }}">
+                        {% else %}
+                            <img src="{{ user.urlPhoto }}" class="card-img" alt="Photo de profil de {{ user.pseudo }}">
+                        {% endif %}
+                    </div>
+
+                    <div class="btn-edit-photo-container">
+{#                        <button class="btn btn-primary btn-sm btn-edit-photo">Changer de photo de profil</button>#}
+
+                        {{ form_widget(form.urlPhoto) }}
+                        {{ form_errors(form.urlPhoto) }}
+                    </div>
+                </div>
+
+
+                {{ form_row(form.pseudo) }}
+                {{ form_row(form.prenom) }}
+                {{ form_row(form.nom) }}
+                {{ form_row(form.telephone) }}
+                {{ form_row(form.mail) }}
+                {{ form_row(form.motDePasse) }}
+
+                {{ form_row(form.campus) }}
+                <div class="button-container">
+                    <button type="submit" class="btn btn-primary">Enregistrer les modifications</button>
+                </div>
+            {% endif %}
+
+            {{  form_end(form, {'render_rest': false}) }}
+        </div>
+    </div>
+
+{% endblock %}
