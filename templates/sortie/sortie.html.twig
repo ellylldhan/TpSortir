@@ -3,19 +3,107 @@
 {% block title %} {{ parent() }}  {% endblock %}
 
 {% block stylesheet %}
-    <link rel="stylesheet" href="{{ asset('css/admin.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/sortie.css') }}">
 {% endblock %}
 
 {% block body %}
 
+    <div class="container mt-5 mb-5">
         <a type="button" class="btn btn-success mb-1" onclick="updateEtat()">Mise à jour état </a>
 
-    {{ form(formSortie) }}
-    <div class="container mt-5 mb-5">
-        <div class="title">
-            <h1>Gérer les sorties</h1>
+        {{ form_start(formSortie, {'attr': {'class': 'form-inline', 'id': 'form_sortie_filter'}}) }}
+
+        {{ form_errors(formSortie) }}
+
+        <div class="col-sm-9 p-0">
+            <div class="form-group mb-3">
+                <label for="sortie_campus" class="col-sm-3 col-form-label justify-content-start">
+                    Campus
+                </label>
+                <div class="col-sm-8">
+                    {{ form_widget(formSortie.campusOrganisateur,  {'attr': {'class': 'form-control w-100'}}) }}
+                </div>
+            </div>
+
+            <div class="form-group mb-3">
+                <label for="sortie_nom" class="col-sm-3 col-form-label justify-content-start">
+                    Le nom de la sortie contient :
+                </label>
+                <div class="col-sm-8">
+                    {{ form_widget(formSortie.nom,  {'attr': {'class': 'form-control w-100'}}) }}
+                </div>
+            </div>
+
+            <div class="form-group mb-3">
+                <label for="sortie_date_debut" class="col-sm-1 col-form-label justify-content-start">
+                    Entre
+                </label>
+                <div class="col-sm-4 p-0">
+                    {{ form_widget(formSortie.dateDebut,  {'attr': {'class': 'form-control w-100', 'id': 'sortie_date_debut'}}) }}
+                </div>
+                <div class="col-sm-1 p-0">
+                    <button class="btn btn_transparent" onclick="deleteValue('#sortie_date_debut')">
+                        <i class="fas fa-times-circle"></i>
+                    </button>
+                </div>
+
+                <label for="sortie_date_cloture" class="col-sm-1 col-form-label justify-content-start">
+                    et
+                </label>
+                <div class="col-sm-4 p-0">
+                    {{ form_widget(formSortie.dateFin,  {'attr': {'class': 'form-control w-100', 'id': 'sortie_date_cloture'}}) }}
+                </div>
+                <div class="col-sm-1 p-0">
+                    <button class="btn" onclick="deleteValue('#sortie_date_cloture')">
+                        <i class="fas fa-times-circle"></i>
+                    </button>
+                </div>
+            </div>
         </div>
-        <br>
+
+        <div class="col-sm-3 p-0">
+            <div class="form-group mb-3">
+                <label class="col-sm-10 col-form-label justify-content-start">
+                    Dont je suis l'organisateur/trice
+                </label>
+                <div class="col-sm-1">
+                    {{ form_widget(formSortie.estOrganisateur,  {'attr': {'class': 'form-control'}}) }}
+                </div>
+            </div>
+
+            <div class="form-group mb-3">
+                <label class="col-sm-10 col-form-label justify-content-start">
+                    Auxquelles je suis inscrit/e
+                </label>
+                <div class="col-sm-1">
+                    {{ form_widget(formSortie.estInscrit,  {'attr': {'class': 'form-control'}}) }}
+                </div>
+            </div>
+
+            <div class="form-group mb-3">
+                <label class="col-sm-10 col-form-label justify-content-start">
+                    Auxquelles je ne suis pas inscrit/e
+                </label>
+                <div class="col-sm-1">
+                    {{ form_widget(formSortie.pasInscrit,  {'attr': {'class': 'form-control'}}) }}
+                </div>
+            </div>
+
+            <div class="form-group mb-3">
+                <label class="col-sm-10 col-form-label justify-content-start">
+                    Sorties passées
+                </label>
+                <div class="col-sm-1">
+                    {{ form_widget(formSortie.sortiePasse,  {'attr': {'class': 'form-control'}}) }}
+                </div>
+            </div>
+        </div>
+
+        <div class="m-auto">
+            {{ form_widget(formSortie.rechercher) }}
+        </div>
+
+        {{ form_end(formSortie) }}
 
         <div id="table_participant" class="mt-5">
             {% if isMobile == false %}
@@ -96,6 +184,7 @@
 {% block javascripts %}
 
     {{ parent() }}
+
     <script>
         function deleteValue(id) {
             $(id).value = '';

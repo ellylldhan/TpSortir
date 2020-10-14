@@ -19,6 +19,11 @@
     border: 1px solid black;
 }
 
+#form_sortie_filter .form-control:focus {
+    outline: none;
+    box-shadow: none;
+}
+
 .btn_custom {
     width: 100px;
     background: #27AE60;
@@ -57,4 +62,9 @@
 
 .btn_custom_secondary:focus {
     outline: none;
+}
+
+.btn_transparent:focus {
+    outline: none;
+    box-shadow: none;
 }
