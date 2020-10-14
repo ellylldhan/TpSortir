@@ -195,8 +195,8 @@ class SearchSortieType extends AbstractType
             ->add('sortiePasse', CheckboxType::class, [
                 'required' => false
             ])
-            ->add('enregister',SubmitType::class,[
-                'label' => 'Enregister',
+            ->add('rechercher',SubmitType::class,[
+                'label' => 'Rechercher',
                 'attr' => [
                     'class' => 'btn_custom'
                 ]

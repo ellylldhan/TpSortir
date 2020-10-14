@@ -7,6 +7,7 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 use PhpParser\Node\Arg;
+use PhpParser\Node\Expr\Array_;
 use Symfony\Component\Validator\Constraints\Date;
 
 /**
@@ -41,6 +42,15 @@ class SortieRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
 
+    }
+    public function findAllWithEtat()
+    {
+        return $this->createQueryBuilder('s')
+            ->select('s', 'e')
+            ->innerJoin('s.etat','e')
+            ->andWhere("CURRENT_DATE() <= DATE_ADD(s.dateDebut,1, 'month')")
+            ->getQuery()
+            ->getResult();
     }
     // /**
     //  * @return Sortie[] Returns an array of Sortie objects

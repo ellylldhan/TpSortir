@@ -7,10 +7,11 @@
 {% endblock %}
 
 {% block body %}
+    <a type="button" class="btn btn-success mb-1" onclick="updateEtat()" ">Mise à jour état </a>
     {{ form(formSortie) }}
 <div class="container mt-5 mb-5">
     <div class="title">
-        <h1>Gérer les participants</h1>
+        <h1>Gérer les sorties</h1>
     </div>
     <br>
 
@@ -44,7 +45,7 @@
             <!--
             app.user.id
             -->
-            {% set isInscrit = sortie.isInscrit(2) %}
+            {% set isInscrit = sortie.isInscrit(app.User.id) %}
             <tr>
                 <th>{{ sortie.nom }}</th>
                 <th>{{ sortie.dateDebut|format_datetime() }}</th>
@@ -55,24 +56,21 @@
                 <th>{{ sortie.organisateur.pseudo }}</th>
                 <th>
 
+                    <a type="button" class="btn btn-success mb-1" href="{{ path('inscriptionSortie') }}">Détail</a>
 
-                    {% if sortie.etat.libelle == 'Ouverte' %}
-                        {% if isInscrit %}
-                            <a type="button" class="btn btn-success mb-1" href="{{ path('desinscriptionSortie') }}">se désister</a>
+                    {% if sortie.organisateur.id == app.user.id %}
+                        {% if sortie.etat.libelle != 'Activité en cours' %}
+                            <a type="button" class="btn btn-success mb-1" href="{{ path('ajoutSortie') }}?sortieId={{ sortie.id }}">Modifié</a>
+                            <a type="button" class="btn btn-success mb-1" href="{{ path('inscriptionSortie') }}?sortieId={{ sortie.id }}">Annulé</a>
+                        {% endif %}
+                    {% else %}
+                        {% if sortie.etat.libelle == 'Fermé' or sortie.etat.libelle == 'Ouverte'%}
+                            <a type="button" class="btn btn-success mb-1" href="{{ path('desinscriptionSortie') }}?sortieId={{ sortie.id }}">se désister</a>
                         {% else %}
-                            <a type="button" class="btn btn-success mb-1" href="{{ path('inscriptionSortie') }}">S'inscrire</a>
+                            <a type="button" class="btn btn-success mb-1" href="{{ path('inscriptionSortie') }}?sortieId={{ sortie.id }}">S'inscrire</a>
                         {% endif %}
                     {% endif %}
-                    {% if sortie.etat.libelle == 'Fermé' %}
-                        <a type="button" class="btn btn-success mb-1" href="{{ path('desinscriptionSortie') }}">se désister</a>
-                    {% endif %}
-                    <!--
-                    app.user.id-->
-                    {% if sortie.organisateur.id == 1 and sortie.etat.libelle != 'Activité en cours' %}
-                            <a type="button" class="btn btn-success mb-1" href="{{ path('inscriptionSortie') }}">Motifié</a>
-                        {% else %}
-                            <a type="button" class="btn btn-success mb-1" href="{{ path('inscriptionSortie') }}">Détail</a>
-                    {% endif %}
+
                 </th>
             </tr>
             {% endfor %}
@@ -87,6 +85,22 @@
 {% block javascripts %}
 
     {{ parent() }}
+    <script>
+        function deleteValue(id){
+            $(id).value = '';
+        }
+        function updateEtat() {
+            $routeUpdateEtat = '{{ path('updatEtat') }}';
+            $.ajax({
+                url: $routeUpdateEtat,
+                type: 'GET',
+                success: function (data) {
+                    //ajout d'un message 'ok'
+                }
+            });
+        }
+    </script>
+
 
 {% endblock %}
 

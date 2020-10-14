@@ -19,6 +19,7 @@ use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use function Doctrine\ORM\QueryBuilder;
 
@@ -32,21 +33,21 @@ class SortieController extends AbstractController
      */
     public function sortie(Request $request, EntityManagerInterface $em)
     {
+
+
         $sortie = new SearchSortieType();
 
         $form = $this->createForm(SearchSortieType::class, $sortie);
-        dump($form);
         $form->handleRequest($request);
 
         //Si le formulaire est soumis et est valide
         if ($form->isSubmitted() && $form->isValid()) {
             //On récupère les données et on hydrate l'instance
             $sortie = $form->getData();
-            dump($sortie);
         }
 
         $sorties = $em->getRepository(Sortie::class)->findAllWithLibelle($this->findSearch($sortie, $em));
-
+        dump($sorties);
         return $this->render('sortie/Sortie.html.twig', [
             'formSortie' => $form->createView(),
             'sorties' => $sorties
@@ -56,42 +57,53 @@ class SortieController extends AbstractController
     /**
      * @Route("/ajout", name="ajoutSortie")
      */
-    public function ajout(Request $request, EntityManagerInterface $em)
+    public function ajout(Request $request)
     {
 
-        //Récupération de l'entity manager
+
         $em = $this->getDoctrine()->getManager();
-        //Création d'une nouvelle instance de Participant
-        $sortie = new Sortie();
-        //Création du formulaire
+        $sortieId = $request->get("sortieId");
+        dump($sortieId);
+        $sortieRepo = $em->getRepository(Sortie::class);
+        $organisateur = $this->getUser();
+
+        if ($sortieId == null) {
+            $sortie = new Sortie();
+        } else {
+            $sortie = $sortieRepo->find($sortieId);
+            if ($sortie->getOrganisateur()->getId() != $organisateur->getId()) {
+                $this->addFlash('Danger', 'vous n\'avez pas l\'autorisation !');
+                return $this->redirectToRoute('sortie');
+            }
+            if ($sortie->getEtat()->getLibelle() != "Ouverte" && $sortie->getEtat()->getLibelle() != "Fermée") {
+
+            }
+            if (!$sortie) {
+                //Création d'une alerte contenant le message d'erreur
+                $this->addFlash('danger', 'La sortie n\'existe pas.');
+                //Redirection vers la page de gestion des campus
+                $this->redirectToRoute('sortie');
+            }
+        }
+
+
         $form = $this->createForm(SortieType::class, $sortie);
-        dump($form);
         $form->handleRequest($request);
 
-        //Si le formulaire est soumis et est valide
         if ($form->isSubmitted() && $form->isValid()) {
-            //On récupère les données et on hydrate l'instance
             $sortie = $form->getData();
-            //pseudo_5_2
-            // $sortie->setOrganisateur($em->getRepository(Participant::class)->findOneBy(['pseudo' => $this->getUser()->getId()]));
-            $organisateur = $em->getRepository(Participant::class)->findOneBy(['pseudo' => 'pseudo_5_2']);
             $sortie->setOrganisateur($organisateur);
             $sortie->setEtat($em->getRepository(Etat::class)->findOneBy(['libelle' => 'Ouverte']));
             $sortie->setCampusOrganisateur($organisateur->getCampus());
-
-            //On sauvegarde
             $em->persist($sortie);
             $em->flush();
 
-            //On affiche un message de succès et on redirige vers la page d'ajout des participants
             $this->addFlash('success', 'Sortie enregistré !');
-            $form = $this->createForm(SortieType::class, $sortie);
-
+            return $this->redirectToRoute('sortie');
         }
 
-        //On redirige vers la page d'ajout
         return $this->render('sortie/AjoutSortie.html.twig', [
-            'campusName' => $em->getRepository(Participant::class)->findOneBy(['pseudo' => 'pseudo_5_2'])->getCampus()->getNom(),
+            'campusName' => $this->getUser()->getCampus()->getNom(),
             'formSortie' => $form->createView()
         ]);
     }
@@ -101,25 +113,28 @@ class SortieController extends AbstractController
      */
     public function inscription(Request $request, EntityManagerInterface $em)
     {
+
+
         $message = "inscription impossible";
         $typeMessage = "error";
 
         if ($this->getUser() == null) {
 
         } else {
-            $participantRepo = $this->getDoctrine()->getRepository(Participant::class);
-            $participant = $participantRepo->findBy(['pseudo' => $this->getUser()->getUsername()]);
+            $inscriptionRepo = $this->getDoctrine()->getRepository(Inscription::class);
+            $participant = $this->getUser();
 
 
             $sortieRepo = $this->getDoctrine()->getRepository(Sortie::class);
             $sortie = $sortieRepo->find($request->get('sortie'));
-
-            if ($sortie->getDateCloture() > new DateTime() || $sortie->getEtatSortie() == 0 || $participant != null || $participant->getActif()) {
+            $inscriptions = $inscriptionRepo->findBy(["sortie" => $sortie]);
+            dump($inscriptions);
+            if ($sortie->getDateCloture() > new \DateTime() && count($inscriptions) < $sortie->getNombreInscriptionsMax() && $sortie->getEtat()->getLibelle() == "Ouvert" && $participant != null && $participant->getActif()) {
                 $inscription = new Inscription();
-                $inscription->setDateInscription(new DateTime());
+                $inscription->setDateInscription(new \DateTime());
                 $inscription->setParticipant($participant);
-                $inscription->setDateInscription($sortie);
-                $em->persist();
+                $inscription->setSortie($sortie);
+                $em->persist($inscription);
                 $em->flush();
                 $message = "inscription réussi";
                 $typeMessage = "success";
@@ -137,25 +152,23 @@ class SortieController extends AbstractController
      */
     public function desinscription(Request $request, EntityManagerInterface $em)
     {
+
+
         $message = "désinscription impossible";
         $typeMessage = "error";
 
         if ($this->getUser() == null) {
 
         } else {
-            $participantRepo = $this->getDoctrine()->getRepository(Participant::class);
-            $participant = $participantRepo->findBy(['id' => $this->getUser()->getId()]);
-
-            $inscriptionRepo = $this->getDoctrine()->getRepository(Inscription::class);
+            $participant = $this->getUser();
 
             $sortieRepo = $this->getDoctrine()->getRepository(Sortie::class);
             $sortie = $sortieRepo->find($request->get('sortie'));
 
-            if ($sortie->getDateCloture() > new DateTime() || $sortie->getEtatSortie() == 0 || $participant != null || $participant->getActif()) {
-                $inscription = new Inscription();
-                $inscription->setDateInscription(new DateTime());
-                $inscription->setParticipant($participant);
-                $inscription->setDateInscription($sortie);
+            if ($sortie->getEtat()->getLibelle() == "Cloturée" || $sortie->getEtat()->getLibelle() == "Ouvert" || $participant != null || $participant->getActif()) {
+                $inscriptionRepo = $this->getDoctrine()->getRepository(Inscription::class);
+
+                //$inscription = $inscriptionRepo->findOneBy(["sortie"=>$sortie,"participant"=>$participant]);
                 $em->remove($inscriptionRepo->find([
                     'participant' => $participant,
                     'sortie' => $sortie
@@ -177,18 +190,18 @@ class SortieController extends AbstractController
      */
     public function annulation(Request $request, EntityManagerInterface $em)
     {
+
         $message = "annulation impossible";
         $typeMessage = "error";
 
-        $participantRepo = $this->getDoctrine()->getRepository(Participant::class);
-        $participant = $participantRepo->findBy(['id' => $this->getUser()->getId()]);
+        $participant = $this->getUser();
 
         $sortie = $em->find(Sortie::class, $request->get('sortie'));
 
         //vérification si c'est l'organisateur
         if ($sortie->getOrganisateur() == $participant) {
             $sortie->setEtatSortie(1);
-            $em . flush();
+            $em->flush();
             $message = "annulation réussi";
             $typeMessage = "succes";
         }
@@ -263,6 +276,41 @@ class SortieController extends AbstractController
         }
         dump($query);
         return $query;
-
     }
+
+    /**
+     * @Route("/updateEtat", name="updatEtat")
+     */
+    public function UpdateEtat(EntityManagerInterface $em)
+    {
+        $sorties = $em->getRepository(Sortie::class)
+            ->findAllWithEtat();
+        $repositoryEtat = $em->getRepository(Etat::class);
+        $datenow = new \DateTime();
+        foreach ($sorties as $sortie){
+            $duree = $sortie->getDuree();
+            dump(strval($duree));
+            if (!$duree){
+
+                $duree = 0;
+            }
+            if ($datenow > $sortie->getDateDebut()->add(new \DateInterval('P2Y4DT6H8M'))){
+                if ($sortie->getEtat() != 'Passée'){
+                    $sortie->setEtat($repositoryEtat->findOneBy(['libelle'=>'Passée']));
+                }
+            }
+            elseif ($datenow > $sortie->getDateDebut() ){
+                if ($sortie->getEtat() != 'Activité en cours'){
+                    $sortie->setEtat($repositoryEtat->findOneBy(['libelle'=>'Activité en cours']));
+                }
+            }
+            elseif($datenow > $sortie->getDateCloture()){
+                if ($sortie->getEtat() != 'Cloturée'){
+                    $sortie->setEtat($repositoryEtat->findOneBy(['libelle'=>'Cloturée']));
+                }
+            }
+        }
+        return Response::create();
+    }
+
 }
