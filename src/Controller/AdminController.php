@@ -390,7 +390,6 @@ class AdminController extends AbstractController
             ->getForm();
 
         $formUpdateParticipant->handleRequest($request);
-        dump($oParticipant->getId());
 
         //Si le formulaire est soumit et est valide
         if ($formUpdateParticipant->isSubmitted() && $formUpdateParticipant->isValid()) {
