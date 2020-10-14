@@ -48,7 +48,7 @@ class LieuController extends AbstractController
             $em->flush();
 
             $this->addFlash('success', 'Lieu enregistré !');
-            return $this->redirectToRoute('ajout');
+            return $this->redirectToRoute('ajoutSortie');
         }
 
         return $this->render('lieu/getModalLieu.html.twig',  [

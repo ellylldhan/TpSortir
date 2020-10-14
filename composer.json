@@ -9,6 +9,7 @@
         "doctrine/doctrine-bundle": "^2.1",
         "doctrine/doctrine-migrations-bundle": "^3.0",
         "doctrine/orm": "^2.7",
+        "mobiledetect/mobiledetectlib": "^2.8",
         "sensio/framework-extra-bundle": "^5.6",
         "symfony/apache-pack": "^1.0",
         "symfony/asset": "4.4.*",

@@ -99,6 +99,9 @@
     "fzaninotto/faker": {
         "version": "v1.9.1"
     },
+    "mobiledetect/mobiledetectlib": {
+        "version": "2.8.34"
+    },
     "monolog/monolog": {
         "version": "1.25.5"
     },

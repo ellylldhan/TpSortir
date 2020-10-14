@@ -7,78 +7,89 @@
 {% endblock %}
 
 {% block body %}
-    <a type="button" class="btn btn-success mb-1" onclick="updateEtat()" ">Mise à jour état </a>
+
+        <a type="button" class="btn btn-success mb-1" onclick="updateEtat()">Mise à jour état </a>
+
     {{ form(formSortie) }}
-<div class="container mt-5 mb-5">
-    <div class="title">
-        <h1>Gérer les sorties</h1>
-    </div>
-    <br>
+    <div class="container mt-5 mb-5">
+        <div class="title">
+            <h1>Gérer les sorties</h1>
+        </div>
+        <br>
 
-    <div id="table_participant" class="mt-5">
-        <a type="button" class="btn btn-success mb-1" href="{{ path('ajoutSortie') }}">Ajouter une sortie</a>
-        <style>
-            #divConteneur{
-                min-height:1000px;
-                height:1000px;
-                min-width:1300px;
-                width:1300px;
-                overflow:auto;
-            }
-        </style>
+        <div id="table_participant" class="mt-5">
+            {% if isMobile == false %}
+            <a type="button" class="btn btn-success mb-1" href="{{ path('ajoutSortie') }}">Ajouter une sortie</a>
+            {% endif %}
+            <style>
+                #divConteneur {
+                    min-height: 1000px;
+                    height: 1000px;
+                    min-width: 1300px;
+                    width: 1300px;
+                    overflow: auto;
+                }
+            </style>
 
-        <div id="divConteneur">
-        <table class="table table-striped">
-            <thead>
-            <th>Nom de la sortie</th>
-            <th>Date de la sortie</th>
-            <th>Clôture</th>
-            <th>Inscrit/Places</th>
-            <th>Etat</th>
-            <th>Inscrit</th>
-            <th>Organisateur</th>
-            <th>Actions</th>
-            </thead>
+            <div id="divConteneur">
+                <table class="table table-striped">
+                    <thead>
+                    <th>Nom de la sortie</th>
+                    <th>Date de la sortie</th>
+                    <th>Clôture</th>
+                    <th>Inscrit/Places</th>
+                    <th>Etat</th>
+                    <th>Inscrit</th>
+                    <th>Organisateur</th>
+                    <th>Actions</th>
+                    </thead>
 
-            <tbody>
-            {% for sortie in sorties %}
-            <!--
-            app.user.id
-            -->
-            {% set isInscrit = sortie.isInscrit(app.User.id) %}
-            <tr>
-                <th>{{ sortie.nom }}</th>
-                <th>{{ sortie.dateDebut|format_datetime() }}</th>
-                <th>{{ sortie.dateCloture|format_date() }}</th>
-                <th>{{ sortie.inscriptions|length }} / {{ sortie.nombreInscriptionsMax }}</th>
-                <th>{{ sortie.etat.libelle }}</th>
-                <th>{% if isInscrit %} x {% endif %} </th>
-                <th>{{ sortie.organisateur.pseudo }}</th>
-                <th>
+                    <tbody>
+                    {% for sortie in sorties %}
+                        <!--
+                        app.user.id
+                        -->
+                        {% set isInscrit = sortie.isInscrit(app.User.id) %}
+                        <tr>
+                            <th>{{ sortie.nom }}</th>
+                            <th>{{ sortie.dateDebut|format_datetime() }}</th>
+                            <th>{{ sortie.dateCloture|format_date() }}</th>
+                            <th>{{ sortie.inscriptions|length }} / {{ sortie.nombreInscriptionsMax }}</th>
+                            <th>{{ sortie.etat.libelle }}</th>
+                            <th>{% if isInscrit %} x {% endif %} </th>
+                            <th>{{ sortie.organisateur.pseudo }}</th>
+                            <th>
 
-                    <a type="button" class="btn btn-success mb-1" href="{{ path('inscriptionSortie') }}">Détail</a>
+                                <a type="button" class="btn btn-success mb-1" href="{{ path('inscriptionSortie') }}">Détail</a>
 
-                    {% if sortie.organisateur.id == app.user.id %}
-                        {% if sortie.etat.libelle != 'Activité en cours' %}
-                            <a type="button" class="btn btn-success mb-1" href="{{ path('ajoutSortie') }}?sortieId={{ sortie.id }}">Modifié</a>
-                            <a type="button" class="btn btn-success mb-1" href="{{ path('inscriptionSortie') }}?sortieId={{ sortie.id }}">Annulé</a>
-                        {% endif %}
-                    {% else %}
-                        {% if sortie.etat.libelle == 'Fermé' or sortie.etat.libelle == 'Ouverte'%}
-                            <a type="button" class="btn btn-success mb-1" href="{{ path('desinscriptionSortie') }}?sortieId={{ sortie.id }}">se désister</a>
-                        {% else %}
-                            <a type="button" class="btn btn-success mb-1" href="{{ path('inscriptionSortie') }}?sortieId={{ sortie.id }}">S'inscrire</a>
-                        {% endif %}
-                    {% endif %}
+                                {% if sortie.organisateur.id == app.user.id %}
+                                    {% if sortie.etat.libelle == 'Cloturée' or sortie.etat.libelle == 'Ouverte' or sortie.etat.libelle == 'Créee' %}
+                                        <a type="button" class="btn btn-success mb-1"
+                                           href="{{ path('ajoutSortie') }}?sortieId={{ sortie.id }}">Modifié</a>
+                                        <a type="button" class="btn btn-success mb-1"
+                                           href="{{ path('annulationSortie') }}?sortieId={{ sortie.id }}">Annulé</a>
+                                    {% endif %}
+                                {% else %}
+                                    {% if sortie.etat.libelle == 'Cloturée' or sortie.etat.libelle == 'Ouverte' and isInscrit %}
+                                        <a type="button" class="btn btn-success mb-1"
+                                           href="{{ path('desinscriptionSortie') }}?sortieId={{ sortie.id }}">se
+                                            désister</a>
+                                    {% else %}
+                                        {% if sortie.etat.libelle == 'Ouverte' and isInscrit == false%}
+                                            <a type="button" class="btn btn-success mb-1"
+                                               href="{{ path('inscriptionSortie') }}?sortieId={{ sortie.id }}">S'inscrire</a>
+                                        {% endif %}
+                                    {% endif %}
+                                {% endif %}
 
-                </th>
-            </tr>
-            {% endfor %}
-            </tbody>
-        </table>
+                            </th>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
-</div>
 
 {% endblock %}
 
@@ -86,9 +97,10 @@
 
     {{ parent() }}
     <script>
-        function deleteValue(id){
+        function deleteValue(id) {
             $(id).value = '';
         }
+
         function updateEtat() {
             $routeUpdateEtat = '{{ path('updatEtat') }}';
             $.ajax({
