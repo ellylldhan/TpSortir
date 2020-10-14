@@ -11,31 +11,20 @@
 
     <div class="container">
         <div class="jumbotron">
-{#            <div class="photo-container">#}
-{#                <div>#}
-{#                    <img src="{{ app.user.urlPhoto }}" class="card-img" alt="Photo de profil de {{ app.user.pseudo }}">#}
-{#                </div>#}
-
-{#                <div>#}
-{#                    <button class="btn btn-primary btn-sm btn-edit-photo">Changer de photo de profil</button>#}
-{#                </div>#}
-{#            </div>#}
-
             {{ form_start(form) }}
-            <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+
             {% if form.administrateur %}
 
                 <div class="photo-container">
                     <div>
                         {% if app.user %}
-                            <img src="{{ app.user.urlPhoto }}" class="card-img" alt="Photo de profil de {{ app.user.pseudo }}">
+                            <img src="{{ asset(path_avatar ~ app.user.urlPhoto) }}" class="card-img" alt="Photo de profil de {{ app.user.pseudo }}">
                         {% else %}
-                            <img src="{{ user.urlPhoto }}" class="card-img" alt="Photo de profil de {{ user.pseudo }}">
+                            <img src="{{ asset(path_avatar ~ user.urlPhoto) }}" class="card-img" alt="Photo de profil de {{ user.pseudo }}">
                         {% endif %}
                     </div>
 
                     <div class="btn-edit-photo-container">
-{#                        <button class="btn btn-primary btn-sm btn-edit-photo">Changer de photo de profil</button>#}
 
                         {{ form_widget(form.urlPhoto) }}
                         {{ form_errors(form.urlPhoto) }}
@@ -51,6 +40,9 @@
                 {{ form_row(form.motDePasse) }}
 
                 {{ form_row(form.campus) }}
+
+                {{ form_widget(form._token) }}
+
                 <div class="button-container">
                     <button type="submit" class="btn btn-primary">Enregistrer les modifications</button>
                 </div>

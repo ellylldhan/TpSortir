@@ -17,7 +17,7 @@
                 <hr class="my-4">
             </h1>
             <div class="row justify-content-md-center user-details-container">
-                <img src="{{ user.urlPhoto }}" class="card-img" alt="Photo de profil de {{ user.pseudo }}">
+                <img src="{{ asset(path_avatar ~ user.urlPhoto) }}" class="card-img" alt="Photo de profil de {{ user.pseudo }}">
                 <div id="user-infos-container">
                     <small>Prénom : </small>
                     <p class="user-details">{{ user.prenom }}</p>
