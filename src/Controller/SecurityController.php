@@ -10,15 +10,17 @@ use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
 class SecurityController extends AbstractController
 {
-    public const ROUTE_BASE = 'base';
+    public const ROUTE_HOME = 'base';
 
     /**
      * @Route("/login", name="login")
+     * @param AuthenticationUtils $authenticationUtils
+     * @return Response
      */
     public function login(AuthenticationUtils $authenticationUtils): Response
     {
          if ($this->getUser()) {
-             return $this->redirectToRoute(self::ROUTE_BASE);
+             return $this->redirectToRoute(self::ROUTE_HOME);
          }
 
         // get the login error if there is one
@@ -48,27 +50,12 @@ class SecurityController extends AbstractController
     }
 
 
-
-    /**
-     * @Route("/user/list", name="user_list")
-     */
-    public function list()
-    {
-        $userRepo = $this->getDoctrine()->getRepository(Participant::class);
-
-        $listUsers = $userRepo->findBy([], ["pseudo" => "ASC"], 30, 0);
-        dump($listUsers);
-
-        return $this->render('security/list.html.twig', [
-            'listUsers' => $listUsers,
-        ]);
-    }
-
     /**
      * @Route("/", name="base")
      */
     public function index()
     {
+        //TODO: redirect sur page LISTE_SORTIES
         return $this->render("base.html.twig", []);
     }
 }

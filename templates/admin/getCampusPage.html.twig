@@ -60,10 +60,10 @@
 
     <script>
         function getModaleCampus(id) {
-            $routeGetModaleCampus = '{{ path('admin_get_modale_campus') }}';
+            routeGetModaleCampus = '{{ path('admin_get_modale_campus') }}';
 
             $.ajax({
-                url: $routeGetModaleCampus,
+                url: routeGetModaleCampus,
                 data: {
                     idCampus: id
                 },

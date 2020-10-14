@@ -8,10 +8,26 @@ body {
     color: white;
 }
 
-.navbar a {
+.navbar .navbar-brand {
     color: white;
 }
 
-.navbar a:hover {
+.navbar .navbar-brand:hover {
     color: white;
+}
+
+.navbar .nav-link {
+    color: white;
+}
+
+.navbar .nav-link:hover {
+    color: white;
+}
+
+.navbar .dropdown-item {
+    color: #154c82;
+}
+
+.navbar .dropdown-item:hover {
+    color: #154c82;
 }

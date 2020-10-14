@@ -2,12 +2,14 @@
 
 namespace App\Controller;
 
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormInterface;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -18,14 +20,21 @@ use App\Entity\Campus;
 use App\Form\CampusType;
 use App\Entity\Ville;
 use App\Form\VilleType;
+use Symfony\Component\Serializer\Encoder\JsonEncoder;
+use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
+use Symfony\Component\Serializer\Normalizer\ArrayDenormalizer;
+use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
+use Symfony\Component\Serializer\Serializer;
 
 /**
  * Class AdminController
  * @package App\Controller
  * @Route("/admin", name="admin")
+ * @IsGranted("ROLE_ADMIN")
  */
 class AdminController extends AbstractController
 {
+
     /**
      * Permet à un administrateur d'ajouter un participant
      * @Route("/addParticipant", name="_add_participant")
@@ -38,33 +47,33 @@ class AdminController extends AbstractController
         //Récupération de l'entity manager
         $em = $this->getDoctrine()->getManager();
         //Création d'une nouvelle instance de Participant
-        $participant = new Participant();
+        $oParticipant = new Participant();
 
         //Création du formulaire
-        $form = $this->createForm(ParticipantType::class, $participant);
+        $form = $this->createForm(ParticipantType::class, $oParticipant);
         $form->handleRequest($request);
 
         //Si le formulaire est soumis et est valide
         if ($form->isSubmitted() && $form->isValid()) {
             //On récupère les données et on hydrate l'instance
-            $participant = $form->getData();
+            $oParticipant = $form->getData();
             //On encode le mot de passe
-            $hashed = $encoder->encodePassword($participant, $participant->getPassword());
-            $participant->setPassword($hashed);
+            $hashed = $encoder->encodePassword($oParticipant, $oParticipant->getPassword());
+            $oParticipant->setPassword($hashed);
 
             //On sauvegarde
-            $em->persist($participant);
+            $em->persist($oParticipant);
             $em->flush();
 
             //On affiche un message de succès et on redirige vers la page d'ajout des participants
             $this->addFlash('success', 'Participant enregistré !');
-            $this->redirectToRoute('admin_add_participant');
+            $this->redirectToRoute("admin_get_participant_page");
         } else { //Si le formulaire n'est pas valide
             $errors = $this->getErrorsFromForm($form);
 
             //Pour chaque erreur, on affiche une alerte contenant le message
             foreach ($errors as $error) {
-                $this->addFlash('danger', $error[0]);
+                $this->addFlash("danger", $error[0]);
             }
         }
 
@@ -76,12 +85,85 @@ class AdminController extends AbstractController
     }
 
     /**
-     * Permet de récupérer la page de gestion des campus
-     * @Route("/getCampusPage", name="_get_campus_page")
+     * Permet d'ajouter des participants à partir d'un fichier json
+     * @Route("/addParticipantFromJsonFile", name="_add_participant_from_json_file")
      * @param Request $request
      * @return mixed
      */
-    public function getCampusPage(Request $request)
+    public function addParticipantFromJsonFile(Request $request, UserPasswordEncoderInterface $passwordEncoder) {
+        //Récupération de l'entity manager
+        $em = $this->getDoctrine()->getManager();
+        //Récupération du repository de l'entité Participant
+        $participantRepository = $em->getRepository('App:Participant');
+        //Récupération du repository de l'entité Campus
+        $campusRepository = $em->getRepository('App:Campus');
+
+        //Récupération du fichier json transmit par le formulaire
+        $jsonFile = $request->files->get('jsonFileParticipant');
+        //Récupération du contenu du fichier
+        $fileContent = file_get_contents($jsonFile);
+
+        //On ignore les attributs suivants :
+        $defaultContext = [
+            AbstractNormalizer::IGNORED_ATTRIBUTES => [
+                'campus', 'sorties', 'inscriptions', 'roles', 'salt', 'password', 'username'
+            ]
+        ];
+
+        //On définit l'encoder que l'on souhaite, ici json
+        $encoder = new JsonEncoder();
+        $normalizer = new ObjectNormalizer(null, null, null, null, null, null,  $defaultContext);
+
+        //Définition du serializer
+        $serializer = new Serializer([$normalizer, new ArrayDenormalizer()], [$encoder]);
+
+        //On récupère le tableau d'instance Participant en deserialisant notre fichier json
+        $toParticipant = $serializer->deserialize($fileContent, 'App\Entity\Participant[]', 'json');
+        $index = 0;
+
+        //Pour chaque participant obtenu
+        foreach ($toParticipant as $oParticipant) {
+            //Vérification du pseudo unique
+            $pseudoExists = $participantRepository->findOneBy(['pseudo' => $oParticipant->getPseudo()]);
+            //S'il existe un participant avec ce pseudo
+            if ($pseudoExists) {
+                //On affiche un message d'erreur et on redirige vers la page de gestion des participants
+                $this->addFlash('danger', 'Le pseudo : ' . $oParticipant->getPseudo() . 'est déjà utilisé. Veuillez vérifier votre fichier.');
+                return $this->redirectToRoute('admin_get_participant_page');
+            }
+
+            //On encode le mot de passe
+            $hashed = $passwordEncoder->encodePassword($oParticipant, $oParticipant->getPassword());
+            $oParticipant->setPassword($hashed);
+
+            //On récupère l'identifiant du campus renseigné
+            $oCampus = $campusRepository->findOneBy(['id' => json_decode($fileContent, true)[$index]["campus_id"]]);
+            //Si le campus n'existe pas, on génère une erreur et on redirige vers la page de gestion des participants
+            if (!$oCampus) {
+                $this->addFlash('danger', 'Le campus renseigné pour le participant' . $oParticipant->getPseudo() . 'n\'existe pas. Veuillez vérifier votre fichier.');
+                return $this->redirectToRoute('admin_get_participant_page');
+            } else {
+                $oParticipant->setCampus($oCampus);
+            }
+
+            //On persiste le participant
+            $em->persist($oParticipant);
+            $index++;
+        }
+
+        //Si tout s'est bien passé, on sauvegarde, on affiche un message de succès et on redirige
+        $em->flush();
+
+        $this->addFlash('success', 'Création des participants réussie.');
+        return $this->redirectToRoute('admin_get_participant_page');
+    }
+
+    /**
+     * Permet de récupérer la page de gestion des campus
+     * @Route("/getCampusPage", name="_get_campus_page")
+     * @return mixed
+     */
+    public function getCampusPage()
     {
         //Récupération de l'entity manager
         $em = $this->getDoctrine()->getManager();
@@ -101,10 +183,9 @@ class AdminController extends AbstractController
     /**
      * Permet de récupérer la page de gestion des villes
      * @Route("/getVillePage", name="_get_ville_page")
-     * @param Request $request
      * @return mixed
      */
-    public function getVillePage(Request $request)
+    public function getVillePage()
     {
         //Récupération de l'entity manager
         $em = $this->getDoctrine()->getManager();
@@ -124,10 +205,9 @@ class AdminController extends AbstractController
     /**
      * Permet de récupérer la page de gestion des participants
      * @Route("/getParticipantPage", name="_get_participant_page")
-     * @param Request $request
      * @return mixed
      */
-    public function getParticipantPage(Request $request)
+    public function getParticipantPage()
     {
         //Récupération de l'entity manager
         $em = $this->getDoctrine()->getManager();
@@ -147,6 +227,7 @@ class AdminController extends AbstractController
      * Récupère la modale d'ajout ou de modification
      * @Route("/getModaleCampus", name="_get_modale_campus")
      * @param Request $request
+     * @return RedirectResponse|Response
      */
     public function getModaleCampus(Request $request)
     {
@@ -206,6 +287,7 @@ class AdminController extends AbstractController
      * Récupère la modale d'ajout ou de modification
      * @Route("/getModaleVille", name="_get_modale_ville")
      * @param Request $request
+     * @return RedirectResponse|Response
      */
     public function getModaleVille(Request $request)
     {
@@ -264,7 +346,7 @@ class AdminController extends AbstractController
     /**
      * Permet de récupérer la modale de modification d'un participant
      * @Route("/getModaleUpdateParticipant", name="_get_modale_update_participant")
-     * @param $idParticipant
+     * @param Request $request
      * @return mixed
      */
     public function getModaleUpdateParticipant(Request $request)
@@ -308,10 +390,23 @@ class AdminController extends AbstractController
             ->getForm();
 
         $formUpdateParticipant->handleRequest($request);
-        //Si le formulaire est soumis et est valide
+        dump($oParticipant->getId());
+
+        //Si le formulaire est soumit et est valide
         if ($formUpdateParticipant->isSubmitted() && $formUpdateParticipant->isValid()) {
             //On hydrate l'instance avec les données du formulaire
-            $oParticipant = $formUpdateParticipant->getData();
+            $oUpdateParticipant = $formUpdateParticipant->getData();
+
+            //Vérification de la contrainte unique du pseudo d'un participant
+            $pseudoExists = $participantRepository->findOneBy(['pseudo' => $oUpdateParticipant->getPseudo()]);
+            if ($pseudoExists) {
+                if ($oParticipant->getPseudo() === $oUpdateParticipant->getPseudo()) {
+                    $oParticipant = $oUpdateParticipant;
+                } else {
+                    $this->addFlash('danger', 'Le pseudo est déjà utilisé');
+                    return $this->redirectToRoute('admin_get_participant_page');
+                }
+            }
 
             //on sauvegarde en base
             $em->persist($oParticipant);
@@ -320,6 +415,8 @@ class AdminController extends AbstractController
             //on affiche un message alertant du succès de la modif et on redirige vers la page de gestion des participants
             $this->addFlash('success', 'Participant modifié !');
             return $this->redirectToRoute('admin_get_participant_page');
+        } else {
+            dump($this->getErrorsFromForm($formUpdateParticipant));
         }
 
         return $this->render('admin/getModaleUpdateParticipant.html.twig', [
@@ -327,6 +424,75 @@ class AdminController extends AbstractController
             'idParticipant' => $idParticipant,
             'form' => $formUpdateParticipant->createView()
         ]);
+    }
+
+    /**
+     * Permet de supprimer un participant si l'on a accepté de supprimer les entités liées
+     * @Route("/deleteParticipant", name="_delete_participant")
+     * @param Request $request
+     * @return mixed
+     */
+    public function deleteParticipant(Request $request) {
+        //Récupération de l'entity manager
+        $em = $this->getDoctrine()->getManager();
+
+        //Récupération de l'identifiant du participant que l'on souhaite modifier
+        $idParticipant = $request->get('idParticipant');
+        //Récupération du repository de l'entité Participant
+        $participantRepository = $em->getRepository('App:Participant');
+        //Récupération du repository de l'entité Sortie
+        $sortieRepository = $em->getRepository('App:Sortie');
+        //Récupération du repository de l'entité Inscription
+        $inscriptionRepository = $em->getRepository('App:Inscription');
+
+        //Récupération du participant à supprimer
+        $oParticipant = $participantRepository->findOneBy(['id' => $idParticipant]);
+        //Si le participant n'existe pas
+        if (!$oParticipant) {
+            $this->addFlash('danger', 'Le participant n\'existe pas');
+            return $this->redirectToRoute('admin_get_participant_page');
+        }
+
+        //On recherche les inscriptions aux sorties du participant
+        $toInscription = $inscriptionRepository->findBy(['participant' => $oParticipant]);
+        //Si le participant est inscrit à des sorties
+        if ($toInscription) {
+            //On supprime chaque inscription
+            foreach ($toInscription as $oInscription) {
+                $em->remove($oInscription);
+            }
+
+            $em->flush();
+        }
+
+        //On recherche les sorties organisées par le participant
+        $toSortie = $sortieRepository->findBy(['organisateur' => $oParticipant]);
+        //Si le participant a organisé des sorties
+        if ($toSortie) {
+            //On supprime chaque sortie
+            foreach ($toSortie as $oSortie) {
+                //On récupère les inscriptions de chaque sortie
+                $toInscription = $inscriptionRepository->findBy(['sortie' => $oSortie]);
+                //Si on a bien des inscriptions
+                if ($toInscription) {
+                    //On supprime chaque inscription
+                    foreach ($toInscription as $oInscription) {
+                        $em->remove($oInscription);
+                    }
+                }
+
+                $em->remove($oSortie);
+            }
+
+            $em->flush();
+        }
+
+        //Enfin, on supprime le participant
+        $em->remove($oParticipant);
+        $em->flush();
+
+        $this->addFlash('success', 'Le participant et les données liées ont été supprimés avec succès.');
+        return $this->redirectToRoute('admin_get_participant_page');
     }
 
     /**

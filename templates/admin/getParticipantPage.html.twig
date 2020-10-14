@@ -14,14 +14,21 @@
         </div>
         <br>
 
-        <div id="table_participant" class="mt-5">
-            <a type="button" class="btn btn-success mb-1" href="{{ path('admin_add_participant') }}">Ajouter un participant</a>
+        <a type="button" class="btn btn_custom w-auto m-0" href="{{ path('admin_add_participant') }}">Ajouter un participant</a>
+        <button class="btn btn_custom_cancel w-auto m-0" onclick="return afficherFormJson()">Ajouter depuis un fichier json</button>
+
+        <form id="form_json" class="d-none form-inline mt-2" method="post" action="{{ path('admin_add_participant_from_json_file') }}" enctype="multipart/form-data">
+            <input type="file" name="jsonFileParticipant" id="jsonFileParticipant">
+            <button type="submit" class="btn btn_custom">Valider</button>
+        </form>
+
+        <div id="table_participant" class="mt-2">
             <table class="table table-striped">
                 <thead>
                     <th>Pseudo</th>
                     <th>Nom</th>
                     <th>Prénom</th>
-                    <th>Téléphone</th>
+                    <th class="d-sm-none">Téléphone</th>
                     <th>Mail</th>
                     <th>Campus</th>
                     <th>Actions</th>
@@ -33,14 +40,14 @@
                             <th>{{ oParticipant.pseudo }}</th>
                             <th>{{ oParticipant.nom }}</th>
                             <th>{{ oParticipant.prenom }}</th>
-                            <th>{{ oParticipant.telephone }}</th>
+                            <th class="d-sm-none">{{ oParticipant.telephone }}</th>
                             <th>{{ oParticipant.mail }}</th>
                             <th>{{ oParticipant.campus.nom }}</th>
                             <th>
-                                <button class="btn btn_transparent pt-0 pr-0" title="Modifier"  onclick="return getModaleUpdateParticipant({{ oParticipant.id }});">
+                                <button class="btn btn_transparent p-0" title="Modifier"  onclick="return getModaleUpdateParticipant({{ oParticipant.id }});">
                                     <i class="fas fa-edit"></i>
                                 </button>
-                                <button class="btn btn_transparent pt-0 pl-0" title="Supprimer">
+                                <button class="btn btn_transparent p-0" title="Supprimer" onclick="return getConfirmDeleteParticipant({{ oParticipant.id }});">
                                     <i class="fas fa-trash"></i>
                                 </button>
                             </th>
@@ -58,11 +65,15 @@
     {{ parent() }}
 
     <script>
+        function afficherFormJson() {
+            $('#form_json').addClass('d-block');
+        }
+
         function getModaleUpdateParticipant(id) {
-            $routeGetModaleUpdateParticipant = '{{ path('admin_get_modale_update_participant') }}';
+            routeGetModaleUpdateParticipant = '{{ path('admin_get_modale_update_participant') }}';
 
             $.ajax({
-                url: $routeGetModaleUpdateParticipant,
+                url: routeGetModaleUpdateParticipant,
                 data: {
                     idParticipant: id
                 },
@@ -71,6 +82,26 @@
                     $(data).modal();
                 }
             });
+        }
+
+        function getConfirmDeleteParticipant(id) {
+            if (confirm("Êtes-vous sûre de vouloir supprimer les possibles sorties organisées et inscriptions liées ?")) {
+                routeDeleteParticipant = '{{ path('admin_delete_participant') }}';
+
+                $.ajax({
+                    url: routeDeleteParticipant,
+                    data: {
+                        idParticipant: id
+                    },
+                    method: 'POST',
+                    success: function (render) {
+                        document.open();
+                        document.write(render);
+                        document.close();
+                    },
+                    async: false
+                })
+            }
         }
     </script>
 

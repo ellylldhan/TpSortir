@@ -271,8 +271,7 @@ class Participant implements UserInterface
 
     public function getRoles()
     {
-        //TODO: [RL] moulinette pour determiner les user
-        return ['ROLE_USER'];
+        return ($this->administrateur) ? ["ROLE_ADMIN"] : ["ROLE_USER"];
     }
 
     public function getPassword()
