@@ -1,0 +1,18 @@
+
+{% extends 'base.html.twig' %}
+
+{% block title %} {{ parent() }} Page non trouvée  {% endblock %}
+
+{% block stylesheet %}
+    <link rel="stylesheet" href="{{ asset('css/error/error.css') }}">
+{% endblock %}
+
+{% block body %}
+
+    <div class="container">
+        <h1>Hey ! T'as pas le droit d'être ici è_é</h1>
+        <p>Cliques sur le lien ci-dessous pour retrouver ton chemin ;)</p>
+        <a href="{{ path('login') }}" class="btn btn-primary">Accueil</a>
+    </div>
+
+{% endblock %}
