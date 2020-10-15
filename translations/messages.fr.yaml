@@ -1,9 +1,9 @@
-Pseudo: Nickname
-Prenom: Surname
-Nom: Name
-Telephone: Phone
+Nickname: Pseudo
+Surname: Prénom
+Name: Nom
+Phone: Téléphone
 Mail: Mail
-Mot de passe: Password
-Confirmer le mot de passe: Please confirm your password
+Password: Mot de passe
+Please confirm your password: Confirmer le mot de passe
 Campus: Campus
-Rechercher: Search
+Search: Rechercher
