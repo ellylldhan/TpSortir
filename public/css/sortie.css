@@ -72,3 +72,8 @@
 .divConteneur {
      overflow: auto;
  }
+
+.btn-success {
+    border: 1px solid #28a745;
+    border-radius: 0px;
+}
