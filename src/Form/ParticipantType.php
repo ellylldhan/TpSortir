@@ -58,13 +58,19 @@ class ParticipantType extends AbstractType
             ->add('motDePasse', RepeatedType::class, [
                 'type' => PasswordType::class,
                 'invalid_message' => 'Le mot de passe doit être identique.',
-                'options' => ['attr' => [
-                    'class' => 'password-field form-control',
-                    'placeholder' => 'Mot de passe'
-                ]],
                 'required' => true,
-                'first_options'  => ['label' => false],
-                'second_options' => ['label' => false],
+                'first_options'  => [
+                    'label' => false,
+                    'attr' => [
+                        'placeholder' => 'mot de passe',
+                        'class' => 'password-field form-control password-first-input'
+                    ]],
+                'second_options' => [
+                    'label' => false,
+                    'attr' => [
+                        'placeholder' => 'confirmation',
+                        'class' => 'password-field form-control'
+                    ]]
             ])
             ->add('administrateur', CheckboxType::class, [
                 'required' => false,
@@ -102,6 +108,9 @@ class ParticipantType extends AbstractType
                         ],
                         'mimeTypesMessage' => 'Veuillez charger un fichier de type pdf, jpeg ou gif',
                     ])
+                ],
+                'attr' => [
+                    'class' => 'custom-file-input',
                 ]
             ])
         ;

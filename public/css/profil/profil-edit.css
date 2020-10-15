@@ -70,6 +70,18 @@ input.form-control, select.form-control{
     border: 1px solid #d6d6d6;
 }
 
-.password-field.form-control{
+.password-first-input{
     margin-bottom: 10px;
+}
+
+.photo-input{
+    background-color: #27AE60;
+}
+
+.custom-file-label {
+    border-radius: 0;
+}
+
+.custom-file{
+    overflow: hidden;
 }

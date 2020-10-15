@@ -26,8 +26,23 @@
                         {% endif %}
                     </div>
 
-                    <div class="btn-edit-photo-container">
-                        {{ form_widget(form.urlPhoto, {'attr': {'class': 'btn btn-sm btn-edit-photo'}}) }}
+                    <div class="container">
+                        <div class="row justify-content-center">
+                            <div class="col-6">
+                                <div class="btn-edit-photo-container">
+                                    <div class="custom-file">
+                                        {{ form_widget(form.urlPhoto) }}
+                                        <label class="custom-file-label">
+                                            {% if app.user.urlPhoto %}
+                                                {{ app.user.urlPhoto }}
+                                            {% else %}
+                                                choisir un avatar
+                                            {% endif %}
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
