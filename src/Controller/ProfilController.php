@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Participant;
 use App\Form\ParticipantType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
@@ -101,7 +102,7 @@ class ProfilController extends AbstractController
             $manager->flush();
             $userConnected = $this->findUser($userConnected->getId());
 
-            $this->addFlash("success", "Votre profil à bien été mis à jour");
+            $this->addFlash("success", "Votre profil a bien été mis à jour");
 
             return $this->redirectToRoute('profil', [
                 'user' => $userConnected,
@@ -123,7 +124,7 @@ class ProfilController extends AbstractController
     }
 
     private function notFound(){
-        return $this->render('exception/error404.html.twig', [
+        return $this->render('bundles/TwigBundle/Exception/error404.html.twig', [
             'controller_name' => 'ProfilController',
         ]);
     }
