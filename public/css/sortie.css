@@ -68,3 +68,7 @@
     outline: none;
     box-shadow: none;
 }
+
+.divConteneur {
+     overflow: auto;
+ }

@@ -9,174 +9,177 @@
 {% block body %}
 
     <div class="container mt-5 mb-5">
-        <a type="button" class="btn btn-success mb-1" onclick="updateEtat()">Mise à jour état </a>
+        {% if isMobile == false %}
+            <a type="button" class="btn btn-success mb-1" onclick="updateEtat()">Mise à jour état </a>
 
-        {{ form_start(formSortie, {'attr': {'class': 'form-inline', 'id': 'form_sortie_filter'}}) }}
+            {{ form_start(formSortie, {'attr': {'class': 'form-inline', 'id': 'form_sortie_filter'}}) }}
 
-        {{ form_errors(formSortie) }}
+            {{ form_errors(formSortie) }}
 
-        <div class="col-sm-9 p-0">
-            <div class="form-group mb-3">
-                <label for="sortie_campus" class="col-sm-3 col-form-label justify-content-start">
-                    Campus
-                </label>
-                <div class="col-sm-8">
-                    {{ form_widget(formSortie.campusOrganisateur,  {'attr': {'class': 'form-control w-100'}}) }}
+            <div class="col-sm-9 p-0">
+                <div class="form-group mb-3">
+                    <label for="sortie_campus" class="col-sm-3 col-form-label justify-content-start">
+                        Campus
+                    </label>
+                    <div class="col-sm-8">
+                        {{ form_widget(formSortie.campusOrganisateur,  {'attr': {'class': 'form-control w-100'}}) }}
+                    </div>
+                </div>
+
+                <div class="form-group mb-3">
+                    <label for="sortie_nom" class="col-sm-3 col-form-label justify-content-start">
+                        Le nom de la sortie contient :
+                    </label>
+                    <div class="col-sm-8">
+                        {{ form_widget(formSortie.nom,  {'attr': {'class': 'form-control w-100'}}) }}
+                    </div>
+                </div>
+
+                <div class="form-group mb-3">
+                    <label for="sortie_date_debut" class="col-sm-1 col-form-label justify-content-start">
+                        Entre
+                    </label>
+                    <div class="col-sm-4 p-0">
+                        {{ form_widget(formSortie.dateDebut,  {'attr': {'class': 'form-control w-100', 'id': 'sortie_date_debut'}}) }}
+                    </div>
+                    <div class="col-sm-1 p-0">
+                        <button type="button" class="btn btn_transparent"
+                                onclick="deleteValue('#search_sortie_dateDebut')">
+                            <i class="fas fa-times-circle"></i>
+                        </button>
+                    </div>
+
+                    <label for="sortie_date_cloture" class="col-sm-1 col-form-label justify-content-start">
+                        et
+                    </label>
+                    <div class="col-sm-4 p-0">
+                        {{ form_widget(formSortie.dateFin,  {'attr': {'class': 'form-control w-100', 'id': 'sortie_date_cloture'}}) }}
+                    </div>
+                    <div class="col-sm-1 p-0">
+                        <button type="button" class="btn" onclick="deleteValue('#search_sortie_dateFin')">
+                            <i class="fas fa-times-circle"></i>
+                        </button>
+                    </div>
                 </div>
             </div>
 
-            <div class="form-group mb-3">
-                <label for="sortie_nom" class="col-sm-3 col-form-label justify-content-start">
-                    Le nom de la sortie contient :
-                </label>
-                <div class="col-sm-8">
-                    {{ form_widget(formSortie.nom,  {'attr': {'class': 'form-control w-100'}}) }}
+            <div class="col-sm-3 p-0">
+                <div class="form-group mb-3">
+                    <label class="col-sm-10 col-form-label justify-content-start">
+                        Dont je suis l'organisateur/trice
+                    </label>
+                    <div class="col-sm-1">
+                        {{ form_widget(formSortie.estOrganisateur,  {'attr': {'class': 'form-control'}}) }}
+                    </div>
+                </div>
+
+                <div class="form-group mb-3">
+                    <label class="col-sm-10 col-form-label justify-content-start">
+                        Auxquelles je suis inscrit/e
+                    </label>
+                    <div class="col-sm-1">
+                        {{ form_widget(formSortie.estInscrit,  {'attr': {'class': 'form-control'}}) }}
+                    </div>
+                </div>
+
+                <div class="form-group mb-3">
+                    <label class="col-sm-10 col-form-label justify-content-start">
+                        Auxquelles je ne suis pas inscrit/e
+                    </label>
+                    <div class="col-sm-1">
+                        {{ form_widget(formSortie.pasInscrit,  {'attr': {'class': 'form-control'}}) }}
+                    </div>
+                </div>
+
+                <div class="form-group mb-3">
+                    <label class="col-sm-10 col-form-label justify-content-start">
+                        Sorties passées
+                    </label>
+                    <div class="col-sm-1">
+                        {{ form_widget(formSortie.sortiePasse,  {'attr': {'class': 'form-control'}}) }}
+                    </div>
                 </div>
             </div>
 
-            <div class="form-group mb-3">
-                <label for="sortie_date_debut" class="col-sm-1 col-form-label justify-content-start">
-                    Entre
-                </label>
-                <div class="col-sm-4 p-0">
-                    {{ form_widget(formSortie.dateDebut,  {'attr': {'class': 'form-control w-100', 'id': 'sortie_date_debut'}}) }}
-                </div>
-                <div class="col-sm-1 p-0">
-                    <button class="btn btn_transparent" onclick="deleteValue('#sortie_date_debut')">
-                        <i class="fas fa-times-circle"></i>
-                    </button>
-                </div>
-
-                <label for="sortie_date_cloture" class="col-sm-1 col-form-label justify-content-start">
-                    et
-                </label>
-                <div class="col-sm-4 p-0">
-                    {{ form_widget(formSortie.dateFin,  {'attr': {'class': 'form-control w-100', 'id': 'sortie_date_cloture'}}) }}
-                </div>
-                <div class="col-sm-1 p-0">
-                    <button class="btn" onclick="deleteValue('#sortie_date_cloture')">
-                        <i class="fas fa-times-circle"></i>
-                    </button>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-sm-3 p-0">
-            <div class="form-group mb-3">
-                <label class="col-sm-10 col-form-label justify-content-start">
-                    Dont je suis l'organisateur/trice
-                </label>
-                <div class="col-sm-1">
-                    {{ form_widget(formSortie.estOrganisateur,  {'attr': {'class': 'form-control'}}) }}
-                </div>
+            <div class="m-auto">
+                {{ form_widget(formSortie.rechercher) }}
             </div>
 
-            <div class="form-group mb-3">
-                <label class="col-sm-10 col-form-label justify-content-start">
-                    Auxquelles je suis inscrit/e
-                </label>
-                <div class="col-sm-1">
-                    {{ form_widget(formSortie.estInscrit,  {'attr': {'class': 'form-control'}}) }}
-                </div>
-            </div>
-
-            <div class="form-group mb-3">
-                <label class="col-sm-10 col-form-label justify-content-start">
-                    Auxquelles je ne suis pas inscrit/e
-                </label>
-                <div class="col-sm-1">
-                    {{ form_widget(formSortie.pasInscrit,  {'attr': {'class': 'form-control'}}) }}
-                </div>
-            </div>
-
-            <div class="form-group mb-3">
-                <label class="col-sm-10 col-form-label justify-content-start">
-                    Sorties passées
-                </label>
-                <div class="col-sm-1">
-                    {{ form_widget(formSortie.sortiePasse,  {'attr': {'class': 'form-control'}}) }}
-                </div>
-            </div>
-        </div>
-
-        <div class="m-auto">
-            {{ form_widget(formSortie.rechercher) }}
-        </div>
-
-        {{ form_end(formSortie) }}
-
-        <div id="table_participant" class="mt-5">
-            {% if isMobile == false %}
+            {{ form_end(formSortie) }}
             <a type="button" class="btn btn-success mb-1" href="{{ path('ajoutSortie') }}">Ajouter une sortie</a>
-            {% endif %}
-            <style>
-                #divConteneur {
-                    min-height: 1000px;
-                    height: 1000px;
-                    min-width: 1300px;
-                    width: 1300px;
-                    overflow: auto;
-                }
-            </style>
+        {% endif %}
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="table_participant">
 
-            <div id="divConteneur">
-                <table class="table table-striped">
-                    <thead>
-                    <th>Nom de la sortie</th>
-                    <th>Date de la sortie</th>
-                    <th>Clôture</th>
-                    <th>Inscrit/Places</th>
-                    <th>Etat</th>
-                    <th>Inscrit</th>
-                    <th>Organisateur</th>
-                    <th>Actions</th>
-                    </thead>
+                    <div class="divConteneur">
+                        <table class="table table-striped">
+                            <thead>
+                            <th>Nom de la sortie</th>
+                            <th>Date de la sortie</th>
+                            {% if isMobile == true %}
+                                <th>Lieu</th>
+                            {% endif %}
+                            {% if isMobile == false %}
+                                <th>Clôture</th>
+                                <th>Inscrit/Places</th>
+                                <th>Etat</th>
+                                <th>Inscrit</th>
+                                <th>Organisateur</th>
+                                <th>Actions</th>
+                            {% endif %}
+                            </thead>
 
-                    <tbody>
-                    {% for sortie in sorties %}
-                        <!--
-                        app.user.id
-                        -->
-                        {% set isInscrit = sortie.isInscrit(app.User.id) %}
-                        <tr>
-                            <th>{{ sortie.nom }}</th>
-                            <th>{{ sortie.dateDebut|format_datetime() }}</th>
-                            <th>{{ sortie.dateCloture|format_date() }}</th>
-                            <th>{{ sortie.inscriptions|length }} / {{ sortie.nombreInscriptionsMax }}</th>
-                            <th>{{ sortie.etat.libelle }}</th>
-                            <th>{% if isInscrit %} x {% endif %} </th>
-                            <th>{{ sortie.organisateur.pseudo }}</th>
-                            <th>
-
-                                <a type="button" class="btn btn-success mb-1" href="{{ path('inscriptionSortie') }}">Détail</a>
-
-                                {% if sortie.organisateur.id == app.user.id %}
-                                    {% if sortie.etat.libelle == 'Cloturée' or sortie.etat.libelle == 'Ouverte' or sortie.etat.libelle == 'Créee' %}
-                                        <a type="button" class="btn btn-success mb-1"
-                                           href="{{ path('ajoutSortie') }}?sortieId={{ sortie.id }}">Modifié</a>
-                                        <a type="button" class="btn btn-success mb-1"
-                                           href="{{ path('annulationSortie') }}?sortieId={{ sortie.id }}">Annulé</a>
+                            <tbody>
+                            {% for sortie in sorties %}
+                                {% set isInscrit = sortie.isInscrit(app.User.id) %}
+                                <tr>
+                                    <th>{{ sortie.nom }}</th>
+                                    <th>{{ sortie.dateDebut|format_datetime() }}</th>
+                                    {% if isMobile == true %}
+                                        <th>{{ sortie.lieu.ville.nom }}</th>
                                     {% endif %}
-                                {% else %}
-                                    {% if sortie.etat.libelle == 'Cloturée' or sortie.etat.libelle == 'Ouverte' and isInscrit %}
-                                        <a type="button" class="btn btn-success mb-1"
-                                           href="{{ path('desinscriptionSortie') }}?sortieId={{ sortie.id }}">se
-                                            désister</a>
-                                    {% else %}
-                                        {% if sortie.etat.libelle == 'Ouverte' and isInscrit == false%}
-                                            <a type="button" class="btn btn-success mb-1"
-                                               href="{{ path('inscriptionSortie') }}?sortieId={{ sortie.id }}">S'inscrire</a>
-                                        {% endif %}
-                                    {% endif %}
-                                {% endif %}
+                                    {% if isMobile == false %}
+                                        <th>{{ sortie.dateCloture|format_date() }}</th>
+                                        <th>{{ sortie.inscriptions|length }} / {{ sortie.nombreInscriptionsMax }}</th>
+                                        <th>{{ sortie.etat.libelle }}</th>
+                                        <th>{% if isInscrit %} x {% endif %} </th>
+                                        <th>{{ sortie.organisateur.pseudo }}</th>
+                                        <th>
 
-                            </th>
-                        </tr>
-                    {% endfor %}
-                    </tbody>
-                </table>
+                                            <a type="button" class="btn btn-success mb-1" href="{{ path('inscriptionSortie') }}">Détail</a>
+
+                                            {% if sortie.organisateur.id == app.user.id %}
+                                                {% if sortie.etat.libelle == 'Cloturée' or sortie.etat.libelle == 'Ouverte' or sortie.etat.libelle == 'Créee' %}
+                                                    <a type="button" class="btn btn-success mb-1"
+                                                       href="{{ path('ajoutSortie') }}?sortieId={{ sortie.id }}">Modifié</a>
+                                                    <a type="button" class="btn btn-success mb-1"
+                                                       href="{{ path('annulationSortie') }}?sortieId={{ sortie.id }}">Annulé</a>
+                                                {% endif %}
+                                            {% else %}
+                                                {% if sortie.etat.libelle == 'Cloturée' or sortie.etat.libelle == 'Ouverte' and isInscrit %}
+                                                    <a type="button" class="btn btn-success mb-1"
+                                                       href="{{ path('desinscriptionSortie') }}?sortieId={{ sortie.id }}">se
+                                                        désister</a>
+                                                {% else %}
+                                                    {% if sortie.etat.libelle == 'Ouverte' and isInscrit == false %}
+                                                        <a type="button" class="btn btn-success mb-1"
+                                                           href="{{ path('inscriptionSortie') }}?sortieId={{ sortie.id }}">S'inscrire</a>
+                                                    {% endif %}
+                                                {% endif %}
+                                            {% endif %}
+
+                                        </th>
+                                    {% endif %}
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
         </div>
+
     </div>
 
 {% endblock %}
@@ -187,7 +190,7 @@
 
     <script>
         function deleteValue(id) {
-            $(id).value = '';
+            $(id).val('');
         }
 
         function updateEtat() {

@@ -30,12 +30,13 @@ class SortieRepository extends ServiceEntityRepository
         if ($queryBuilder == null){
             $query = $this->createQueryBuilder('s');
         }
-        return $query->select('s', 'e','co','o','l','i')
+        return $query->select('s', 'e','co','o','l','i','v')
             ->from('App:Sortie','s')
             ->innerJoin('s.campusOrganisateur','co')
             ->innerJoin('s.organisateur','o')
             ->innerJoin('s.etat','e')
             ->innerJoin('s.lieu','l')
+            ->innerJoin('l.ville','v')
             ->leftJoin('s.inscriptions','i')
             ->andWhere("CURRENT_DATE() <= DATE_ADD(s.dateDebut,1, 'month')")
             ->orderBy('s.dateDebut', 'DESC')
