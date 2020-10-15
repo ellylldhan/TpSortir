@@ -37,7 +37,9 @@ class SortieController extends AbstractController
         $detect = new Mobile_Detect();
         $sortie = new SearchSortieType();
 
-        $form = $this->createForm(SearchSortieType::class, $sortie);
+        $form = $this->createForm(SearchSortieType::class, $sortie,[
+            'method' =>'GET'
+        ]);
         $form->handleRequest($request);
 
         //Si le formulaire est soumis et est valide
@@ -77,7 +79,7 @@ class SortieController extends AbstractController
         } else {
             $sortie = $sortieRepo->find($sortieId);
             if ($sortie->getOrganisateur()->getId() != $organisateur->getId()) {
-                $this->addFlash('Danger', 'vous n\'avez pas l\'autorisation !');
+                $this->addFlash('danger', 'vous n\'avez pas l\'autorisation !');
                 return $this->redirectToRoute('sortie');
             }
             if ($sortie->getEtat()->getLibelle() != "Ouverte" && $sortie->getEtat()->getLibelle() != "Fermée") {
@@ -119,7 +121,7 @@ class SortieController extends AbstractController
     public function inscription(Request $request, EntityManagerInterface $em)
     {
         $message = "inscription impossible";
-        $typeMessage = "error";
+        $typeMessage = "danger";
 
         if ($this->getUser() == null) {
 
@@ -160,7 +162,7 @@ class SortieController extends AbstractController
     public function desinscription(Request $request, EntityManagerInterface $em)
     {
         $message = "désinscription impossible";
-        $typeMessage = "error";
+        $typeMessage = "danger";
 
         if ($this->getUser()) {
             $participant = $this->getUser();
@@ -195,7 +197,7 @@ class SortieController extends AbstractController
     {
 
         $message = "annulation impossible";
-        $typeMessage = "error";
+        $typeMessage = "danger";
 
         $participant = $this->getUser();
 
@@ -216,11 +218,17 @@ class SortieController extends AbstractController
 
         return new RedirectResponse($this->generateUrl('sortie'));
     }
+    /**
+     * @Route("/detail", name="detail")
+     */
+    public function ManagerUpdateEtat(EntityManagerInterface $em, Sortie $sortie = null){
+
+    }
 
     /**
      * @Route("/updateEtat", name="updatEtat")
      */
-    public function ManagerUpdateEtat(EntityManagerInterface $em, Sortie $sortie = null)
+    public function getSortie(EntityManagerInterface $em, Sortie $sortie = null)
     {
         $sorties = $em->getRepository(Sortie::class)
             ->findAllWithEtat();
@@ -261,6 +269,7 @@ class SortieController extends AbstractController
 
     public function findSearch(SearchSortieType $searchSortieType, EntityManagerInterface $em)
     {
+
         $query = $em->createQueryBuilder('s');
 
         if (!empty($searchSortieType->getNom())) {
@@ -296,15 +305,15 @@ class SortieController extends AbstractController
 
             $query = $query
                 ->andWhere($query->expr()->In('s.id', $querySub->getDQL()))
-                ->setParameter('pidsub', 2);
+                ->setParameter('pidsub', $this->getUser()->getId());
             //$this->getUser()->getId()
             // ->setParameter('pid', 2);
         }
         if (!empty($searchSortieType->getEstOrganisateur())) {
+            dump($this->getUser()->getId());
             $query = $query
-                ->andWhere('o.id = oid')
-                //$this->getUser()->getId()
-                ->setParameter('oid', 1);
+                ->andWhere('o.id = :oid')
+                ->setParameter('oid', $this->getUser()->getId());
         }
         if (!empty($searchSortieType->getPasInscrit())) {
             $querySub = $em->createQueryBuilder()
@@ -314,7 +323,7 @@ class SortieController extends AbstractController
 
             $query = $query
                 ->andWhere($query->expr()->notIn('s.id', $querySub->getDQL()))
-                ->setParameter('pidnotsub', 2);
+                ->setParameter('pidnotsub', $this->getUser()->getId());
         }
         if (!empty($searchSortieType->getSortiePasse())) {
             $query = $query

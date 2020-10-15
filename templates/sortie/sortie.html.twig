@@ -134,7 +134,13 @@
                             {% for sortie in sorties %}
                                 {% set isInscrit = sortie.isInscrit(app.User.id) %}
                                 <tr>
-                                    <th>{{ sortie.nom }}</th>
+                                    <th>
+                                        {% if isMobile == false %}
+                                           {{ sortie.nom }}</th>
+                                        {% else %}
+                                            <a href="{{ path('detail') }}/?sortieId={{ sortie.id }}">{{ sortie.nom }}</a></th>
+                                        {% endif %}
+
                                     <th>{{ sortie.dateDebut|format_datetime() }}</th>
                                     {% if isMobile == true %}
                                         <th>{{ sortie.lieu.ville.nom }}</th>
@@ -147,8 +153,7 @@
                                         <th>{{ sortie.organisateur.pseudo }}</th>
                                         <th>
 
-                                            <a type="button" class="btn btn-success mb-1" href="{{ path('inscriptionSortie') }}">Détail</a>
-
+                                            <a type="button" class="btn btn-success mb-1" href="{{ path('detail') }}/?sortieId={{ sortie.id }}">Détail</a>
                                             {% if sortie.organisateur.id == app.user.id %}
                                                 {% if sortie.etat.libelle == 'Cloturée' or sortie.etat.libelle == 'Ouverte' or sortie.etat.libelle == 'Créee' %}
                                                     <a type="button" class="btn btn-success mb-1"
