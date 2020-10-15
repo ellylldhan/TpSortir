@@ -164,8 +164,8 @@
                                             <th>
                                                 <a type="button" class="btn btn_transparent p-0" href="{{ path('detail', {'sortieId': sortie.id}) }}">Détail</a>
 
-                                                {% if sortie.organisateur.id == app.user.id %}
-                                                    {% if sortie.etat.libelle == 'Cloturée' or sortie.etat.libelle == 'Ouverte' or sortie.etat.libelle == 'Créée' %}
+                                                {% if sortie.organisateur.id == app.user.id or sortie.organisateur.administrateur %}
+                                                    {% if sortie.organisateur.id == app.user.id and sortie.etat.libelle == 'Créée' %}
                                                         <a type="button" class="btn btn_transparent p-0"
                                                            href="{{ path('ajoutSortie', {'sortieId': sortie.id}) }}">
                                                             - Modifier

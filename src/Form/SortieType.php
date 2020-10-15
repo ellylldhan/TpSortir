@@ -72,7 +72,13 @@ class SortieType extends AbstractType
                 'attr' => [
                     'class' => 'btn_custom'
                 ]
-            ]);
+            ])
+            ->add('publication',SubmitType::class,[
+                'label' => 'publication',
+                'attr' => [
+                    'class' => 'btn_custom'
+                ]
+        ]);
     }
 
     public function configureOptions(OptionsResolver $resolver)

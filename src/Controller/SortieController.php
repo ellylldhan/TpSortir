@@ -15,6 +15,7 @@ use Couchbase\SearchSort;
 use DateTime;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\EntityManagerInterface;
+use mysql_xdevapi\Exception;
 use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -37,8 +38,8 @@ class SortieController extends AbstractController
         $detect = new Mobile_Detect();
         $sortie = new SearchSortieType();
 
-        $form = $this->createForm(SearchSortieType::class, $sortie,[
-            'method' =>'GET'
+        $form = $this->createForm(SearchSortieType::class, $sortie, [
+            'method' => 'GET'
         ]);
         $form->handleRequest($request);
 
@@ -62,6 +63,7 @@ class SortieController extends AbstractController
      */
     public function ajout(Request $request)
     {
+
         $detect = new Mobile_Detect;
         if ($detect->isMobile() == true) {
 
@@ -84,8 +86,15 @@ class SortieController extends AbstractController
                 //Redirection vers la page de gestion des campus
                 $this->redirectToRoute('sortie');
             }
+            $this->updateEtat($em, $sortie);
+
             if ($sortie->getOrganisateur()->getId() != $organisateur->getId()) {
                 $this->addFlash('danger', 'vous n\'avez pas l\'autorisation !');
+                return $this->redirectToRoute('sortie');
+            }
+
+            if ($sortie->getEtat()->getLibelle() != 'Créee'){
+                $this->addFlash('danger', 'La sortie ne peux pas être modifé !');
                 return $this->redirectToRoute('sortie');
             }
         }
@@ -93,19 +102,25 @@ class SortieController extends AbstractController
 
         $form = $this->createForm(SortieType::class, $sortie);
         $form->handleRequest($request);
+        if ($organisateur->getActif()) {
+            if ($form->isSubmitted() && $form->isValid() && ($form->get('publication')->isClicked() || $form->get('enregister')->isClicked() )) {
+                $sortie = $form->getData();
+                $sortie->setOrganisateur($organisateur);
+                if ($form->get('publication')->isClicked() ) {
+                    $sortie->setEtat($em->getRepository(Etat::class)->findOneBy(['libelle' => 'Créee']));
+                }
+                if ($form->get('enregister')->isClicked()){
+                    $sortie->setEtat($em->getRepository(Etat::class)->findOneBy(['libelle' => 'Ouverte']));
+                }
+                $sortie->setCampusOrganisateur($organisateur->getCampus());
+                $em->persist($sortie);
+                $em->flush();
 
-        if ($organisateur->getActif() && $form->isSubmitted() && $form->isValid()) {
-            $sortie = $form->getData();
-            $sortie->setOrganisateur($organisateur);
-            $sortie->setEtat($em->getRepository(Etat::class)->findOneBy(['libelle' => 'Ouverte']));
-            $sortie->setCampusOrganisateur($organisateur->getCampus());
-            $em->persist($sortie);
-            $em->flush();
-
-            $this->addFlash('success', 'Sortie enregistré !');
-            return $this->redirectToRoute('sortie');
-        }else{
-            $this->addFlash('danger', 'une erreur est survenue !');
+                $this->addFlash('success', 'Sortie enregistré !');
+                return $this->redirectToRoute('sortie');
+            }
+        } else {
+            $this->addFlash('danger', 'Organisateur non Actif !');
         }
 
         return $this->render('sortie/AjoutSortie.html.twig', [
@@ -217,10 +232,12 @@ class SortieController extends AbstractController
 
         return new RedirectResponse($this->generateUrl('sortie'));
     }
+
     /**
      * @Route("/detail", name="detail")
      */
-    public function getSortie(Request $request, EntityManagerInterface $em){
+    public function getSortie(Request $request, EntityManagerInterface $em)
+    {
 
         $em = $this->getDoctrine()->getManager();
         $sortieRepository = $em->getRepository('App:Sortie');
@@ -229,7 +246,7 @@ class SortieController extends AbstractController
 
         if (!$sortieid) {
             //On redirige vers la page de gestion des villes
-            $this->addFlash('danger','aucune sortie trouvée');
+            $this->addFlash('danger', 'aucune sortie trouvée');
             return $this->redirectToRoute('sortie');
         }
 
@@ -240,10 +257,12 @@ class SortieController extends AbstractController
             'sortie' => $sortie
         ]);
     }
+
     /**
-    * @Route("/modalAnnuler", name="modalAnnuler")
-    */
-    public function getModalAnnuler(Request $request, EntityManagerInterface $em){
+     * @Route("/modalAnnuler", name="modalAnnuler")
+     */
+    public function getModalAnnuler(Request $request, EntityManagerInterface $em)
+    {
 
         $sortieid = $request->get('sortieId');
 
