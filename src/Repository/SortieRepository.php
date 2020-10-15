@@ -40,6 +40,7 @@ class SortieRepository extends ServiceEntityRepository
             ->leftJoin('s.inscriptions','i')
             ->andWhere("CURRENT_DATE() <= DATE_ADD(s.dateDebut,1, 'month')")
             ->orderBy('s.dateDebut', 'DESC')
+            ->orderBy('e.id', 'ASC')
             ->getQuery()
             ->getResult();
 

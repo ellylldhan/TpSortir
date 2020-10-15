@@ -28,7 +28,8 @@ class Sortie
     /**
      * @ORM\Column(type="datetime")
      * @Assert\GreaterThanOrEqual(
-     *     propertyPath="dateCloture"
+     *     propertyPath="dateCloture",
+     *     message = "La date de cloture doit être antérieur ou égal à la date de début de la sortie"
      * )
      */
     private $dateDebut;

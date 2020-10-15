@@ -17,6 +17,7 @@ use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\EntityManagerInterface;
 use mysql_xdevapi\Exception;
 use Symfony\Component\Form\Form;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -104,20 +105,32 @@ class SortieController extends AbstractController
         $form->handleRequest($request);
         if ($organisateur->getActif()) {
             if ($form->isSubmitted() && $form->isValid() && ($form->get('publication')->isClicked() || $form->get('enregister')->isClicked() )) {
+
                 $sortie = $form->getData();
                 $sortie->setOrganisateur($organisateur);
+
                 if ($form->get('publication')->isClicked() ) {
                     $sortie->setEtat($em->getRepository(Etat::class)->findOneBy(['libelle' => 'Créee']));
                 }
+
                 if ($form->get('enregister')->isClicked()){
                     $sortie->setEtat($em->getRepository(Etat::class)->findOneBy(['libelle' => 'Ouverte']));
                 }
+
                 $sortie->setCampusOrganisateur($organisateur->getCampus());
                 $em->persist($sortie);
                 $em->flush();
 
                 $this->addFlash('success', 'Sortie enregistré !');
                 return $this->redirectToRoute('sortie');
+            }
+            else { //Si le formulaire n'est pas valide
+                $errors = $this->getErrorsFromForm($form);
+
+                //Pour chaque erreur, on affiche une alerte contenant le message
+                foreach ($errors as $error) {
+                    $this->addFlash("danger", $error[0]);
+                }
             }
         } else {
             $this->addFlash('danger', 'Organisateur non Actif !');
@@ -381,5 +394,22 @@ class SortieController extends AbstractController
         return $query;
     }
 
+    private function getErrorsFromForm(FormInterface $form)
+    {
+        $errors = array();
 
+        foreach ($form->getErrors() as $error) {
+            $errors[] = $error->getMessage();
+        }
+
+        foreach ($form->all() as $childForm) {
+            if ($childForm instanceof FormInterface) {
+                if ($childErrors = $this->getErrorsFromForm($childForm)) {
+                    $errors[$childForm->getName()] = $childErrors;
+                }
+            }
+        }
+
+        return $errors;
+    }
 }
