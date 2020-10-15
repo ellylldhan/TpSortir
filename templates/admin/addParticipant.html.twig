@@ -27,7 +27,13 @@
 
                     <div class="form-group mb-3">
                         <div class="col-sm-12">
-                            {{ form_widget(form.motDePasse, { 'attr': {'id': 'participant_mot_de_passe', 'placeholder': 'Mot de passe'} }) }}
+                            {{ form_widget(form.motDePasse.first, { 'attr': {'id': 'participant_mot_de_passe', 'placeholder': 'Mot de passe'} }) }}
+                        </div>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <div class="col-sm-12">
+                            {{ form_widget(form.motDePasse.second, { 'attr': {'id': 'participant_confirmation_mot_de_passe', 'placeholder': 'Confirmer le mot de passe'} }) }}
                         </div>
                     </div>
                 </div>
@@ -90,6 +96,8 @@
                     </div>
                 </div>
 
+                {{ form_widget(form._token) }}
+
                 <div class="mb-5 mt-3 ml-auto mr-auto">
                     <button type="submit" class="btn btn_custom">Enregistrer</button>
                     <a type="button" class="btn btn_custom_cancel" href="{{ path('admin_get_participant_page') }}">
@@ -97,7 +105,7 @@
                     </a>
                 </div>
 
-                {{ form_end(form) }}
+                {{ form_end(form, {'render_rest': false}) }}
             </div>
         </div>
     </div>

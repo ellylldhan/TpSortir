@@ -1,0 +1,17 @@
+.main-container, .button-container, .jumbotron {
+    margin-top: 40px;
+}
+
+.button-container{
+    text-align: center;
+}
+
+.pseudo{
+    text-align: center;
+}
+
+img{
+    max-width: 100px;
+    max-height: 100px;
+}
+

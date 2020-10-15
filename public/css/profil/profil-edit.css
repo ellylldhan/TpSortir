@@ -1,0 +1,17 @@
+
+.main-container{
+    text-align: left;
+}
+
+.photo-container{
+    justify-content: center;
+    text-align: center;
+}
+
+.btn-edit-photo{
+    margin-top: 5px;
+}
+
+.btn-edit-photo-container{
+    margin-top: 5px;
+}
