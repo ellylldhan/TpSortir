@@ -37,7 +37,7 @@ class AdminController extends AbstractController
 
     /**
      * Permet à un administrateur d'ajouter un participant
-     * @Route("/addParticipant", name="_add_participant")
+     * @Route("/add/participant", name="_add_participant")
      * @param Request $request
      * @param UserPasswordEncoderInterface $encoder
      * @return Response
@@ -86,7 +86,7 @@ class AdminController extends AbstractController
 
     /**
      * Permet d'ajouter des participants à partir d'un fichier json
-     * @Route("/addParticipantFromJsonFile", name="_add_participant_from_json_file")
+     * @Route("/add/participant/json", name="_add_participant_from_json_file")
      * @param Request $request
      * @return mixed
      */
@@ -160,7 +160,7 @@ class AdminController extends AbstractController
 
     /**
      * Permet de récupérer la page de gestion des campus
-     * @Route("/getCampusPage", name="_get_campus_page")
+     * @Route("/get/campus", name="_get_campus_page")
      * @return mixed
      */
     public function getCampusPage()
@@ -182,7 +182,7 @@ class AdminController extends AbstractController
 
     /**
      * Permet de récupérer la page de gestion des villes
-     * @Route("/getVillePage", name="_get_ville_page")
+     * @Route("/get/villes", name="_get_ville_page")
      * @return mixed
      */
     public function getVillePage()
@@ -204,7 +204,7 @@ class AdminController extends AbstractController
 
     /**
      * Permet de récupérer la page de gestion des participants
-     * @Route("/getParticipantPage", name="_get_participant_page")
+     * @Route("/get/participants", name="_get_participant_page")
      * @return mixed
      */
     public function getParticipantPage()
@@ -225,7 +225,7 @@ class AdminController extends AbstractController
 
     /**
      * Récupère la modale d'ajout ou de modification
-     * @Route("/getModaleCampus", name="_get_modale_campus")
+     * @Route("/update/campus", name="_get_modale_campus")
      * @param Request $request
      * @return RedirectResponse|Response
      */
@@ -285,7 +285,7 @@ class AdminController extends AbstractController
 
     /**
      * Récupère la modale d'ajout ou de modification
-     * @Route("/getModaleVille", name="_get_modale_ville")
+     * @Route("/update/ville", name="_get_modale_ville")
      * @param Request $request
      * @return RedirectResponse|Response
      */
@@ -345,7 +345,7 @@ class AdminController extends AbstractController
 
     /**
      * Permet de récupérer la modale de modification d'un participant
-     * @Route("/getModaleUpdateParticipant", name="_get_modale_update_participant")
+     * @Route("/update/participant", name="_get_modale_update_participant")
      * @param Request $request
      * @return mixed
      */
@@ -427,7 +427,7 @@ class AdminController extends AbstractController
 
     /**
      * Permet de supprimer un participant si l'on a accepté de supprimer les entités liées
-     * @Route("/deleteParticipant", name="_delete_participant")
+     * @Route("/delete/participant", name="_delete_participant")
      * @param Request $request
      * @return mixed
      */
@@ -496,7 +496,7 @@ class AdminController extends AbstractController
 
     /**
      * Permet de rechercher un campus sur son nom
-     * @Route("/searchCampus", name="_search_campus")
+     * @Route("/search/campus", name="_search_campus")
      * @param Request $request
      * @return mixed
      */
@@ -526,7 +526,7 @@ class AdminController extends AbstractController
 
     /**
      * Permet de rechercher une ville sur son nom
-     * @Route("/searchVille", name="_search_ville")
+     * @Route("/search/ville", name="_search_ville")
      * @param Request $request
      * @return mixed
      */
