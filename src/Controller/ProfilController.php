@@ -43,7 +43,7 @@ class ProfilController extends AbstractController
         $userConnected = $this->getUser();
         $userToUpdate = $this->findUser($id);
 
-        // L'utilisateur n'éxiste pas
+        // L'utilisateur n'existe pas
         if(!$userToUpdate) $this->notFound();
 
         // l'utilisateur courant est-il le même que celui qu'on cherche à modifier
@@ -65,7 +65,7 @@ class ProfilController extends AbstractController
             // Le pseudo existe-t-il déjà en base
             $pseudo = $form->get('pseudo')->getData();
             if($manager->getRepository(Participant::class)->findOneBy(['pseudo' => $pseudo])){
-                $this->addFlash("danger", "Ce pseudo éxiste déjà");
+                $this->addFlash("danger", "Ce pseudo existe déjà");
             }
 
             // On récupère la photo
@@ -111,7 +111,6 @@ class ProfilController extends AbstractController
         }
 
         return $this->render('profil/profil-edit.html.twig', [
-            'controller_name' => 'ProfilController',
             'form' => $form->createView(),
             'title' => 'Edition de mon profil'
         ]);
@@ -124,8 +123,6 @@ class ProfilController extends AbstractController
     }
 
     private function notFound(){
-        return $this->render('bundles/TwigBundle/Exception/error404.html.twig', [
-            'controller_name' => 'ProfilController',
-        ]);
+        return $this->render('bundles/TwigBundle/Exception/error404.html.twig', []);
     }
 }
