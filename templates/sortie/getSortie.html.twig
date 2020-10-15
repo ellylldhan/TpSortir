@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %} {{ parent() }}  {% endblock %}
+{% block title %} {{ parent() }} | Détail sortie {% endblock %}
 
 {% block stylesheet %}
     <link rel="stylesheet" href="{{ asset('css/sortie.css') }}">
@@ -8,94 +8,136 @@
 
 {% block body %}
 
-    <div class="container">
-        <div class="row">
-            <div class="col-sm-6">
+    <div class="container mt-5 mb-5">
+        <div class="title">
+            <h1>Détail sortie</h1>
+        </div>
+        <br>
 
-                <div class="form-group mb-3">
-                    <label class="col-sm-3 col-form-label justify-content-start">
+        <div class="row mt-5">
+            <div class="col-sm-6">
+                <div class="row">
+                    <div class="col-sm-5 font-weight-bold">
                         Nom de la sortie :
-                    </label>
-                    <div class="col-sm-8">
+                    </div>
+                    <div class="col-sm-7 justify-content-start">
                         {{ sortie.nom }}
                     </div>
-                </div>
 
-                <div class="form-group mb-3">
-                    <label class="col-sm-3 col-form-label justify-content-start">
+                    <div class="col-sm-5 font-weight-bold">
                         Date et heure de la sortie :
-                    </label>
-                    <div class="col-sm-8">
+                    </div>
+                    <div class="col-sm-7 justify-content-start">
                         {{ sortie.dateDebut|format_datetime() }}
                     </div>
-                </div>
 
-                <div class="form-group mb-3">
-                    <label class="col-sm-3 col-form-label justify-content-start">
+                    <div class="col-sm-5 font-weight-bold">
                         Date limite d'inscription :
-                    </label>
-                    <div class="col-sm-8">
+                    </div>
+                    <div class="col-sm-7 justify-content-start">
                         {{ sortie.dateCloture|format_datetime() }}
                     </div>
-                </div>
 
-                <div class="form-group mb-3">
-                    <label class="col-sm-3 col-form-label justify-content-start">
+                    <div class="col-sm-5 font-weight-bold">
                         Nombre de places :
-                    </label>
-                    <div class="col-sm-8">
-                        {{ sortie.nombreInscriptionsMax }}
                     </div>
-                </div>
+                    <div class="col-sm-7 justify-content-start">
+                        {% if sortie.nombreInscriptionsMax > 1 %}
+                            {{ sortie.nombreInscriptionsMax }} places
+                        {% else %}
+                            {{ sortie.nombreInscriptionsMax }} place
+                        {% endif %}
+                    </div>
 
-                <div class="form-group mb-3">
-                    <label class="col-sm-3 col-form-label justify-content-start">
+                    <div class="col-sm-5 font-weight-bold">
                         Durée :
-                    </label>
-                    <div class="col-sm-8">
-                        {{ sortie.duree }}
                     </div>
-                </div>
+                    <div class="col-sm-7 justify-content-start">
+                        {% if sortie.duree is null %}
+                            Aucune durée renseignée.
+                        {% else %}
+                            {{ sortie.duree }}
+                        {% endif %}
+                    </div>
 
-                <div class="form-group mb-3">
-                    <label class="col-sm-3 col-form-label justify-content-start">
+                    <div class="col-sm-5 font-weight-bold">
                         Description et infos :
-                    </label>
-                    <div class="col-sm-8">
-                        {{ sortie.duree }}
+                    </div>
+                    <div class="col-sm-7 justify-content-start">
+                        {% if sortie.descriptionInfo is null %}
+                            Aucune information renseignée.
+                        {% else %}
+                            {{ sortie.descriptionInfo }}
+                        {% endif %}
                     </div>
                 </div>
-
             </div>
             <div class="col-sm-6">
-                <span>Campus : {{ sortie.campusOrganisateur.nom }}</span>
-                <span>Lieu : {{ sortie.lieu.nom }}</span>
-                <span>Rue : {{ sortie.lieu.rue }}</span>
-                <span>Code Postal : {{ sortie.lieu.ville.codePostal }}</span>
-                <span>Latitude : {{ sortie.lieu.latitude }}</span>
-                <span>Longitude : {{ sortie.lieu.longitude }}</span>
+                <div class="row">
+                    <div class="col-sm-3 font-weight-bold">
+                        Campus :
+                    </div>
+                    <div class="col-sm-9 justify-content-start">
+                        {{ sortie.campusOrganisateur.nom }}
+                    </div>
+
+                    <div class="col-sm-3 font-weight-bold">
+                        Lieu :
+                    </div>
+                    <div class="col-sm-9 justify-content-start">
+                        {{ sortie.lieu.nom }}
+                    </div>
+
+                    <div class="col-sm-3 font-weight-bold">
+                        Rue :
+                    </div>
+                    <div class="col-sm-9 justify-content-start">
+                        {{ sortie.lieu.rue }}
+                    </div>
+
+                    <div class="col-sm-3 font-weight-bold">
+                        Code postal :
+                    </div>
+                    <div class="col-sm-9 justify-content-start">
+                        {{ sortie.lieu.ville.codePostal }}
+                    </div>
+
+                    <div class="col-sm-3 font-weight-bold">
+                        Latitude :
+                    </div>
+                    <div class="col-sm-9 justify-content-start">
+                        {{ sortie.lieu.latitude }}
+                    </div>
+
+                    <div class="col-sm-3 font-weight-bold">
+                        Longitude :
+                    </div>
+                    <div class="col-sm-9 justify-content-start">
+                        {{ sortie.lieu.longitude }}
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
 
-    <div class="divConteneur">
-        <table class="table table-striped">
-            <thead>
-            <th>pseudo</th>
-            <th>Nom Prenom</th>
-            </thead>
+        <div class="divConteneur mt-5">
+            <table class="table table-striped">
+                <thead>
+                <th>pseudo</th>
+                <th>Nom Prenom</th>
+                </thead>
 
-            <tbody>
-            {% for inscription in sortie.inscriptions %}
-                <tr>
-                    <th>
-                        {{ inscription.participant.pseudo }}
-                    </th>
-                    <th>{{ inscription.participant.nom }} {{ inscription.participant.prenom }} </th>
-                </tr>
-            {% endfor %}
-            </tbody>
-        </table>
+                <tbody>
+                {% for inscription in sortie.inscriptions %}
+                    <tr>
+                        <th>
+                            {{ inscription.participant.pseudo }}
+                        </th>
+                        <th>{{ inscription.participant.nom }} {{ inscription.participant.prenom }} </th>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
     </div>
 
 {% endblock %}
