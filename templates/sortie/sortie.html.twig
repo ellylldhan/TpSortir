@@ -164,13 +164,15 @@
                                             <th>
                                                 <a type="button" class="btn btn_transparent p-0" href="{{ path('detail', {'sortieId': sortie.id}) }}">Détail</a>
 
-                                                {% if sortie.organisateur.id == app.user.id or sortie.organisateur.administrateur %}
-                                                    {% if sortie.organisateur.id == app.user.id and sortie.etat.libelle == 'Créée' %}
+                                                {% if sortie.organisateur.id == app.user.id or app.user.administrateur %}
+                                                    {% if sortie.organisateur.id == app.user.id and sortie.etat.libelle == 'Créee' %}
                                                         <a type="button" class="btn btn_transparent p-0"
                                                            href="{{ path('ajoutSortie', {'sortieId': sortie.id}) }}">
                                                             - Modifier
                                                         </a>
+                                                    {% endif %}
 
+                                                    {% if sortie.etat.libelle == 'Créee' or sortie.etat.libelle == 'Ouverte' or sortie.etat.libelle == 'Cloturée' %}
                                                         <a type="button" class="btn btn_transparent p-0"
                                                            onclick="getModalAnnuler({{ sortie.id }})">
                                                             - Annuler

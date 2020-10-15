@@ -296,21 +296,23 @@ class SortieController extends AbstractController
         if (!$duree) {
             $duree = 0;
         }
-        if ($datenow > $sortie->getDateDebut()->add(new \DateInterval('P0Y0DT0H' . $duree . 'M'))) {
-            if ($sortie->getEtat() != 'Passée') {
-                $sortie->setEtat($repositoryEtat->findOneBy(['libelle' => 'Passée']));
+        if ($sortie->getEtat()->getLibelle() != 'Créee') {
+            if ($datenow > $sortie->getDateDebut()->add(new \DateInterval('P0Y0DT0H' . $duree . 'M'))) {
+                if ($sortie->getEtat() != 'Passée') {
+                    $sortie->setEtat($repositoryEtat->findOneBy(['libelle' => 'Passée']));
+                }
+            } elseif ($datenow > $sortie->getDateDebut()) {
+                if ($sortie->getEtat() != 'Activité en cours') {
+                    $sortie->setEtat($repositoryEtat->findOneBy(['libelle' => 'Activité en cours']));
+                }
+            } elseif ($datenow > $sortie->getDateCloture()) {
+                if ($sortie->getEtat() != 'Cloturée') {
+                    $sortie->setEtat($repositoryEtat->findOneBy(['libelle' => 'Cloturée']));
+                }
             }
-        } elseif ($datenow > $sortie->getDateDebut()) {
-            if ($sortie->getEtat() != 'Activité en cours') {
-                $sortie->setEtat($repositoryEtat->findOneBy(['libelle' => 'Activité en cours']));
-            }
-        } elseif ($datenow > $sortie->getDateCloture()) {
-            if ($sortie->getEtat() != 'Cloturée') {
-                $sortie->setEtat($repositoryEtat->findOneBy(['libelle' => 'Cloturée']));
-            }
+            $em->persist($sortie);
+            $em->flush();
         }
-        $em->persist($sortie);
-        $em->flush();
     }
 
     public function findSearch(SearchSortieType $searchSortieType, EntityManagerInterface $em)
