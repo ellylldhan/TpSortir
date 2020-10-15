@@ -15,3 +15,45 @@ img{
     max-height: 100px;
 }
 
+.btn_custom {
+    width: 100px;
+    background: #27AE60;
+    color: white;
+    border: 0 none;
+    border-radius: 1px;
+    cursor: pointer;
+    padding: 3px;
+    margin: 10px 5px;
+}
+
+.btn_custom:hover {
+    box-shadow: 0 0 0 2px white, 0 0 0 3px #27AE60;
+    color: white;
+}
+
+.btn_custom:focus {
+    outline: none;
+    box-shadow: none;
+}
+
+.btn_custom_cancel {
+    width: 100px;
+    background: #6c757d;
+    color: white;
+    border: 0 none;
+    border-radius: 1px;
+    cursor: pointer;
+    padding: 3px;
+    margin: 10px 5px;
+}
+
+.btn_custom_cancel:hover {
+    box-shadow: 0 0 0 2px white, 0 0 0 3px #6c757d;
+    color: white;
+}
+
+.btn_custom_cancel:focus {
+    outline: none;
+    box-shadow: none;
+}
+

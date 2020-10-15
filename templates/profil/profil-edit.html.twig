@@ -10,11 +10,13 @@
 {% block body %}
 
     <div class="container">
-        <div class="jumbotron">
-            {{ form_start(form) }}
 
-            {% if form.administrateur %}
+        {{ form_start(form) }}
 
+        {% if form.administrateur %}
+
+        <div class="card mt-5 mb-5">
+            <div class="card-header">
                 <div class="photo-container">
                     <div>
                         {% if app.user %}
@@ -25,27 +27,79 @@
                     </div>
 
                     <div class="btn-edit-photo-container">
+                        {{ form_widget(form.urlPhoto, {'attr': {'class': 'btn btn-sm btn-edit-photo'}}) }}
+                    </div>
+                </div>
+            </div>
 
-                        {{ form_widget(form.urlPhoto) }}
-                        {{ form_errors(form.urlPhoto) }}
+            <div class="card-body">
+
+                {{ form_errors(form) }}
+
+                <div class="col-sm-12">
+                    <div class="form-group mb-3">
+                        <div class="col-sm-12">
+                            {{ form_widget(form.pseudo, { 'attr': {'id': 'participant_pseudo', 'placeholder': 'Pseudo'} }) }}
+                        </div>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <div class="col-sm-12">
+                            {{ form_widget(form.motDePasse, {'attr': {'class': 'participant_pw'}}) }}
+                        </div>
                     </div>
                 </div>
 
+                <div class="col-sm-12">
+                    <div class="form-group mb-3">
+                        <div class="col-sm-12">
+                            {{ form_widget(form.nom, { 'attr': {'id': 'participant_nom', 'placeholder': 'Nom'} }) }}
+                        </div>
+                    </div>
 
-                {{ form_row(form.pseudo) }}
-                {{ form_row(form.prenom) }}
-                {{ form_row(form.nom) }}
-                {{ form_row(form.telephone) }}
-                {{ form_row(form.mail) }}
-                {{ form_row(form.motDePasse) }}
+                    <div class="form-group mb-3">
+                        <div class="col-sm-12">
+                            {{ form_widget(form.prenom, { 'attr': {'id': 'participant_prenom', 'placeholder': 'Prénom'} }) }}
+                        </div>
+                    </div>
+                </div>
 
-                {{ form_row(form.campus) }}
+                <div class="col-sm-12">
+                    <div class="form-group mb-3">
+                        <div class="col-sm-12">
+                            {{ form_widget(form.telephone, { 'attr': {'id': 'participant_telephone', 'placeholder': 'Numéro de téléphone'} }) }}
+                        </div>
+                    </div>
+
+                    <div class="form-group mb-4">
+                        <div class="col-sm-12">
+                            {{ form_widget(form.mail, { 'attr': {'id': 'participant_mail', 'placeholder': 'Adresse mail'} }) }}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-sm-12">
+                    <div class="form-group mb-4 campus-container">
+                        <label for="participant_campus" class="col-sm-2 col-form-label justify-content-start">
+                            Campus
+                            <span class="required">*</span>
+                        </label>
+                        <div class="col-sm-10">
+                            {{ form_widget(form.campus, { 'attr': {'id': 'participant_campus'} }) }}
+                        </div>
+                    </div>
+                </div>
 
                 {{ form_widget(form._token) }}
 
-                <div class="button-container">
-                    <button type="submit" class="btn btn-primary">Enregistrer les modifications</button>
+                <div class="mb-5 mt-3 ml-auto mr-auto button-container">
+                    <button type="submit" class="btn btn_custom">Enregistrer</button>
+                    <a type="button" class="btn btn_custom_cancel" href="{{ path('profil', {'id': app.user.id}) }}">
+                        Annuler
+                    </a>
                 </div>
+            </div>
+
             {% endif %}
 
             {{  form_end(form, {'render_rest': false}) }}

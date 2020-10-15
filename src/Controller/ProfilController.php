@@ -12,6 +12,7 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 class ProfilController extends AbstractController
 {
     /**
+     * Permet de récuperer un participant par son id
      * @Route("/profil/{id}", name="profil")
      * @param int $id
      * @return \Symfony\Component\HttpFoundation\Response
@@ -32,6 +33,7 @@ class ProfilController extends AbstractController
     }
 
     /**
+     * Permet d'éditer un profil
      * @Route("/profil/edit/{id}", name="edit-profil")
      * @param int $id
      * @return \Symfony\Component\HttpFoundation\Response
@@ -43,7 +45,7 @@ class ProfilController extends AbstractController
         $userToUpdate = $this->findUser($id);
 
         // L'utilisateur n'éxiste pas
-        if(!$userToUpdate) $this->notFound();
+        if(!$userToUpdate) throw $this->createNotFoundException();
 
         // l'utilisateur courant est-il le même que celui qu'on cherche à modifier
         if($userConnected->getId() != $userToUpdate->getId()) {
@@ -61,9 +63,17 @@ class ProfilController extends AbstractController
             // On récupère l'entité depuis le formulaire
             $userConnected = $form->getData();
 
-            // Le pseudo existe-t-il déjà en base
+
+            // Pseudo utilisateur courant
             $pseudo = $form->get('pseudo')->getData();
-            if($manager->getRepository(Participant::class)->findOneBy(['pseudo' => $pseudo])){
+
+            // Occurance du pseudo en base
+            $pseudoExist = $manager->getRepository(Participant::class)
+                ->findOneBy(['pseudo' => $pseudo])
+                ->getPseudo();
+
+            // Le pseudo existe-t-il déjà en base
+            if($pseudoExist && $pseudoExist != $pseudo){
                 $this->addFlash("danger", "Ce pseudo éxiste déjà");
             }
 
@@ -120,11 +130,5 @@ class ProfilController extends AbstractController
         // Récupération du profil utilisateur
         $em = $this->getDoctrine()->getManager();
         return $em->find(Participant::class, $id);
-    }
-
-    private function notFound(){
-        return $this->render('exception/error404.html.twig', [
-            'controller_name' => 'ProfilController',
-        ]);
     }
 }

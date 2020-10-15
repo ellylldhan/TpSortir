@@ -36,9 +36,9 @@
                 </div>
             </div>
             <div class="button-container">
-                <a href="{{ app.request.baseUrl }}" class="btn btn-primary">Retour</a>
+                <a href="{{ app.request.baseUrl }}" class="btn btn_custom">Retour</a>
                 {% if app.user and app.user == user %}
-                    <a href="{{ path('edit-profil', {"id":app.user.id}) }}" class="btn btn-primary">Modifier mon profil</a>
+                    <a href="{{ path('edit-profil', {"id":app.user.id}) }}" class="btn btn_custom_cancel">Modifier</a>
                 {% endif %}
             </div>
         </div>

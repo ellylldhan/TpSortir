@@ -63,8 +63,8 @@ class ParticipantType extends AbstractType
                     'placeholder' => 'Mot de passe'
                 ]],
                 'required' => true,
-                'first_options'  => ['label' => 'Mot de passe'],
-                'second_options' => ['label' => 'Confirmer le mot de passe'],
+                'first_options'  => ['label' => false],
+                'second_options' => ['label' => false],
             ])
             ->add('administrateur', CheckboxType::class, [
                 'required' => false,
@@ -92,9 +92,6 @@ class ParticipantType extends AbstractType
                 'label' => 'Photo participant',
                 'mapped' => false,
                 'required' => false,
-                'attr' => [
-                    'class' => 'btn btn-primary btn-sm'
-                ],
                 'constraints' => [
                     new File([
                         'maxSize' => '1024k',
