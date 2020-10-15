@@ -515,7 +515,7 @@ class AdminController extends AbstractController
         }
 
         //On récupère les campus correspondant à la recherche
-        $toCampus = $campusRepository->searchCampus($recherche);
+        $toCampus = $campusRepository->searchCampus('%'.$recherche);
 
         return $this->render('admin/getCampusPage.html.twig', [
             'title' => "Gestion campus",
