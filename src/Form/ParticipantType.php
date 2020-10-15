@@ -109,9 +109,6 @@ class ParticipantType extends AbstractType
                         'mimeTypesMessage' => 'Veuillez charger un fichier de type pdf, jpeg ou gif',
                     ])
                 ],
-                'attr' => [
-                    'class' => 'custom-file-input',
-                ]
             ])
         ;
     }

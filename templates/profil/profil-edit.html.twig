@@ -28,20 +28,9 @@
 
                     <div class="container">
                         <div class="row justify-content-center">
-                            <div class="col-6">
-                                <div class="btn-edit-photo-container">
-                                    <div class="custom-file">
+                                <div class="btn-edit-photo-container btn-sm">
                                         {{ form_widget(form.urlPhoto) }}
-                                        <label class="custom-file-label">
-                                            {% if app.user.urlPhoto %}
-                                                {{ app.user.urlPhoto }}
-                                            {% else %}
-                                                choisir un avatar
-                                            {% endif %}
-                                        </label>
-                                    </div>
                                 </div>
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -92,6 +81,10 @@
                         </div>
                     </div>
                 </div>
+
+                {# Champs à caché à l'utilisateur, mais nécéssaire pour la soumission entière du formulaire #}
+                {{ form_widget(form.administrateur, {'attr': {'class': 'd-none'}}) }}
+                {{ form_widget(form.actif, {'attr': {'class': 'd-none'}}) }}
 
                 <div class="col-sm-12">
                     <div class="form-group mb-4 campus-container">

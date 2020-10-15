@@ -57,12 +57,11 @@ class ProfilController extends AbstractController
         // Création du formulaire
         $form = $this->createForm(ParticipantType::class, $userConnected);
         $form->handleRequest($request);
-
+        dump($form);
         if($form->isSubmitted() && $form->isValid()){
-
+            dump($form);
             // On récupère l'entité depuis le formulaire
             $userConnected = $form->getData();
-
 
             // Pseudo utilisateur courant
             $pseudo = $form->get('pseudo')->getData();
@@ -74,7 +73,7 @@ class ProfilController extends AbstractController
 
             // Le pseudo existe-t-il déjà en base
             if($pseudoExist && $pseudoExist != $pseudo){
-                $this->addFlash("danger", "Ce pseudo éxiste déjà");
+                $this->addFlash("danger", "Ce pseudo existe déjà");
             }
 
             // On récupère la photo
@@ -105,7 +104,7 @@ class ProfilController extends AbstractController
             // Géstion du mot de passe
             $hashed = $encoder->encodePassword($userConnected, $userConnected->getPassword());
             $userConnected->setPassword($hashed);
-
+            dump($userConnected);
             // On persiste le nouvel état de l'entité
             $manager->persist($userConnected);
             $manager->flush();
@@ -113,10 +112,10 @@ class ProfilController extends AbstractController
 
             $this->addFlash("success", "Votre profil à bien été mis à jour");
 
-            return $this->redirectToRoute('profil', [
-                'user' => $userConnected,
-                'id' => $userConnected->getId()
-            ]);
+//            return $this->redirectToRoute('profil', [
+//                'user' => $userConnected,
+//                'id' => $userConnected->getId()
+//            ]);
         }
 
         return $this->render('profil/profil-edit.html.twig', [
