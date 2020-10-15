@@ -221,14 +221,31 @@ class SortieController extends AbstractController
     /**
      * @Route("/detail", name="detail")
      */
-    public function ManagerUpdateEtat(EntityManagerInterface $em, Sortie $sortie = null){
+    public function getSortie(Request $request, EntityManagerInterface $em){
 
+        $em = $this->getDoctrine()->getManager();
+        $sortieRepository = $em->getRepository('App:Sortie');
+
+        $sortieid = $request->get('sortieId');
+
+        if (!$sortieid) {
+            //On redirige vers la page de gestion des villes
+            $this->addFlash('danger','aucune sortie trouvée');
+            return $this->redirectToRoute('sortie');
+        }
+
+        //Récupération des villes en fonction de la recherche utilisateur
+        $sortie = $sortieRepository->find($sortieid);
+
+        return $this->render('sortie/getSortie.html.twig', [
+            'sortie' => $sortie
+        ]);
     }
 
     /**
      * @Route("/updateEtat", name="updatEtat")
      */
-    public function getSortie(EntityManagerInterface $em, Sortie $sortie = null)
+    public function ManagerUpdateEtat(EntityManagerInterface $em, Sortie $sortie = null)
     {
         $sorties = $em->getRepository(Sortie::class)
             ->findAllWithEtat();
