@@ -172,7 +172,7 @@
                                                         </a>
 
                                                         <a type="button" class="btn btn_transparent p-0"
-                                                           href="{{ path('annulationSortie', {'sortieId': sortie.id}) }}">
+                                                           onclick="getModalAnnuler({{ sortie.id }})">
                                                             - Annuler
                                                         </a>
                                                     {% endif %}
@@ -223,6 +223,19 @@
                     //ajout d'un message 'ok'
                 }
             });
+        }
+        function getModalAnnuler(id){
+                $routeGetModaleLieu = '{{ path('modalAnnuler') }}';
+                $.ajax({
+                    url: $routeGetModaleLieu,
+                    data: {
+                        sortieId: id
+                    },
+                    type: 'GET',
+                    success: function (data) {
+                        $(data).modal();
+                    }
+                });
         }
     </script>
 

@@ -192,10 +192,7 @@
             document.cookie = "champ = \"\" ; -1 ;path=/";
         }
         function setForm(json){
-            console.log(json);
             let object = JSON.parse(json);
-            console.log(object);
-           console.log(Object.keys(object));
             Object.keys(object).forEach(x => {
                 $(x).val(object[x]);
             })

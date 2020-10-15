@@ -78,18 +78,15 @@ class SortieController extends AbstractController
             $sortie = new Sortie();
         } else {
             $sortie = $sortieRepo->find($sortieId);
-            if ($sortie->getOrganisateur()->getId() != $organisateur->getId()) {
-                $this->addFlash('danger', 'vous n\'avez pas l\'autorisation !');
-                return $this->redirectToRoute('sortie');
-            }
-            if ($sortie->getEtat()->getLibelle() != "Ouverte" && $sortie->getEtat()->getLibelle() != "Fermée") {
-
-            }
             if (!$sortie) {
                 //Création d'une alerte contenant le message d'erreur
                 $this->addFlash('danger', 'La sortie n\'existe pas.');
                 //Redirection vers la page de gestion des campus
                 $this->redirectToRoute('sortie');
+            }
+            if ($sortie->getOrganisateur()->getId() != $organisateur->getId()) {
+                $this->addFlash('danger', 'vous n\'avez pas l\'autorisation !');
+                return $this->redirectToRoute('sortie');
             }
         }
 
@@ -97,7 +94,7 @@ class SortieController extends AbstractController
         $form = $this->createForm(SortieType::class, $sortie);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
+        if ($organisateur->getActif() && $form->isSubmitted() && $form->isValid()) {
             $sortie = $form->getData();
             $sortie->setOrganisateur($organisateur);
             $sortie->setEtat($em->getRepository(Etat::class)->findOneBy(['libelle' => 'Ouverte']));
@@ -107,6 +104,8 @@ class SortieController extends AbstractController
 
             $this->addFlash('success', 'Sortie enregistré !');
             return $this->redirectToRoute('sortie');
+        }else{
+            $this->addFlash('danger', 'une erreur est survenue !');
         }
 
         return $this->render('sortie/AjoutSortie.html.twig', [
@@ -134,7 +133,6 @@ class SortieController extends AbstractController
             $sortie = $sortieRepo->find($request->get('sortieId'));
             $inscriptions = $inscriptionRepo->findBy(["sortie" => $sortie]);
             if ($sortie) {
-                dump($sortie);
                 $this->updateEtat($em, $sortie);
 
                 if ($participant != null && $participant->getActif() && $sortie->getDateCloture() > new \DateTime() && count($inscriptions) < $sortie->getNombreInscriptionsMax() && $sortie->getEtat()->getLibelle() == "Ouverte") {
@@ -198,19 +196,20 @@ class SortieController extends AbstractController
 
         $message = "annulation impossible";
         $typeMessage = "danger";
-
+        $motif = $request->get('motif');
         $participant = $this->getUser();
 
         $sortie = $em->find(Sortie::class, $request->get('sortieId'));
+        if ($sortie && $motif) {
 
-        if ($sortie) {
             $this->updateEtat($em, $sortie);
 
-            if ($participant != null && $participant->getActif() && ($sortie->getOrganisateur() == $participant || $participant->getAdministrateur() == true) && ($sortie->getEtat()->getLibelle() == 'Cloturée' || $sortie->getEtat()->getLibelle() == 'Ouverte' || $sortie->getEtat()->getLibelle() == 'Créee')) {
+            if ($participant != null && $participant->getActif() && ($sortie->getOrganisateur()->getId() == $participant->getId() || $participant->getAdministrateur() == true) && ($sortie->getEtat()->getLibelle() == 'Cloturée' || $sortie->getEtat()->getLibelle() == 'Ouverte' || $sortie->getEtat()->getLibelle() == 'Créee')) {
                 $sortie->setEtat($em->getRepository(Etat::class)->findOneBy(['libelle' => 'Annulée']));
+                $sortie->setDescriptionInfo($motif);
                 $em->flush();
                 $message = "annulation réussi";
-                $typeMessage = "succes";
+                $typeMessage = "success";
             }
         }
 
@@ -239,6 +238,17 @@ class SortieController extends AbstractController
 
         return $this->render('sortie/getSortie.html.twig', [
             'sortie' => $sortie
+        ]);
+    }
+    /**
+    * @Route("/modalAnnuler", name="modalAnnuler")
+    */
+    public function getModalAnnuler(Request $request, EntityManagerInterface $em){
+
+        $sortieid = $request->get('sortieId');
+
+        return $this->render('sortie/getModalSortieAnnuler.html.twig', [
+            'sortieId' => $request->get('sortieId')
         ]);
     }
 

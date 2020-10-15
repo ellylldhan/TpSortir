@@ -103,6 +103,21 @@
 {% block javascripts %}
 
     {{ parent() }}
+<script>
+    function getModaleLieu(id) {
+        $routeGetModaleLieu = '{{ path('get_modale_lieu') }}';
+        $.ajax({
+            url: $routeGetModaleLieu,
+            data: {
+                idLieu: id
+            },
+            type: 'GET',
+            success: function (data) {
+                $(data).modal();
+            }
+        });
+    }
 
+</script>
 {% endblock %}
 
