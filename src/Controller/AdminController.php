@@ -415,7 +415,7 @@ class AdminController extends AbstractController
             $this->addFlash('success', 'Participant modifié !');
             return $this->redirectToRoute('admin_get_participant_page');
         } else {
-            dump($this->getErrorsFromForm($formUpdateParticipant));
+            //dump($this->getErrorsFromForm($formUpdateParticipant));
         }
 
         return $this->render('admin/getModaleUpdateParticipant.html.twig', [
@@ -515,7 +515,7 @@ class AdminController extends AbstractController
         }
 
         //On récupère les campus correspondant à la recherche
-        $toCampus = $campusRepository->searchCampus($recherche);
+        $toCampus = $campusRepository->searchCampus('%'.$recherche);
 
         return $this->render('admin/getCampusPage.html.twig', [
             'title' => "Gestion campus",

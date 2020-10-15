@@ -26,7 +26,7 @@ class SortieRepository extends ServiceEntityRepository
     public function findAllWithLibelle(QueryBuilder $queryBuilder = null){
         $query = $queryBuilder;
 
-        dump($queryBuilder);
+        //dump($queryBuilder);
         if ($queryBuilder == null){
             $query = $this->createQueryBuilder('s');
         }
