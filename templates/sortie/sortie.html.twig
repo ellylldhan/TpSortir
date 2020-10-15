@@ -118,7 +118,7 @@
                     <a type="button" class="btn btn-success mb-1" href="{{ path('ajoutSortie') }}">Ajouter une sortie</a>
 
                     <div class="divConteneur">
-                        <table class="table table-striped">
+                        <table class="table table-striped table-hover table-fixed">
                             <thead>
                                 <th>Nom de la sortie</th>
                                 <th>Date de la sortie</th>
@@ -139,29 +139,27 @@
                                 {% for sortie in sorties %}
                                     {% set isInscrit = sortie.isInscrit(app.User.id) %}
                                     <tr>
-                                        <th>
+                                        <td>
                                             {% if isMobile == false %}
                                                {{ sortie.nom }}
                                             {% else %}
                                                 <a href="{{ path('detail') }}/?sortieId={{ sortie.id }}">{{ sortie.nom }}</a>
                                             {% endif %}
-                                        </th>
-
-                                        <th>{{ sortie.dateDebut|format_datetime() }}</th>
-
+                                        </td>
+                                        <td>{{ sortie.dateDebut|format_datetime() }}</td>
                                         {% if isMobile == true %}
-                                            <th>{{ sortie.lieu.ville.nom }}</th>
+                                            <td>{{ sortie.lieu.ville.nom }}</td>
                                         {% else %}
-                                            <th>{{ sortie.dateCloture|format_date() }}</th>
-                                            <th>{{ sortie.inscriptions|length }} / {{ sortie.nombreInscriptionsMax }}</th>
-                                            <th>{{ sortie.etat.libelle }}</th>
-                                            <th class="text-center">
+                                            <td>{{ sortie.dateCloture|format_date() }}</td>
+                                            <td>{{ sortie.inscriptions|length }} / {{ sortie.nombreInscriptionsMax }}</td>
+                                            <td>{{ sortie.etat.libelle }}</td>
+                                            <td>
                                                 {% if isInscrit %}
                                                     <i class="fas fa-times"></i>
                                                 {% endif %}
-                                            </th>
-                                            <th>{{ sortie.organisateur.pseudo }}</th>
-                                            <th>
+                                            </td>
+                                            <td>{{ sortie.organisateur.pseudo }}</td>
+                                            <td>
                                                 <a type="button" class="btn btn_transparent p-0" href="{{ path('detail', {'sortieId': sortie.id}) }}">Détail</a>
 
                                                 {% if sortie.organisateur.id == app.user.id or app.user.administrateur %}
@@ -193,7 +191,7 @@
                                                         {% endif %}
                                                     {% endif %}
                                                 {% endif %}
-                                            </th>
+                                            </td>
                                         {% endif %}
                                     </tr>
                                 {% endfor %}
@@ -204,7 +202,7 @@
             </div>
         </div>
     </div>
-
+ <!---->
 {% endblock %}
 
 {% block javascripts %}
