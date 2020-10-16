@@ -52,7 +52,7 @@ class SortieController extends AbstractController
 
         $sorties = $em->getRepository(Sortie::class)->findAllWithLibelle($this->findSearch($sortie, $em));
 
-        return $this->render('sortie/Sortie.html.twig', [
+        return $this->render('sortie/sortie.html.twig', [
             'formSortie' => $form->createView(),
             'sorties' => $sorties,
             'isMobile' => $detect->isMobile()
@@ -136,7 +136,7 @@ class SortieController extends AbstractController
             $this->addFlash('danger', 'Organisateur non Actif !');
         }
 
-        return $this->render('sortie/AjoutSortie.html.twig', [
+        return $this->render('sortie/ajoutSortie.html.twig', [
             'campusName' => $this->getUser()->getCampus()->getNom(),
             'formSortie' => $form->createView()
         ]);
