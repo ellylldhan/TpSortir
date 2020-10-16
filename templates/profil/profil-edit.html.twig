@@ -1,20 +1,42 @@
 {% extends 'base.html.twig' %}
 
-{% block title %} {{ parent() }} {{ title}} {% endblock %}
+{% block title %} {{ parent() }} {{ title }} {% endblock %}
 
 {% block stylesheet %}
-    <link rel="stylesheet" href="{{ asset('css/admin.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/profil/main.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/profil/profil-edit.css') }}">
 {% endblock %}
 
 {% block body %}
 
     <div class="container">
+
+        {{ form_start(form) }}
+
+        {% if form.administrateur %}
+
         <div class="card mt-5 mb-5">
             <div class="card-header">
-                <h1>Ajouter un participant</h1>
+                <div class="photo-container">
+                    <div>
+                        {% if app.user %}
+                            <img src="{{ asset(path_avatar ~ app.user.urlPhoto) }}" class="card-img" alt="Photo de profil de {{ app.user.pseudo }}">
+                        {% else %}
+                            <img src="{{ asset(path_avatar ~ user.urlPhoto) }}" class="card-img" alt="Photo de profil de {{ user.pseudo }}">
+                        {% endif %}
+                    </div>
+
+                    <div class="container">
+                        <div class="row justify-content-center">
+                                <div class="btn-edit-photo-container btn-sm">
+                                        {{ form_widget(form.urlPhoto) }}
+                                </div>
+                        </div>
+                    </div>
+                </div>
             </div>
+
             <div class="card-body">
-                {{ form_start(form, { 'attr': {'class': 'form-inline mt-5', 'id': 'form_add_participant'} }) }}
 
                 {{ form_errors(form) }}
 
@@ -27,13 +49,7 @@
 
                     <div class="form-group mb-3">
                         <div class="col-sm-12">
-                            {{ form_widget(form.motDePasse.first, { 'attr': {'id': 'participant_mot_de_passe', 'placeholder': 'Mot de passe'} }) }}
-                        </div>
-                    </div>
-
-                    <div class="form-group mb-3">
-                        <div class="col-sm-12">
-                            {{ form_widget(form.motDePasse.second, { 'attr': {'id': 'participant_confirmation_mot_de_passe', 'placeholder': 'Confirmer le mot de passe'} }) }}
+                            {{ form_widget(form.motDePasse, {'attr': {'class': 'participant_pw'}}) }}
                         </div>
                     </div>
                 </div>
@@ -66,26 +82,12 @@
                     </div>
                 </div>
 
-                <div class="col-sm-12">
-                    <div class="form-group mb-4">
-                        <label for="participant_administrateur" class="col-sm-2 col-form-label justify-content-start">
-                            Administrateur
-                        </label>
-                        <div class="col-sm-1 justify-content-start">
-                            {{ form_widget(form.administrateur, { 'attr': {'id': 'participant_administrateur'} }) }}
-                        </div>
-
-                        <label for="participant_actif" class="col-sm-2 col-form-label justify-content-start">
-                            Actif
-                        </label>
-                        <div class="col-sm-1 justify-content-start">
-                            {{ form_widget(form.actif, { 'attr': {'id': 'participant_actif'} }) }}
-                        </div>
-                    </div>
-                </div>
+                {# Champs à caché à l'utilisateur, mais nécéssaire pour la soumission entière du formulaire #}
+                {{ form_widget(form.administrateur, {'attr': {'class': 'd-none'}}) }}
+                {{ form_widget(form.actif, {'attr': {'class': 'd-none'}}) }}
 
                 <div class="col-sm-12">
-                    <div class="form-group mb-4">
+                    <div class="form-group mb-4 campus-container">
                         <label for="participant_campus" class="col-sm-2 col-form-label justify-content-start">
                             Campus
                             <span class="required">*</span>
@@ -98,15 +100,17 @@
 
                 {{ form_widget(form._token) }}
 
-                <div class="mb-5 mt-3 ml-auto mr-auto">
+                <div class="mb-5 mt-3 ml-auto mr-auto button-container">
                     <button type="submit" class="btn btn_custom">Enregistrer</button>
-                    <a type="button" class="btn btn_custom_cancel" href="{{ path('admin_get_participant_page') }}">
+                    <a type="button" class="btn btn_custom_cancel" href="{{ path('profil', {'id': app.user.id}) }}">
                         Annuler
                     </a>
                 </div>
-
-                {{ form_end(form, {'render_rest': false}) }}
             </div>
+
+            {% endif %}
+
+            {{  form_end(form, {'render_rest': false}) }}
         </div>
     </div>
 

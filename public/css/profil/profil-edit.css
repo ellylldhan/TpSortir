@@ -1,0 +1,89 @@
+
+.main-container{
+    text-align: left;
+}
+
+.photo-container{
+    justify-content: center;
+    text-align: center;
+}
+
+.btn-edit-photo{
+    margin-top: 5px;
+}
+
+.btn-edit-photo-container{
+    margin-top: 5px;
+    border: 4px solid white;
+    border-radius: 0;
+}
+
+#form_add_participant input.form-control {
+    padding: 10px 10px 10px 5px;
+    -webkit-appearance: none;
+    display: block;
+    color: #636363;
+    width: 100%;
+    border: none;
+    border-radius: 0;
+    border-bottom: 1px solid #757575;
+}
+
+#form_add_participant input.form-control:focus {
+    outline: none;
+    box-shadow: none;
+    border-bottom: 1px solid black;
+}
+
+#form_add_participant select.form-control {
+    color: #636363;
+    width: 100%;
+    border: 1px solid #757575;
+    border-radius: 0;
+}
+
+#form_add_participant select.form-control:focus {
+    outline: none;
+    box-shadow: none;
+    border: 1px solid black;
+}
+
+#form_add_participant .col-form-label {
+    font-weight: bold;
+}
+
+.participant_pw{
+    margin-bottom: 5px;
+}
+
+.campus-container{
+    display: flex;
+}
+
+input.form-control, select.form-control{
+    border: none;
+    border-bottom: 1px solid #000;
+    border-radius: 0;
+}
+
+.btn-edit-photo{
+    cursor: pointer;
+    border-radius: 0;
+    border: 1px solid #d6d6d6;
+}
+
+.password-first-input{
+    margin-bottom: 10px;
+}
+
+.photo-input{
+    background-color: #27AE60;
+}
+
+.custom-file-label {
+    border-radius: 0;
+}
+
+.custom-file{
+    overflow: hidden;
+}

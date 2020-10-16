@@ -1,0 +1,47 @@
+
+{% extends 'base.html.twig' %}
+
+{% block title %} {{ parent() }} {{ title }} {% endblock %}
+
+{% block stylesheet %}
+    <link rel="stylesheet" href="{{ asset('css/profil/main.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/profil/profil.css') }}">
+{% endblock %}
+
+{% block body %}
+
+    <div class="container">
+        <div class="jumbotron">
+            <h1 class="pseudo">
+                <small>{{ user.pseudo }}</small>
+                <hr class="my-4">
+            </h1>
+            <div class="row justify-content-md-center user-details-container">
+                <img src="{{ asset(path_avatar ~ user.urlPhoto) }}" class="card-img" alt="Photo de profil de {{ user.pseudo }}">
+                <div id="user-infos-container">
+                    <small>Prénom : </small>
+                    <p class="user-details">{{ user.prenom }}</p>
+
+                    <small>Nom : </small>
+                    <p class="user-details">{{ user.nom }}</p>
+
+                    <small>Téléphone : </small>
+                    <p class="user-details">{{ user.telephone }}</p>
+
+                    <small>Email : </small>
+                    <p class="user-details">{{ user.mail }}</p>
+
+                    <small>Campus : </small>
+                    <p class="user-details">{{ user.campus.nom }}</p>
+                </div>
+            </div>
+            <div class="button-container">
+                <a href="{{ app.request.baseUrl }}" class="btn btn_custom">Retour</a>
+                {% if app.user and app.user == user %}
+                    <a href="{{ path('edit-profil', {"id":app.user.id}) }}" class="btn btn_custom_cancel">Modifier</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

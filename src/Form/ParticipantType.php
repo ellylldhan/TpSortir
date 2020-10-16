@@ -7,10 +7,13 @@ use App\Entity\Campus;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
+use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\File;
 
 class ParticipantType extends AbstractType
 {
@@ -52,11 +55,22 @@ class ParticipantType extends AbstractType
                     'max-length' => 20
                 ]
             ])
-            ->add('motDePasse', PasswordType::class, [
+            ->add('motDePasse', RepeatedType::class, [
+                'type' => PasswordType::class,
+                'invalid_message' => 'Le mot de passe doit être identique.',
                 'required' => true,
-                'attr' => [
-                    'class' => 'form-control'
-                ]
+                'first_options'  => [
+                    'label' => false,
+                    'attr' => [
+                        'placeholder' => 'mot de passe',
+                        'class' => 'password-field form-control password-first-input'
+                    ]],
+                'second_options' => [
+                    'label' => false,
+                    'attr' => [
+                        'placeholder' => 'confirmation',
+                        'class' => 'password-field form-control'
+                    ]]
             ])
             ->add('administrateur', CheckboxType::class, [
                 'required' => false,
@@ -76,8 +90,25 @@ class ParticipantType extends AbstractType
                     return $campus->getNom();
                 },
                 'attr' => [
-                    'class' => 'form-control'
+                    'class' => 'form-control',
+                    'label' => 'campus'
                 ]
+            ])
+            ->add('urlPhoto', FileType::class, [
+                'label' => 'Photo participant',
+                'mapped' => false,
+                'required' => false,
+                'constraints' => [
+                    new File([
+                        'maxSize' => '1024k',
+                        'mimeTypes' => [
+                            'image/gif',
+                            'image/png',
+                            'image/jpeg'
+                        ],
+                        'mimeTypesMessage' => 'Veuillez charger un fichier de type pdf, jpeg ou gif',
+                    ])
+                ],
             ])
         ;
     }

@@ -2841,7 +2841,9 @@
                 }
             ],
             "description": "Composer plugin for Symfony",
+
             "time": "2020-10-14T17:41:54+00:00"
+
         },
         {
             "name": "symfony/form",
@@ -3172,6 +3174,7 @@
                 "interoperability",
                 "standards"
             ],
+
             "time": "2020-10-14T17:08:19+00:00"
         },
         {

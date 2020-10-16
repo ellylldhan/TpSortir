@@ -51,7 +51,7 @@
                     {# Check si user est connecté : #}
                     {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
                         <li class="nav-item">
-                            <a class="nav-link" href="#">Mon profil</a>
+                            <a class="nav-link" href=" {{ path('profil', {"id": app.user.id}) }}">Mon profil</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="{{ path('logout') }}">Se déconnecter</a>
