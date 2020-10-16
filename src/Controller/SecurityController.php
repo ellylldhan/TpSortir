@@ -10,7 +10,7 @@ use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
 class SecurityController extends AbstractController
 {
-    public const ROUTE_HOME = 'base';
+    public const ROUTE_HOME = 'sortie';
 
     /**
      * @Route("/login", name="login")
@@ -20,7 +20,14 @@ class SecurityController extends AbstractController
     public function login(AuthenticationUtils $authenticationUtils): Response
     {
          if ($this->getUser()) {
-             return $this->redirectToRoute(self::ROUTE_HOME);
+             $repo = $this->getDoctrine()->getRepository(Participant::class);
+             $p = $repo->findOneBy(['pseudo'=>$this->getUser()->getUsername()], []);
+             if ($p && $p->getActif()) {
+                 return $this->redirectToRoute(self::ROUTE_HOME);
+             } else {
+                 $this->addFlash("danger", "Votre compte a été désactivé.");
+                 return $this->redirectToRoute('login');
+             }
          }
 
         // get the login error if there is one
