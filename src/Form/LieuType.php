@@ -18,6 +18,7 @@ class LieuType extends AbstractType
     {
         $builder
             ->add('nom',TextType::class,[
+                'required' => true,
                 'attr' => ['class' => 'form_control' ]
             ])
             ->add('rue',TextType::class,[
