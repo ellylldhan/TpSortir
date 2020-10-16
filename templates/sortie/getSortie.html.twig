@@ -28,14 +28,14 @@
                         Date et heure de la sortie :
                     </div>
                     <div class="col-sm-7 justify-content-start">
-                        {{ sortie.dateDebut|format_datetime() }}
+                        {{ sortie.dateDebut|date('d/m/Y') }}
                     </div>
 
                     <div class="col-sm-5 font-weight-bold">
                         Date limite d'inscription :
                     </div>
                     <div class="col-sm-7 justify-content-start">
-                        {{ sortie.dateCloture|format_datetime() }}
+                        {{ sortie.dateCloture|date('d/m/Y') }}
                     </div>
 
                     <div class="col-sm-5 font-weight-bold">
