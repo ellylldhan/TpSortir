@@ -146,11 +146,11 @@
                                                 <a href="{{ path('detail') }}/?sortieId={{ sortie.id }}">{{ sortie.nom }}</a>
                                             {% endif %}
                                         </td>
-                                        <td>{{ sortie.dateDebut|date('d/m/Y') }}</td>
+                                        <td>{{ sortie.dateDebut|date('d/m/Y H:i') }}</td>
                                         {% if isMobile == true %}
                                             <td>{{ sortie.lieu.ville.nom }}</td>
                                         {% else %}
-                                            <td>{{ sortie.dateCloture|date('d/m/Y') }}</td>
+                                            <td>{{ sortie.dateCloture|date('d/m/Y H:i') }}</td>
                                             <td>{{ sortie.inscriptions|length }} / {{ sortie.nombreInscriptionsMax }}</td>
                                             <td>{{ sortie.etat.libelle }}</td>
                                             <td>
