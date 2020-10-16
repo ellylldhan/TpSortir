@@ -51,7 +51,7 @@ class SortieController extends AbstractController
         }
 
         $sorties = $em->getRepository(Sortie::class)->findAllWithLibelle($this->findSearch($sortie, $em));
-        dump($detect->isMobile());
+
         return $this->render('sortie/Sortie.html.twig', [
             'formSortie' => $form->createView(),
             'sorties' => $sorties,
@@ -371,7 +371,6 @@ class SortieController extends AbstractController
             // ->setParameter('pid', 2);
         }
         if (!empty($searchSortieType->getEstOrganisateur())) {
-            dump($this->getUser()->getId());
             $query = $query
                 ->andWhere('o.id = :oid')
                 ->setParameter('oid', $this->getUser()->getId());
@@ -390,7 +389,7 @@ class SortieController extends AbstractController
             $query = $query
                 ->andWhere('e.libelle = \'Passée\'');
         }
-        dump($query);
+
         return $query;
     }
 

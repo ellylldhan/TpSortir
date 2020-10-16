@@ -415,7 +415,12 @@ class AdminController extends AbstractController
             $this->addFlash('success', 'Participant modifié !');
             return $this->redirectToRoute('admin_get_participant_page');
         } else {
-            dump($this->getErrorsFromForm($formUpdateParticipant));
+            $errors = $this->getErrorsFromForm($formUpdateParticipant);
+
+            //Pour chaque erreur, on affiche une alerte contenant le message
+            foreach ($errors as $error) {
+                $this->addFlash("danger", $error[0]);
+            }
         }
 
         return $this->render('admin/getModaleUpdateParticipant.html.twig', [
